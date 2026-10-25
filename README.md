@@ -18,6 +18,26 @@ Nothing here is a continuum Yang–Mills result.
 ./verify.sh      # builds, rebuilds 2x2 byte-exact, builds 2x3, certificates, exact laws (2nd/3rd/4th order), integer audit
 ```
 
+## Exact matrix jumps: guaranteed integer equality on a fixed matrix
+
+The reusable [exact matrix-power jump](python/matrix_tricks/exact_jump.py) is
+now part of the checked toolset. For any explicitly supplied small integer
+square matrix `S`, the calculation `S^N v` is **bit-for-bit identical**
+to `N` consecutive applications, using exponentiation by squaring with
+no floating-point arithmetic, normalization or lossy amplitude shifts.
+
+The 3×3 S₃ eight-vacuum **third-order effective** matrix passes:
+64 ordinary steps = 6 squarings; 4,096 steps = 12 squarings and also
+two exact 2,048-step jumps composed. Pinned SHA-256 state hashes are checked
+by `verify.sh`. The guarantee is equality, **not** bounded execution time,
+computational feasibility for a dense 10-million-state matrix, or physical
+time evolution. The pilot's 206-state and 4,454-state vacuum-ball Ritz
+measurements are separate approximations, **not full-system gap certificates**.
+
+Methods, step-count complexity, exact hashes, scope and vacuum-ball
+measurements: [docs/EXACT_MATRIX_JUMP_AND_VACUUM_BALL.md](docs/EXACT_MATRIX_JUMP_AND_VACUUM_BALL.md).
+Run: `python3 python/matrix_tricks/exact_jump.py --self-test`.
+
 ## The model
 
 Kogut–Susskind Hamiltonian with finite group S₃. Links carry S₃ elements.
@@ -183,6 +203,7 @@ python/ladder     ladder.py (milli), ladder2.py (micro, scaling trick), rungs.py
 python/testground HTTP-0 page and routes (127.0.0.1): /evolve, /svg, /jump, /cheb
 python/sweep      17-rung sector sweep
 python/volume     volume.py, second_order.py, flat_law.py, flat_law3.py, flat_law4.py
+python/matrix_tricks exact_jump.py — exact arbitrary-precision 8x8 time-jump self-test
 python/audit      integer-only AST audit
 data/             operators, ledgers, sweeps, volume runs, exact-law receipts (json=0)
 ```
