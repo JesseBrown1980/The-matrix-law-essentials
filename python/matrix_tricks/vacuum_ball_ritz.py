@@ -14,7 +14,7 @@ from hashlib import sha256
 from pathlib import Path
 from time import monotonic_ns
 
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"volume"))
+sys.path.insert(0,str(Path(__file__).resolve().parents[1].joinpath("volume")))
 from flat_law import Lat, MUL, TRANS
 
 L=3
