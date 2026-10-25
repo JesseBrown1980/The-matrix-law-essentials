@@ -49,6 +49,14 @@ tail -1 data/volume/flat_law.hbp | grep -q "^FLAT_LAW|status=COMPLETE|"
 $B/onfly 3 3 1 1 4 | tee build/onfly.out
 tail -1 build/onfly.out | grep -q "|support=35847|norm_w=122922827987436|"
 test "$(grep -c "sa_check=PASS" build/onfly.out)" = 3
+# 5e. Exact integer power-jump: the 64-step state MUST match sequential
+#     evaluation byte for byte, and the 4096-step state MUST match two
+#     2048-step jumps. This is the effective 8-vacuum matrix, not full 3x3.
+python3 python/matrix_tricks/exact_jump.py --self-test | tee build/exact_jump.hbp
+grep -q '|steps=64|squarings=6|exact_equal_sequential=1|' build/exact_jump.hbp
+grep -q '|steps=4096|squarings=12|state_bits=31168|' build/exact_jump.hbp
+grep -q '|rounding=NONE|exact_composition=PASS|' build/exact_jump.hbp
+grep -q '^EXACT_JUMP|result=PASS|' build/exact_jump.hbp
 # 6. integer-only audit of every Python tool
-python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py
+python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"
