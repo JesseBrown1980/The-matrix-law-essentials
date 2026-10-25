@@ -49,6 +49,22 @@ electric graph moves:
 | 1 | 206 (8+198) | 818 | 16 |
 | 2 | 4,454 (8+198+4,248) | 33,218 | 24 |
 
+The vacuum-ball pilot is now **runnable from this repository** using
+`python/matrix_tricks/vacuum_ball_ritz.py`. It reconstructs the same
+gauge-invariant principal ball using the production **comb-tree basis**
+(the independent pilot used a BFS-tree basis) and verifies the same
+Ritz-energy brackets. The state-matrix SHA can differ between bases
+even when all Ritz eigenvalues agree.
+
+```bash
+python3 python/matrix_tricks/vacuum_ball_ritz.py 1 27 --order 1
+python3 python/matrix_tricks/vacuum_ball_ritz.py 2 27 --order 2
+```
+
+The `verify.sh` acceptance gate checks the 206/4,454 state counts,
+818/33,218 directed nonzeros, weighted self-adjointness, and the exact
+reported integer brackets at r=27 (Ritz dimensions 16 and 24).
+
 Independent integer-only block-Krylov Ritz pilot enclosures (for `JE=1`):
 
 | r = JB/JE | radius-1 Ritz gap interval | radius-2 Ritz gap interval |
@@ -60,9 +76,9 @@ Independent integer-only block-Krylov Ritz pilot enclosures (for `JE=1`):
 These are **Ritz trial-space estimates**, not spectral-gap certificates of
 the full 3×3 Hamiltonian. Individual Ritz eigenvalues upper-bound
 corresponding full-Hamiltonian eigenvalues, but their difference does **not**
-bound the full gap. An independent exact integer BFS-tree implementation
-generated the pilot; the reusable exact-jump tool does not claim to build or
-certify these trial matrices. The larger radius-3 compression and a rigorous
+bound the full gap. The original reference run used an independent BFS-tree source; the new
+repo-local comb-tree builder reconstructs the ball and its Ritz enclosures.
+The reusable exact-jump tool does not claim to certify the full spectral gap. The larger radius-3 compression and a rigorous
 bound on omitted states remain future verification tasks.
 
 **Scientific limits:** The jumping test is on `16H3` in the eight-vacuum
