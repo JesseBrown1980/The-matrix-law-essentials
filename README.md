@@ -36,7 +36,7 @@ measurements are separate approximations, **not full-system gap certificates**.
 
 Methods, step-count complexity, exact hashes, scope and vacuum-ball
 measurements: [docs/EXACT_MATRIX_JUMP_AND_VACUUM_BALL.md](docs/EXACT_MATRIX_JUMP_AND_VACUUM_BALL.md).
-Run: `python3 python/matrix_tricks/exact_jump.py --self-test`.
+Run: `python3 python/matrix_tricks/exact_jump.py --self-test`. Reproduce the actual 3×3 radius-1/radius-2 principal-ball Ritz brackets with `python3 python/matrix_tricks/vacuum_ball_ritz.py 1 27 --order 1` and `python3 python/matrix_tricks/vacuum_ball_ritz.py 2 27 --order 2`.
 
 ## The model
 
@@ -203,7 +203,7 @@ python/ladder     ladder.py (milli), ladder2.py (micro, scaling trick), rungs.py
 python/testground HTTP-0 page and routes (127.0.0.1): /evolve, /svg, /jump, /cheb
 python/sweep      17-rung sector sweep
 python/volume     volume.py, second_order.py, flat_law.py, flat_law3.py, flat_law4.py
-python/matrix_tricks exact_jump.py — exact arbitrary-precision 8x8 time-jump self-test
+python/matrix_tricks exact_jump.py (exact jumping) + vacuum_ball_ritz.py (3x3 reduced Ritz)
 python/audit      integer-only AST audit
 data/             operators, ledgers, sweeps, volume runs, exact-law receipts (json=0)
 ```
