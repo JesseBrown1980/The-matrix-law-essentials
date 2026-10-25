@@ -15,7 +15,7 @@ Source of record for the 2×2 programme, its PR stack and its reviews:
 Nothing here is a continuum Yang–Mills result.
 
 ```
-./verify.sh      # builds, rebuilds 2x2 byte-exact, builds 2x3, certificates, exact laws, integer audit
+./verify.sh      # builds, rebuilds 2x2 byte-exact, builds 2x3, certificates, exact laws (2nd/3rd/4th order), integer audit
 ```
 
 ## The model
@@ -108,11 +108,24 @@ sectors are exactly degenerate.
 | 8 | 0.177326 | 0.386040 |
 | 9 | 0.154383 | 0.341110 |
 | 15 | 0.088346 | 0.201684 |
+| 21 | 0.062323 | 0.143471 |
+| 27 | 0.048228 | 0.111398 |
 
 E₀ per site agrees between the two volumes (r = 1: 1.9085 against 1.9089). The
 gaps cross between r = 3 and r = 5. At weak coupling the measured 2×3 gap
-approaches the exact law 3/r with a residual that falls off as 1/r³
-(residual·r³ = 5.67 at r = 9 and 5.68 at r = 15).
+approaches the exact law 3/r with a residual that falls off as 1/r³:
+
+| r | 2×3 gap | (gap − 3/r)·r³ |
+|---|---|---|
+| 9 | 0.341110 | 5.669 |
+| 15 | 0.201684 | 5.684 |
+| 21 | 0.143471 | 5.685 |
+| 27 | 0.111398 | 5.647 |
+
+This supports g(r) = 3/r + O(r⁻³) over the measured range. It is not a
+rigorous bound on the remainder. The rung receipts (E₀, E₁, gap, steps,
+settled status, tolerance, runtime, `json=0`) are the original measurement
+lines in `data/volume/volume_t23.hbp` (sha256 `53b29aeb…`, checked by `verify.sh`).
 
 ## Results: exact weak-coupling laws
 
@@ -138,8 +151,19 @@ non-contractible loop, JE^L/JB^(L−1) on an L×L torus, so at fixed r it
 shrinks steeply as the lattice grows. Square tori share one vacuum-mixing
 pattern (√14 and √6) with coefficients 1, 9/8, 5/4 for L = 2, 3, 4.
 
-**Pending checks**: the 3rd- and 4th-order formulas (3×3, 4×4) have not yet
-been compared with direct numerics on those lattices. The 2×3 numerics confirm
+On 3×3 (and on 3×4, 3×5, 4×4, 4×5, 5×5) the 8×8 second-order matrix is
+verified to be exactly scalar. Its gap coefficient is therefore 0, but that is
+a second-order statement, not a vanishing gap: the splitting starts at third
+order (fourth order on 4×4). `flat_law.py` reports
+`second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3`,
+and `flat_law.hbp` ends with `status=COMPLETE`. The first run, which stopped
+with an `IndexError` at this degenerate case, is kept with an explanatory
+header as `data/volume/flat_law_first_run_INDEXERROR_degenerate_3x3.hbp`; its
+2×2–2×6 lines are valid.
+
+**Pending checks**: the 3rd- and 4th-order formulas (3×3, 4×4) are exact
+perturbative calculations pending independent mathematical review, and have
+not yet been compared with direct numerics on those lattices. The 2×3 numerics confirm
 the 2nd-order law. Every exact law needs independent mathematical review.
 
 ## Not established

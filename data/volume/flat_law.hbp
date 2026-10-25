@@ -35,11 +35,20 @@ FLAT_LAW|L=2x6|kappa_in=[8.999999999,9.000000000]|json=0
 FLAT_LAW|L=2x6|gap_coeff_in=[5.999999999,6.000000000]|law=E_k~72*JE-kappa_k*JE^2/JB|json=0
 FLAT_LAW|L=3x3|links=18|flat_vacua=8|PEP_diag=54|flat_to_flat=0|neighbours=198|intermediate_M=4|Lc=4|charpoly=1,-432,81648,-8817984,595213920,-25713241344,694257516288,-10711401679872,72301961339136|distinct=1|json=0
 FLAT_LAW|L=3x3|kappa_in=[13.499999999,13.500000000]|json=0
-Traceback (most recent call last):
-  File "/tmp/claude-0/-home-claude/f6a27cc1-ca79-552f-be39-e082d11b593e/scratchpad/volume/flat_law.py", line 130, in <module>
-    law(lx, ly)
-    ~~~^^^^^^^^
-  File "/tmp/claude-0/-home-claude/f6a27cc1-ca79-552f-be39-e082d11b593e/scratchpad/volume/flat_law.py", line 123, in law
-    k0, k1 = kap[0], kap[1]
-                     ~~~^^^
-IndexError: list index out of range
+FLAT_LAW|L=3x3|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0
+FLAT_LAW|L=3x4|links=24|flat_vacua=8|PEP_diag=72|flat_to_flat=0|neighbours=264|intermediate_M=4|Lc=4|charpoly=1,-576,145152,-20901888,1881169920,-108355387392,3900793946112,-80244904034304,722204136308736|distinct=1|json=0
+FLAT_LAW|L=3x4|kappa_in=[17.999999999,18.000000000]|json=0
+FLAT_LAW|L=3x4|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0
+FLAT_LAW|L=3x5|links=30|flat_vacua=8|PEP_diag=90|flat_to_flat=0|neighbours=330|intermediate_M=4|Lc=4|charpoly=1,-720,226800,-40824000,4592700000,-330674400000,14880348000000,-382637520000000,4304672100000000|distinct=1|json=0
+FLAT_LAW|L=3x5|kappa_in=[22.499999999,22.500000000]|json=0
+FLAT_LAW|L=3x5|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0
+FLAT_LAW|L=4x4|links=32|flat_vacua=8|PEP_diag=96|flat_to_flat=0|neighbours=352|intermediate_M=4|Lc=4|charpoly=1,-768,258048,-49545216,5945425920,-456608710656,21917218111488,-601157982486528,7213895789838336|distinct=1|json=0
+FLAT_LAW|L=4x4|kappa_in=[23.999999999,24.000000000]|json=0
+FLAT_LAW|L=4x4|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0
+FLAT_LAW|L=4x5|links=40|flat_vacua=8|PEP_diag=120|flat_to_flat=0|neighbours=440|intermediate_M=4|Lc=4|charpoly=1,-960,403200,-96768000,14515200000,-1393459200000,83607552000000,-2866544640000000,42998169600000000|distinct=1|json=0
+FLAT_LAW|L=4x5|kappa_in=[29.999999999,30.000000000]|json=0
+FLAT_LAW|L=4x5|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0
+FLAT_LAW|L=5x5|links=50|flat_vacua=8|PEP_diag=150|flat_to_flat=0|neighbours=550|intermediate_M=4|Lc=4|charpoly=1,-1200,630000,-189000000,35437500000,-4252500000000,318937500000000,-13668750000000000,256289062500000000|distinct=1|json=0
+FLAT_LAW|L=5x5|kappa_in=[37.499999999,37.500000000]|json=0
+FLAT_LAW|L=5x5|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0
+FLAT_LAW|status=COMPLETE|lattices=2x2,2x3,2x4,2x5,2x6,3x3,3x4,3x5,4x4,4x5,5x5|json=0

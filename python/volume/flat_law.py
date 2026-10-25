@@ -120,6 +120,18 @@ def law(lx, ly):
     print(out, flush=True)
     for lo, hi in kap:
         print("FLAT_LAW|L=%dx%d|kappa_in=[%s,%s]|json=0" % (lx, ly, SO.fmt_div(lo, bits, Lc), SO.fmt_div(hi, bits, Lc)), flush=True)
+    if len(kap) < 2:
+        # One distinct eigenvalue. Only call it degenerate if the 8x8 second-order
+        # matrix is exactly scalar (a non-scalar matrix with one eigenvalue would be
+        # a defective Jordan block, which is not a degenerate splitting).
+        scalar = all(K[i][j] == (K[0][0] if i == j else 0) for i in range(len(K)) for j in range(len(K)))
+        if not scalar:
+            print("FLAT_LAW|L=%dx%d|error=single_eigenvalue_but_K_not_scalar|json=0" % (lx, ly), flush=True)
+            raise SystemExit(1)
+        # A vanishing SECOND-ORDER coefficient does not mean the gap vanishes:
+        # the splitting starts at a higher order (flat_law3.py, flat_law4.py).
+        print("FLAT_LAW|L=%dx%d|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0" % (lx, ly), flush=True)
+        return
     k0, k1 = kap[0], kap[1]
     print("FLAT_LAW|L=%dx%d|gap_coeff_in=[%s,%s]|law=E_k~%d*JE-kappa_k*JE^2/JB|json=0"
           % (lx, ly, SO.fmt_div(k0[0]-k1[1], bits, Lc), SO.fmt_div(k0[1]-k1[0], bits, Lc), sorted(set(pdiag.values()))[0]), flush=True)
@@ -128,3 +140,4 @@ if __name__ == "__main__":
     for spec in sys.argv[1:]:
         lx, ly = map(int, spec.split("x"))
         law(lx, ly)
+    print("FLAT_LAW|status=COMPLETE|lattices=%s|json=0" % ",".join(sys.argv[1:]), flush=True)

@@ -26,6 +26,23 @@ test "$n" = "$f" && test "$f" = 1
 # 5. exact magnetic-end laws (second order): 2x2 -> sqrt14 - sqrt6, 2x3 -> 3
 python3 python/volume/second_order.py build/torus2x2.matrix | grep -q "gap_coeff_in=\[1.292167643,1.292167643\]"
 python3 python/volume/flat_law.py 2x3 | grep -q "gap_coeff_in=\[2.999999999,3.000000000\]"
+# 5b. 3x3: second order verified scalar and degenerate (coefficient 0, NOT a vanishing gap),
+#     third-order splitting (9/8)(sqrt14-sqrt6); 4x4: fourth-order (5/4)(sqrt14-sqrt6).
+#     Exact perturbative laws, pending independent mathematical review.
+python3 python/volume/flat_law.py 3x3 | grep -q "^FLAT_LAW|L=3x3|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0$"
+python3 python/volume/flat_law3.py 3x3 | grep -q "gap_coeff3_in=\[1.453688599,1.453688599\]"
+python3 python/volume/flat_law4.py 4x4 | grep -q "gap_coeff4_in=\[1.615209554,1.615209554\]"
+python3 - <<'PY'
+import math
+K = 10**30
+d = math.isqrt(14*K*K) - math.isqrt(6*K*K)          # (sqrt14 - sqrt6) * 10^30 (floor-level)
+assert (9*d//8) // 10**21 == 1453688599, "3x3 coefficient"
+assert (5*d//4) // 10**21 == 1615209554, "4x4 coefficient"
+print("CLOSED_FORM|3x3=(9/8)(sqrt14-sqrt6)|4x4=(5/4)(sqrt14-sqrt6)|status=PASS|review=pending|json=0")
+PY
+# 5c. archives: published 2x3 receipts unchanged; regenerated law archive complete
+test "$(sha256sum data/volume/volume_t23.hbp | cut -d' ' -f1)" = 53b29aeb421eed669aae9c538d2ffa6696988ddb1f5b014d29f48ed0729403df
+tail -1 data/volume/flat_law.hbp | grep -q "^FLAT_LAW|status=COMPLETE|"
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py
 echo "VERIFY|status=PASS|json=0"
