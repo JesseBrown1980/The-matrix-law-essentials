@@ -66,6 +66,19 @@ grep -q '|states=206|layers=8,198|nnz=818|' build/vacuum_ball_r1.hbp
 grep -q '|ritz_dim=16|E0_in=\[53496532,53496533\]/1000000|E1_in=\[53498537,53498538\]/1000000|gap_in=\[2004,2006\]/1000000|' build/vacuum_ball_r1.hbp
 grep -q '|states=4454|layers=8,198,4248|nnz=33218|' build/vacuum_ball_r2.hbp
 grep -q '|ritz_dim=24|E0_in=\[53493574,53493575\]/1000000|E1_in=\[53495589,53495590\]/1000000|gap_in=\[2014,2016\]/1000000|' build/vacuum_ball_r2.hbp
+# 5g. Rust vacuum-ball compression (crates/torusl/src/bin/ball.rs): principal
+#     compression of H onto all orbits within K moves of the 8 vacua (upper bounds by
+#     interlacing), solved by the existing evolvers.
+#     (i) validation on 2x3: K=4 (34,890 states) reproduces the full 47,449-state
+#         Chebyshev measurement at r=9 (E0 34.470733 vs 34.470732, gap 0.341110).
+mkdir -p build/ball
+$B/ball 2 3 4 build/ball/b23_k4.matrix | grep -q "|states=34890|nnz=1023198|.*|w_self_adjoint=PASS|"
+$B/cheb build/ball/b23_k4.matrix 1 9 4000 341110 | grep -q "|E0=34470733/1000000|dE0=0|E1=34811843/1000000|dE1=0|gap=341110/1000000|"
+#     (ii) 3x3 K=1 (206 states): converged ball eigenvalues by dense matrix jump at r=27;
+#         they must sit at or below the 16-dim Krylov Ritz values of section 5f.
+$B/ball 3 3 1 build/ball/b33_k1.matrix | grep -q "|states=206|nnz=818|.*|w_self_adjoint=PASS|"
+$B/jump build/ball/b33_k1.matrix 1 27 27 6 | tee build/ball/b33_k1_r27.line | grep -q "|E0=53496482/1000000|dE0=0|E1=53498465/1000000|dE1=0|gap=1983/1000000|"
+test 53496482 -le 53496532 && test 53498465 -le 53498537
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"

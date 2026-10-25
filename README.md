@@ -73,6 +73,7 @@ Every torus has exactly 8 flat vacua: the commuting holonomy pairs of S₃ up to
 | **Gershgorin shift** | Puts c rigorously above the spectrum. Assuming "E₀ < 24" was a real bug: it fails for non-vacuum sectors at large r (kept as evidence in `data/sweep/sweep_bugged_shift.hbp`). |
 | **Deflated Rayleigh energies** | E₁ comes from evolution with the ground vector projected out (Hotelling), so gap = E₁ − E₀ with no ratio fitting and quadratic error. |
 | **Integer Chebyshev filter** | Three-term recurrence on ((a+b) − 2H)/(b − a) with doubling blocks: about √ as many steps as plain stepping. Matches the matrix jump to the micro-unit at r = 9 on 2×2. |
+| **Vacuum-ball compression** (`ball`) | H restricted to every gauge orbit within K moves of the 8 vacua, written in the standard matrix format so the evolvers run unchanged. By interlacing its energies are upper bounds that fall as K grows. 3×3: 206 / 4,454 / 59,246 / 518,177 states for K = 1–4, instead of 10,097,891. |
 | **Vacuum-neighbourhood perturbation** | The weak-coupling law needs only the 8 vacua and their one-, two- and three-step neighbours, never the full matrix, so it reaches 3×3, 4×4 and beyond. |
 
 ## Results: 2×2 torus
@@ -147,6 +148,45 @@ rigorous bound on the remainder. The rung receipts (E₀, E₁, gap, steps,
 settled status, tolerance, runtime, `json=0`) are the original measurement
 lines in `data/volume/volume_t23.hbp` (sha256 `53b29aeb…`, checked by `verify.sh`).
 
+## Results: vacuum-ball compression (Rust `ball`)
+
+**Validation on 2×3**, where the full answer is known (Chebyshev; full lattice: r = 9 gap 0.341110, r = 27 gap 0.111398):
+
+| K | ball states | r = 9: E₀ | r = 9: gap | r = 27: gap |
+|---|---|---|---|---|
+| 1 | 122 | 34.557113 | 0.309247 | 0.110133 |
+| 2 | 1,520 | 34.474701 | 0.339132 | 0.111391 |
+| 3 | 10,332 | 34.470864 | 0.341032 | 0.111399 |
+| 4 | 34,890 | 34.470733 | 0.341110 | 0.111399 |
+| full | 47,449 | 34.470732 | 0.341110 | 0.111398 |
+
+E₀ falls monotonically toward the full value (interlacing). At r = 9, K = 4 is
+exact to 1 micro-unit, and at r = 27, K = 3 already is.
+
+**3×3, K = 1 (206 states)**: converged ball eigenvalues by the dense matrix jump
+(dE = 0), next to the 16-dimensional Krylov Ritz values of the same ball
+(`python/matrix_tricks/vacuum_ball_ritz.py`) and the third-order law:
+
+| r | ball K = 1 gap | Krylov-16 Ritz gap | (9/8)(√14 − √6)/r² |
+|---|---|---|---|
+| 9 | 0.016339 | – | 0.017947 |
+| 27 | 0.001983 | 0.002005 | 0.001994 |
+| 81 | 0.000221 | – | 0.000222 |
+
+The ball's energies sit at or below the Krylov values (r = 27: E₀ 53.496482 ≤
+53.496532, E₁ 53.498465 ≤ 53.498537), as interlacing requires for a subspace of
+the same ball. The ball contains the length-3 tunnelling paths, and its gap
+approaches the third-order law as r grows: 9%, 0.6% and 0.3% away at r = 9, 27
+and 81. That is a check of the 3×3 law against the actual Hamiltonian
+compressed to the ball, not against the 8×8 effective matrix.
+
+**Not converged, not used as results**: Chebyshev runs on the 3×3 K = 2 and
+K = 3 balls. Interlacing is violated (r = 9: E₀ at K = 3 is above K = 2), the
+gap is negative at r = 81 with K = 1, and the final-block drift is large. The 8
+vacuum levels lie within about 10⁻³, with a four-fold cluster next to E₁, so a
+single-vector filter cannot resolve them; a block or cluster solver is needed.
+Receipts for every build and run are in `data/ball/ball_runs.hbp`.
+
 ## Results: exact weak-coupling laws
 
 These come from integer characteristic polynomials and Sturm root isolation
@@ -197,6 +237,7 @@ the 2nd-order law. Every exact law needs independent mathematical review.
 ```
 crates/torusl     Lx×Ly gauge-orbit operator builder (Rust 1.81, no external crates)
                   + onfly: matrix-free H application for lattices too large to store (3×3)
+                  + ball: vacuum-ball principal compression (upper bounds by interlacing)
 crates/sturmrs    interval Sturm / LDLᵀ inertia verifier (num-bigint)
 crates/evolvers   evolvers (sparse stepping), jump (matrix jump), cheb (Chebyshev)
 python/ladder     ladder.py (milli), ladder2.py (micro, scaling trick), rungs.py
