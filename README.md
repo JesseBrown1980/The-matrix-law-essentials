@@ -38,6 +38,18 @@ Methods, step-count complexity, exact hashes, scope and vacuum-ball
 measurements: [docs/EXACT_MATRIX_JUMP_AND_VACUUM_BALL.md](docs/EXACT_MATRIX_JUMP_AND_VACUUM_BALL.md).
 Run: `python3 python/matrix_tricks/exact_jump.py --self-test`. Reproduce the actual 3×3 radius-1/radius-2 principal-ball Ritz brackets with `python3 python/matrix_tricks/vacuum_ball_ritz.py 1 27 --order 1` and `python3 python/matrix_tricks/vacuum_ball_ritz.py 2 27 --order 2`.
 
+### Cosmological time-jumps, triadic ladders, and hash-altering in-between sampling
+
+The [time-jump ladder](python/matrix_tricks/time_jump_ladder.py) tool provides:
+- **Cosmological Time-Jump**: 60 squarings advance 2^60 steps (>36.5 billion years at 1 s/step) in ~5 ms, converging to the exact analytical ground state of the effective 8x8 vacuum matrix.
+- **Triadic Ladder Skips**: Base-3 progression (1, 3, 9, 27, 81, 243 ... x 3^n) and intermediate harmonic rungs (2, 5, 6, 8) evaluate ANY intermediate checkpoint t in at most 2 * ceil(log3(t)) matrix-vector multiplies, without simulating intervening steps.
+- **Skip with Hash Change**: Advances directly to target epoch T_skip, content-addresses the jumped state with SHA-256, alters the operator hash (shift, coupling, or perturbation), and measures local in-between dynamics along the ladder (dt in {1, 2, 3, 5, 6, 8, 9, 27}) directly from the jumped state.
+
+Run:
+```bash
+python3 python/matrix_tricks/time_jump_ladder.py --self-test
+```
+
 ## The model
 
 Kogut–Susskind Hamiltonian with finite group S₃. Links carry S₃ elements.

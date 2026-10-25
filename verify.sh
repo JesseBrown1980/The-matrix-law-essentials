@@ -57,6 +57,15 @@ grep -q '|steps=64|squarings=6|exact_equal_sequential=1|' build/exact_jump.hbp
 grep -q '|steps=4096|squarings=12|state_bits=31168|' build/exact_jump.hbp
 grep -q '|rounding=NONE|exact_composition=PASS|' build/exact_jump.hbp
 grep -q '^EXACT_JUMP|result=PASS|' build/exact_jump.hbp
+# 5e-2. Cosmological time-jump (2^60 steps) and triadic ladder in-between sampling:
+#       evaluates skips of 1, 2, 3, 5, 6, 8, 9, 27, 81, 243 without simulating
+#       intervening steps, and verifies skip-then-measure with hash change.
+python3 python/matrix_tricks/time_jump_ladder.py --self-test | tee build/time_jump_ladder.hbp
+grep -q '^COSMOLOGICAL_JUMP|squarings=60|steps=2\^60|.*|ground_convergence=PASS|' build/time_jump_ladder.hbp
+grep -q '^TRIADIC_LADDER|rungs=1,2,3,5,6,8,9,27,81,243|all_exact_match=PASS|' build/time_jump_ladder.hbp
+grep -q '^INBETWEEN_SAMPLING|.*|exact_sequential_match=PASS|' build/time_jump_ladder.hbp
+grep -q '^HASH_CHANGE_JUMP|.*|inbetween_measured_match=PASS|' build/time_jump_ladder.hbp
+grep -q '^TIME_JUMP_VERIFY|status=PASS|' build/time_jump_ladder.hbp
 # 5f. Actual 3x3 vacuum-ball principal compression via the repository's
 #     comb-tree lattice source: do NOT confuse Ritz-gap intervals with a
 #     certified full 10,097,891-state gap.
