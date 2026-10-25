@@ -57,6 +57,15 @@ grep -q '|steps=64|squarings=6|exact_equal_sequential=1|' build/exact_jump.hbp
 grep -q '|steps=4096|squarings=12|state_bits=31168|' build/exact_jump.hbp
 grep -q '|rounding=NONE|exact_composition=PASS|' build/exact_jump.hbp
 grep -q '^EXACT_JUMP|result=PASS|' build/exact_jump.hbp
+# 5f. Actual 3x3 vacuum-ball principal compression via the repository's
+#     comb-tree lattice source: do NOT confuse Ritz-gap intervals with a
+#     certified full 10,097,891-state gap.
+python3 python/matrix_tricks/vacuum_ball_ritz.py 1 27 --order 1 | tee build/vacuum_ball_r1.hbp
+python3 python/matrix_tricks/vacuum_ball_ritz.py 2 27 --order 2 | tee build/vacuum_ball_r2.hbp
+grep -q '|states=206|layers=8,198|nnz=818|' build/vacuum_ball_r1.hbp
+grep -q '|ritz_dim=16|E0_in=\[53496532,53496533\]/1000000|E1_in=\[53498537,53498538\]/1000000|gap_in=\[2004,2006\]/1000000|' build/vacuum_ball_r1.hbp
+grep -q '|states=4454|layers=8,198,4248|nnz=33218|' build/vacuum_ball_r2.hbp
+grep -q '|ritz_dim=24|E0_in=\[53493574,53493575\]/1000000|E1_in=\[53495589,53495590\]/1000000|gap_in=\[2014,2016\]/1000000|' build/vacuum_ball_r2.hbp
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"
