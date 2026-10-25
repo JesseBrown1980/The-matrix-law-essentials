@@ -176,6 +176,7 @@ the 2nd-order law. Every exact law needs independent mathematical review.
 
 ```
 crates/torusl     Lx×Ly gauge-orbit operator builder (Rust 1.81, no external crates)
+                  + onfly: matrix-free H application for lattices too large to store (3×3)
 crates/sturmrs    interval Sturm / LDLᵀ inertia verifier (num-bigint)
 crates/evolvers   evolvers (sparse stepping), jump (matrix jump), cheb (Chebyshev)
 python/ladder     ladder.py (milli), ladder2.py (micro, scaling trick), rungs.py

@@ -43,6 +43,12 @@ PY
 # 5c. archives: published 2x3 receipts unchanged; regenerated law archive complete
 test "$(sha256sum data/volume/volume_t23.hbp | cut -d' ' -f1)" = 53b29aeb421eed669aae9c538d2ffa6696988ddb1f5b014d29f48ed0729403df
 tail -1 data/volume/flat_law.hbp | grep -q "^FLAT_LAW|status=COMPLETE|"
+# 5d. matrix-free 3x3 operator (10,097,891-state lattice, rows generated on demand):
+#     support after 4 applications from the trivial vacuum = 35,847 (independently
+#     reproduced count), exact W-self-adjointness at every step, pinned norm at (1,1)
+$B/onfly 3 3 1 1 4 | tee build/onfly.out
+tail -1 build/onfly.out | grep -q "|support=35847|norm_w=122922827987436|"
+test "$(grep -c "sa_check=PASS" build/onfly.out)" = 3
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py
 echo "VERIFY|status=PASS|json=0"
