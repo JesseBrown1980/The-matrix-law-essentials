@@ -79,6 +79,13 @@ $B/cheb build/ball/b23_k4.matrix 1 9 4000 341110 | grep -q "|E0=34470733/1000000
 $B/ball 3 3 1 build/ball/b33_k1.matrix | grep -q "|states=206|nnz=818|.*|w_self_adjoint=PASS|"
 $B/jump build/ball/b33_k1.matrix 1 27 27 6 | tee build/ball/b33_k1_r27.line | grep -q "|E0=53496482/1000000|dE0=0|E1=53498465/1000000|dE1=0|gap=1983/1000000|"
 test 53496482 -le 53496532 && test 53498465 -le 53498537
+# 5h. Block cluster eigensolver (crates/evolvers/src/bin/cluster.rs) on 3x3 vacuum balls:
+#     all 8 vacuum levels resolved at once, rigorous residual intervals (exact big
+#     integers), ordering certified by interval-Sturm counts between the intervals.
+#     Scope: the compressed operator (ball), not the full 3x3 lattice.
+$B/ball 3 3 2 build/ball/b33_k2.matrix | grep -q "|states=4454|nnz=33218|.*|w_self_adjoint=PASS|"
+python3 python/volume/cluster_certify.py build/ball/b33_k1.matrix 27 | tee build/ball/cert_k1_r27.hbp | grep -q "|E0_in=\[53496481,53496484\]/1000000|E1_in=\[53498464,53498467\]/1000000|gap_in=\[1980,1986\]/1000000|.*|count_t1=1|.*|count_t2=2|ordering=CERTIFIED|"
+python3 python/volume/cluster_certify.py build/ball/b33_k2.matrix 27 | tee build/ball/cert_k2_r27.hbp | grep -q "|E0_in=\[53493381,53493384\]/1000000|E1_in=\[53495393,53495396\]/1000000|gap_in=\[2009,2015\]/1000000|.*|count_t1=1|.*|count_t2=2|ordering=CERTIFIED|"
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"
