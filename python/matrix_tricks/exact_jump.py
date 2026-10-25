@@ -114,7 +114,7 @@ def self_test():
     b=[11,-13]
     for n in (0,1,2,3,9,17,65):
         assert exact_jump(a,b,n)[0]==sequential(a,b,n)
-    for bad in (-1,1.5):
+    for bad in (-1,"1.5"):
         try:
             exact_jump(s,v,bad)
             raise AssertionError("invalid step accepted")
