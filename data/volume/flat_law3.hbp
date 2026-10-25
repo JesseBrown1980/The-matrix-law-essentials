@@ -1,0 +1,11 @@
+FLAT_LAW3|L=3x3|c=54|intermediate_M=4|D=16|K2_diag_xD=216|K2_offdiag_nonzero=0|json=0
+FLAT_LAW3|L=3x3|second_order_degenerate=1|gap_coeff3_in=[1.453688599,1.453688599]|law=gap~coeff*JE^3/JB^2|json=0
+  distinct H3 eigenvalues: 5
+FLAT_LAW3|L=3x4|c=72|intermediate_M=4|D=16|K2_diag_xD=288|K2_offdiag_nonzero=0|json=0
+FLAT_LAW3|L=3x4|second_order_degenerate=1|gap_coeff3_in=[2.999999999,3.000000000]|law=gap~coeff*JE^3/JB^2|json=0
+  distinct H3 eigenvalues: 5
+FLAT_LAW3|L=3x5|c=90|intermediate_M=4|D=16|K2_diag_xD=360|K2_offdiag_nonzero=0|json=0
+FLAT_LAW3|L=3x5|second_order_degenerate=1|gap_coeff3_in=[3.749999999,3.750000000]|law=gap~coeff*JE^3/JB^2|json=0
+  distinct H3 eigenvalues: 5
+FLAT_LAW3|L=4x4|c=96|intermediate_M=4|D=16|K2_diag_xD=384|K2_offdiag_nonzero=0|json=0
+  distinct H3 eigenvalues: 1

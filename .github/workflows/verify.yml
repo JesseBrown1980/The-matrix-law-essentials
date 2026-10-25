@@ -1,0 +1,25 @@
+name: verify (Rust 1.81, integer-only)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain 1.81 with clippy
+        run: |
+          rustup toolchain install 1.81.0 --profile minimal --component clippy
+          rustup override set 1.81.0
+          rustc --version
+      - name: Clippy, warnings are errors
+        run: cargo clippy --release --all-targets -- -D warnings
+      - name: No floating point in Rust sources
+        run: |
+          if grep -rnE '\bf(32|64)\b' crates/*/src; then echo "FLOAT|status=FAIL|json=0"; exit 1; fi
+          echo "FLOAT|status=PASS|json=0"
+      - name: End-to-end reproduction
+        run: ./verify.sh

@@ -1,0 +1,14 @@
+SECOND_ORDER|matrix=t23.matrix|flat=8|PEP_diag=36|PEP_offdiag_nonzero=0|intermediate_M=4|L=4|charpoly_LK=1,-288,35928,-2534976,110586384,-3051862272,51970678272,-498483154944,2057059307520|distinct_roots=5|json=0
+SECOND_ORDER|matrix=t23.matrix|kappa_in=[13.499999999,13.500000000]|json=0
+SECOND_ORDER|matrix=t23.matrix|kappa_in=[10.499999999,10.500000000]|json=0
+SECOND_ORDER|matrix=t23.matrix|kappa_in=[8.999999999,9.000000000]|json=0
+SECOND_ORDER|matrix=t23.matrix|kappa_in=[7.499999999,7.500000000]|json=0
+SECOND_ORDER|matrix=t23.matrix|kappa_in=[4.499999999,4.500000000]|json=0
+SECOND_ORDER|matrix=t23.matrix|gap_coeff_in=[2.999999999,3.000000000]|law=gap~coeff*JE^2/JB|json=0
+SECOND_ORDER|matrix=t32.matrix|flat=8|PEP_diag=36|PEP_offdiag_nonzero=0|intermediate_M=4|L=4|charpoly_LK=1,-288,35928,-2534976,110586384,-3051862272,51970678272,-498483154944,2057059307520|distinct_roots=5|json=0
+SECOND_ORDER|matrix=t32.matrix|kappa_in=[13.499999999,13.500000000]|json=0
+SECOND_ORDER|matrix=t32.matrix|kappa_in=[10.499999999,10.500000000]|json=0
+SECOND_ORDER|matrix=t32.matrix|kappa_in=[8.999999999,9.000000000]|json=0
+SECOND_ORDER|matrix=t32.matrix|kappa_in=[7.499999999,7.500000000]|json=0
+SECOND_ORDER|matrix=t32.matrix|kappa_in=[4.499999999,4.500000000]|json=0
+SECOND_ORDER|matrix=t32.matrix|gap_coeff_in=[2.999999999,3.000000000]|law=gap~coeff*JE^2/JB|json=0
