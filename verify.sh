@@ -185,6 +185,9 @@ python3 python/volume/shell_gap_cert.py data/volume/ym3x3/YM3X3-SECTORS-GITRAM.h
 (cd data/volume/ym3x3 && sha256sum -c --quiet YM3X3-SHELLSCHUR-R9-SUMMARY.sha256 \
   && [ "$(xz -dc YM3X3-SHELLSCHUR-R9-GITRAM.hbp.xz | sha256sum | cut -d' ' -f1)" = "$(cut -d' ' -f1 YM3X3-SHELLSCHUR-R9-GITRAM.sha256)" ])
 python3 python/volume/shell_gap_cert.py data/volume/ym3x3/YM3X3-SECTORS-GITRAM.hbp 9 data/volume/ym3x3/YM3X3-SHELLSCHUR-R9-SUMMARY.hbp | has "|r=9|N(t1)=8|N(tB)=8|.*|gap_E9_minus_E8_in=\\[23938578,23939630\\]/1000000|.*|result=PASS|"
+#     3x3 vacuum-cluster certificate at r=27: N(t0)=0 and N(ts)=1 give the cluster
+#     width and the first splitting E2-E1 (third-order law: 1994 micro-units)
+python3 python/volume/shell_gap_cert.py data/volume/ym3x3/YM3X3-SECTORS-GITRAM.hbp 27 data/volume/ym3x3/shellschur_r27.hbp data/volume/ym3x3/shellschur_r27_cluster.hbp | has "^SHELL_CLUSTER_CERT|.*|cluster_width_E8_minus_E1_in=\[11609,11692\]/1000000|.*|first_splitting_E2_minus_E1_in=\[1967,2059\]/1000000|result=PASS|"
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"
