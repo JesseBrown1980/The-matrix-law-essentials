@@ -147,7 +147,16 @@ for L in "2 2" "2 3"; do
   done
 done
 python3 python/volume/ymsec_validate.py 2x2 27 | has "|flat_total=8|levels_compared=12|max_abs_diff=0|.*|result=PASS|"
-python3 python/volume/ymsec_validate.py 2x3 9 | has "|flat_total=8|ground_equal=1|.*|result=PASS|"
+python3 python/volume/ymsec_validate.py 2x3 9 | has "|flat_total=8|ground_equal=1|union_levels_in_window=10|matched_with_multiplicity=10|.*|result=PASS|"
+#     exhaustive commutation on every gauge orbit (2x2: 1,393; 2x3: 47,449)
+YMSEC_CHECK_SAMPLES=0 $B/ymsec 2 2 1 1 build/ymsec_check.matrix | has "|gauge_orbits=1393|.*|group_relations=PASS|commutes_with_H=PASS|structural_samples=1393|"
+YMSEC_CHECK_SAMPLES=0 $B/ymsec 2 3 1 1 build/ymsec_check.matrix | has "|gauge_orbits=47449|.*|group_relations=PASS|commutes_with_H=PASS|structural_samples=47449|"
+#     sector completeness by exact spectral moments (no eigensolver): Tr(H^n), n=1..4
+mkdir -p build/ymsec
+for s in "1 1" "1 -1" "-1 1" "-1 -1"; do set -- $s; $B/ymsec 2 2 $1 $2 build/ymsec/m_$1_$2.matrix > /dev/null; done
+for jb in 1 27; do
+  python3 python/volume/trace_moments.py data/matrices/sector_pp.matrix 1 $jb 4 build/ymsec/m_1_1.matrix build/ymsec/m_1_-1.matrix build/ymsec/m_-1_1.matrix build/ymsec/m_-1_-1.matrix | has "^TRACE_MOMENTS|.*|result=PASS|"
+done
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"

@@ -26,6 +26,7 @@
 //!   commutation with H: for every op g, the electric move targets of g.x are
 //!   exactly g applied to the move targets of x (as gauge orbits, with
 //!   multiplicity), and the magnetic energy of g.x equals that of x.
+//!   Sample size from YMSEC_CHECK_SAMPLES (0 = every gauge orbit; default 97).
 //!
 //! usage: ymsec LX LY SX SY OUT_MATRIX        (SX, SY in {1, -1})     json=0
 #![forbid(unsafe_code)]
@@ -107,11 +108,20 @@ fn main() {
     };
     let key_of = |raw: &[u8]| lat.canonical(&g, &lat.gauge_fix(&g, raw));
     // ---- structural checks on sample states (raw configurations) ----
-    let samples: Vec<usize> = (0..tree).filter(|&id| is_key[id]).step_by((tree / 97).max(1)).take(97).collect();
+    // sample size: YMSEC_CHECK_SAMPLES (0 = every gauge orbit, exhaustive); default 97
+    let want_samples: usize = std::env::var("YMSEC_CHECK_SAMPLES").ok().and_then(|v| v.parse().ok()).unwrap_or(97);
+    let all_keys: Vec<usize> = (0..tree).filter(|&id| is_key[id]).collect();
+    let samples: Vec<usize> = if want_samples == 0 || want_samples >= all_keys.len() {
+        all_keys
+    } else {
+        let step = (all_keys.len() / want_samples).max(1);
+        all_keys.into_iter().step_by(step).take(want_samples).collect()
+    };
+    let opx = |tx: usize, ty: usize, p: u8| Op { tx, ty, p };
+    let check = |keys: &[usize]| -> (bool, bool) {
     let mut rel_ok = true;
     let mut comm_ok = true;
-    let opx = |tx: usize, ty: usize, p: u8| Op { tx, ty, p };
-    for &key in &samples {
+    for &key in keys {
         let u = lat.representative(&lat.decode(key));
         let e = |op: Op, v: &[u8]| apply(&g, &lat, op, v);
         let sx = opx(0, 0, 1);
@@ -162,6 +172,33 @@ fn main() {
             }
         }
     }
+    (rel_ok, comm_ok)
+    };
+    // targeted samples: the flat vacua (commuting holonomy pairs on the seams)
+    // and the lowest-code gauge orbits (near-identity configurations)
+    let mut special: Vec<usize> = Vec::new();
+    for ha in 0..6u8 {
+        for hb in 0..6u8 {
+            if g.m(ha, hb) != g.m(hb, ha) {
+                continue;
+            }
+            let mut links = vec![0u8; nl];
+            for y in 0..ly {
+                links[lat.site(lx - 1, y)] = ha;
+            }
+            for x in 0..lx {
+                links[lat.n + lat.site(x, ly - 1)] = hb;
+            }
+            special.push(key_of(&links));
+        }
+    }
+    special.extend((0..tree).filter(|&id| is_key[id]).take(100));
+    special.sort_unstable();
+    special.dedup();
+    let (r1, c1) = check(&samples);
+    let (r2, c2) = check(&special);
+    let rel_ok = r1 && r2;
+    let comm_ok = c1 && c2;
     if !(rel_ok && comm_ok) {
         println!("YMSEC|error=structural_check_failed|group_relations={}|commutes_with_H={}|json=0", u8::from(rel_ok), u8::from(comm_ok));
         std::process::exit(2);
@@ -220,6 +257,17 @@ fn main() {
         wts.push(i64::try_from(img.len()).unwrap_or(0) * lat.weight(&g, &q));
     }
     let n = reps.len();
+    // structural check on representatives with a nontrivial stabiliser
+    let stab_keys: Vec<usize> = reps.iter().zip(wts.iter()).filter(|&(&k, &w)| {
+        let gw = lat.weight(&g, &lat.decode(k));
+        w / gw.max(1) < i64::try_from(ops.len()).unwrap_or(0)
+    }).map(|(&k, _)| k).take(200).collect();
+    let (r3, c3) = check(&stab_keys);
+    if !(r3 && c3) {
+        println!("YMSEC|error=structural_check_failed_on_stabiliser_states|json=0");
+        std::process::exit(2);
+    }
+    let special_n = special.len() + stab_keys.len();
     // sector electric rows (diagonal 3*nl, -chi per move into the sector)
     let mut rows: Vec<BTreeMap<u32, i64>> = Vec::with_capacity(n);
     for (i, &key) in reps.iter().enumerate() {
@@ -270,7 +318,7 @@ fn main() {
     }
     ok &= out.flush().is_ok();
     println!(
-        "YMSEC|L={lx}x{ly}|sector=Sx{}Sy{}|group={}|gauge_orbits={gauge_orbits}|sector_states={n}|flat_states={flat_states}|nnz={nnz}|group_relations=PASS|commutes_with_H=PASS|structural_samples={}|w_self_adjoint={}|write={}|ms={}|json=0",
+        "YMSEC|L={lx}x{ly}|sector=Sx{}Sy{}|group={}|gauge_orbits={gauge_orbits}|sector_states={n}|flat_states={flat_states}|nnz={nnz}|group_relations=PASS|commutes_with_H=PASS|structural_samples={}|targeted_samples={special_n}|w_self_adjoint={}|write={}|ms={}|json=0",
         if sxc > 0 { "+" } else { "-" },
         if syc > 0 { "+" } else { "-" },
         ops.len(),
