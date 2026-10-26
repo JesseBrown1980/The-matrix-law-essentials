@@ -1,0 +1,8 @@
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+FLATCOMP|matrix=s33_1_1.matrix|n=288645|flat_states=7|flat_electric_diag=[54,54,54,54,54,54,54]|flat_diag_max=54|flat_flat_couplings=0|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+FLATCOMP|matrix=s33_-1_-1.matrix|n=279386|flat_states=1|flat_electric_diag=[54]|flat_diag_max=54|flat_flat_couplings=0|json=0
+MATRIX_SHA|6c53ff4ac123b610f0d509a228c893be8bf0a088315180b4c381df98dc6d301b  build/ymsec/s33_1_-1.matrix
+FLATCOMP|matrix=s33_1_-1.matrix|n=277090|flat_states=0|flat_electric_diag=[]|flat_diag_max=0|flat_flat_couplings=0|json=0
+MATRIX_SHA|d8e07b51b835a8499832fc21527cc1b6082cf017760316d2612efd0f94675ddd  build/ymsec/s33_-1_1.matrix
+FLATCOMP|matrix=s33_-1_1.matrix|n=277090|flat_states=0|flat_electric_diag=[]|flat_diag_max=0|flat_flat_couplings=0|json=0

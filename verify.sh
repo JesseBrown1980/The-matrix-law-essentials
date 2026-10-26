@@ -190,15 +190,25 @@ python3 python/volume/shell_gap_cert.py data/volume/ym3x3/YM3X3-SECTORS-GITRAM.h
 python3 python/volume/shell_gap_cert.py data/volume/ym3x3/YM3X3-SECTORS-GITRAM.hbp 27 data/volume/ym3x3/shellschur_r27.hbp data/volume/ym3x3/shellschur_r27_cluster.hbp | has "^SHELL_CLUSTER_CERT|.*|cluster_width_E8_minus_E1_in=\[11609,11692\]/1000000|.*|first_splitting_E2_minus_E1_in=\[1967,2059\]/1000000|result=PASS|"
 #     five-coupling ladder (sealed GitRAM run 40293785827): gap + cluster certificates
 #     at r = 9, 15, 27, 45, 81 rebuilt from receipts, then the monotone-cell
-#     continuation (E_k(r) non-decreasing since M >= 0) over r in [9, 81]
+#     continuation (E_k(r) non-decreasing since M >= 0) over r in [9, 243], plus
+#     the local r = 243 point (r243_cluster.hbp, shellschur_r243.hbp)
 (cd data/volume/ym3x3 && sha256sum -c --quiet YM3X3-SHELLSCHUR-LADDER-GITRAM.sha256)
 D=data/volume/ym3x3; SEC=$D/YM3X3-SECTORS-GITRAM.hbp; LAD=$D/YM3X3-SHELLSCHUR-LADDER-GITRAM.hbp
 { python3 python/volume/shell_gap_cert.py $SEC 9 $LAD $D/YM3X3-SHELLSCHUR-R9-SUMMARY.hbp
   python3 python/volume/shell_gap_cert.py $SEC 27 $D/shellschur_r27.hbp $D/shellschur_r27_cluster.hbp
-  for r in 15 45 81; do python3 python/volume/shell_gap_cert.py $SEC $r $LAD; done; } > build/ym3x3_certs.hbp
-[ "$(grep -c '^SHELL_GAP_CERT|.*|result=PASS|' build/ym3x3_certs.hbp)" = 5 ]
+  for r in 15 45 81; do python3 python/volume/shell_gap_cert.py $SEC $r $LAD; done
+  python3 python/volume/shell_gap_cert.py $D/r243_cluster.hbp 243 $D/shellschur_r243.hbp; } > build/ym3x3_certs.hbp
+[ "$(grep -c '^SHELL_GAP_CERT|.*|result=PASS|' build/ym3x3_certs.hbp)" = 6 ]
+has "^SHELL_GAP_CERT|L=3x3|r=243|.*|gap_E9_minus_E8_in=\[728911221,728913186\]/1000000|" build/ym3x3_certs.hbp
 [ "$(grep -c '^SHELL_CLUSTER_CERT|.*|N(ts)=1|.*|result=PASS|' build/ym3x3_certs.hbp)" = 5 ]
-python3 python/volume/monotone_cells.py build/ym3x3_certs.hbp | has "^MONOTONE_CELLS|L=3x3|points=9,15,27,45,81|r_range=\[9,81\]|cells=4|min_gap_lower_bound=23357514/1000000|result=PASS|"
+#     ray r >= 243: E8(r) <= 54 for every r (flatcomp: 7+1 flat states, M = 0,
+#     no flat-flat coupling, electric diagonal 54), matrices pinned to the GitRAM shas
+F=$D/flatcomp_3x3.hbp
+has "^FLATCOMP|matrix=s33_1_1.matrix|.*|flat_states=7|flat_electric_diag=\[54,54,54,54,54,54,54\]|flat_diag_max=54|flat_flat_couplings=0|" $F
+has "^FLATCOMP|matrix=s33_-1_-1.matrix|.*|flat_states=1|flat_electric_diag=\[54\]|flat_diag_max=54|flat_flat_couplings=0|" $F
+[ "$(grep -c '|flat_states=0|.*|flat_flat_couplings=0|' $F)" = 2 ]
+for h in $(grep '^MATRIX_SHA|' $F | cut -d'|' -f2 | cut -d' ' -f1); do has "^MATRIX_SHA|$h " $LAD; done
+python3 python/volume/monotone_cells.py --ray 54000000 build/ym3x3_certs.hbp | has "^MONOTONE_CELLS|L=3x3|points=9,15,27,45,81,243|r_range=\[9,infinity\]|cells=5|ray=1|min_gap_lower_bound=23357514/1000000|result=PASS|"
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"

@@ -22,7 +22,7 @@ Logic (every step an exact integer comparison):
     t0 with N(t0) = 0      =>  E1 >= t0;   E1 <= min hi of the cluster.
     ts with N(ts) = 1      =>  E2 >= ts;   E1 < ts, and E2 <= min hi over
                                intervals with lo >= ts.
-      cluster width  E8 - E1 in [max_lo - min_hi, t1 - t0]
+      cluster width  E8 - E1 in [max(0, max_lo - min_hi), t1 - t0]
       first splitting E2 - E1 in [ts - E1_hi, E2_hi - t0]
 usage: shell_gap_cert.py SEALED_HBP R SHELL_LOG...        json=0
 """
@@ -89,7 +89,7 @@ def main():
             print("SHELL_CLUSTER_CERT|r=%d|result=FAIL|reason=t0_above_an_interval|json=0" % r)
             sys.exit(2)
         out = "SHELL_CLUSTER_CERT|L=3x3|r=%d|N(t0)=0|t0=%d/1000000|E1_in=[%d,%d]/1000000|cluster_width_E8_minus_E1_in=[%d,%d]/1000000" % (
-            r, t0, t0, e1_hi, e8_lo - e1_hi, t1 - t0)
+            r, t0, t0, e1_hi, max(0, e8_lo - e1_hi), t1 - t0)
         if one:
             ts = max(one)
             if not (e1_hi < ts):
@@ -98,6 +98,8 @@ def main():
             e2_hi = min(iv[1] for iv in ivs if iv[0] >= ts)
             out += "|N(ts)=1|ts=%d/1000000|sector_counts_ts=%s|E2_in=[%d,%d]/1000000|first_splitting_E2_minus_E1_in=[%d,%d]/1000000" % (
                 ts, detail(ts), ts, e2_hi, ts - e1_hi, e2_hi - t0)
+        else:
+            out += "|first_splitting=INCONCLUSIVE(no_threshold_with_N=1;intervals_overlap)"
         print(out + "|result=PASS|json=0")
 
 
