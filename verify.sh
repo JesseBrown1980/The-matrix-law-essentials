@@ -157,6 +157,25 @@ for s in "1 1" "1 -1" "-1 1" "-1 -1"; do set -- $s; $B/ymsec 2 2 $1 $2 build/yms
 for jb in 1 27; do
   python3 python/volume/trace_moments.py data/matrices/sector_pp.matrix 1 $jb 4 build/ymsec/m_1_1.matrix build/ymsec/m_1_-1.matrix build/ymsec/m_-1_1.matrix build/ymsec/m_-1_-1.matrix | has "^TRACE_MOMENTS|.*|result=PASS|"
 done
+#     sturmfast (O(log n) minimum-degree pivot search, same interval arithmetic)
+#     must reproduce sturmrs counts exactly: four 2x2 sectors x three thresholds
+negf() { { "$B/sturmfast" "$@" || true; } | tr '|' '\n' | grep '^negative=' | cut -d= -f2; }
+for s in "1 1" "1 -1" "-1 1" "-1 -1"; do set -- $s
+  for t in 13240 20000 60000; do
+    a=$(neg build/ymsec/m_$1_$2.matrix 1 1 $t 30); b=$(negf build/ymsec/m_$1_$2.matrix 1 1 $t 30)
+    [ -n "$a" ] && [ "$a" = "$b" ] || { echo "sturmfast mismatch $1,$2 t=$t: $a vs $b"; exit 1; }
+  done
+done
+#     shellschur (magnetic-shell Schur + Haynsworth inertia) must reproduce sturmrs
+#     counts exactly: full 2x2 at JB=27, and four 2x2 sectors at JB=9 and 27
+negs() { { "$B/shellschur" "$@" || true; } | tr '|' '\n' | grep '^negative=' | cut -d= -f2; }
+[ "$(negs data/matrices/torus2x2.matrix 1 27 64000)" = "$(neg data/matrices/torus2x2.matrix 1 27 64000 30)" ] || { echo "shellschur mismatch 2x2 JB=27"; exit 1; }
+for s in "1 1" "1 -1" "-1 1" "-1 -1"; do set -- $s
+  for jb in 9 27; do
+    a=$(neg build/ymsec/m_$1_$2.matrix 1 $jb 64000 30); b=$(negs build/ymsec/m_$1_$2.matrix 1 $jb 64000 -1 15 10)
+    [ -n "$a" ] && [ "$a" = "$b" ] || { echo "shellschur mismatch $1,$2 JB=$jb: $a vs $b"; exit 1; }
+  done
+done
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"
