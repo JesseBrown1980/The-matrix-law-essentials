@@ -1,0 +1,135 @@
+# GitRAM lane: zero-momentum C2v sectors of the FULL 3x3 S3 Yang-Mills operator
+# (10,097,891 gauge orbits; no vacuum-ball truncation). Template: JesseBrown1980/GitRAM.
+# 30 stateless cells: 2 validation cells (2x2 / 2x3 reconstruction against complete
+# operators) + 28 spectroscopy cells (4 sectors x 7 couplings, 12 levels each with exact
+# residual intervals). All-or-nothing fan-in: all cells present, checksums verified, and
+# the 3x3 flat-vacuum decomposition must be exactly 7/0/0/1 across the four sectors.
+# Levels carry residual intervals; their ordering is not certified in this lane.
+name: GitRAM YM 3x3 zero-momentum sectors (30 cells)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ym-3x3-zero-momentum-sectors]
+    paths: ['.github/workflows/gitram-ym-3x3-sectors.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gitram-ym3x3-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cell:
+    name: Cell ${{ matrix.id }} ${{ matrix.kind }} ${{ matrix.arg }} (${{ matrix.sx }},${{ matrix.sy }}) r=${{ matrix.r }}
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        include:
+          - {id: "01", kind: validate, arg: "2x2:27", sx: 0, sy: 0, r: 0}
+          - {id: "02", kind: validate, arg: "2x3:9", sx: 0, sy: 0, r: 0}
+          - {id: "03", kind: sector3x3, arg: "3x3", sx: 1, sy: 1, r: 3}
+          - {id: "04", kind: sector3x3, arg: "3x3", sx: 1, sy: 1, r: 5}
+          - {id: "05", kind: sector3x3, arg: "3x3", sx: 1, sy: 1, r: 9}
+          - {id: "06", kind: sector3x3, arg: "3x3", sx: 1, sy: 1, r: 15}
+          - {id: "07", kind: sector3x3, arg: "3x3", sx: 1, sy: 1, r: 27}
+          - {id: "08", kind: sector3x3, arg: "3x3", sx: 1, sy: 1, r: 45}
+          - {id: "09", kind: sector3x3, arg: "3x3", sx: 1, sy: 1, r: 81}
+          - {id: "10", kind: sector3x3, arg: "3x3", sx: 1, sy: -1, r: 3}
+          - {id: "11", kind: sector3x3, arg: "3x3", sx: 1, sy: -1, r: 5}
+          - {id: "12", kind: sector3x3, arg: "3x3", sx: 1, sy: -1, r: 9}
+          - {id: "13", kind: sector3x3, arg: "3x3", sx: 1, sy: -1, r: 15}
+          - {id: "14", kind: sector3x3, arg: "3x3", sx: 1, sy: -1, r: 27}
+          - {id: "15", kind: sector3x3, arg: "3x3", sx: 1, sy: -1, r: 45}
+          - {id: "16", kind: sector3x3, arg: "3x3", sx: 1, sy: -1, r: 81}
+          - {id: "17", kind: sector3x3, arg: "3x3", sx: -1, sy: 1, r: 3}
+          - {id: "18", kind: sector3x3, arg: "3x3", sx: -1, sy: 1, r: 5}
+          - {id: "19", kind: sector3x3, arg: "3x3", sx: -1, sy: 1, r: 9}
+          - {id: "20", kind: sector3x3, arg: "3x3", sx: -1, sy: 1, r: 15}
+          - {id: "21", kind: sector3x3, arg: "3x3", sx: -1, sy: 1, r: 27}
+          - {id: "22", kind: sector3x3, arg: "3x3", sx: -1, sy: 1, r: 45}
+          - {id: "23", kind: sector3x3, arg: "3x3", sx: -1, sy: 1, r: 81}
+          - {id: "24", kind: sector3x3, arg: "3x3", sx: -1, sy: -1, r: 3}
+          - {id: "25", kind: sector3x3, arg: "3x3", sx: -1, sy: -1, r: 5}
+          - {id: "26", kind: sector3x3, arg: "3x3", sx: -1, sy: -1, r: 9}
+          - {id: "27", kind: sector3x3, arg: "3x3", sx: -1, sy: -1, r: 15}
+          - {id: "28", kind: sector3x3, arg: "3x3", sx: -1, sy: -1, r: 27}
+          - {id: "29", kind: sector3x3, arg: "3x3", sx: -1, sy: -1, r: 45}
+          - {id: "30", kind: sector3x3, arg: "3x3", sx: -1, sy: -1, r: 81}
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain 1.81
+        run: |
+          rustup toolchain install 1.81.0 --profile minimal
+          rustup override set 1.81.0
+      - name: Build tools from in-repo source
+        run: cargo build --release -q
+      - name: One unit of work, gated on its own PASS markers
+        run: |
+          set -euo pipefail
+          mkdir -p out build/ymsec
+          o=out/cell-${{ matrix.id }}.hbp
+          if [ "${{ matrix.kind }}" = validate ]; then
+            lat="${{ matrix.arg }}"; python3 python/volume/ymsec_validate.py ${lat%%:*} ${lat##*:} | tee $o
+            grep -q '|result=PASS|' $o
+          else
+            m=build/ymsec/s33.matrix
+            target/release/ymsec 3 3 ${{ matrix.sx }} ${{ matrix.sy }} $m | sed "s/^YMSEC/YM3X3_BUILD_r${{ matrix.r }}/" | tee $o
+            grep -q '|group_relations=PASS|commutes_with_H=PASS|' $o
+            grep -q '|w_self_adjoint=PASS|' $o
+            sha256sum $m | sed 's/^/MATRIX_SHA|/' >> $o
+            target/release/cluster $m 1 ${{ matrix.r }} 12 4 | sed "s/^CLUSTER/YM3X3_S${{ matrix.sx }}_${{ matrix.sy }}_r${{ matrix.r }}_CLUSTER/" | tee -a $o
+            grep -q '_CLUSTER|.*|converged=1|' $o
+          fi
+          echo "GITRAM_CELL|id=${{ matrix.id }}|kind=${{ matrix.kind }}|sx=${{ matrix.sx }}|sy=${{ matrix.sy }}|r=${{ matrix.r }}|json=0" >> $o
+          (cd out && sha256sum cell-${{ matrix.id }}.hbp > cell-${{ matrix.id }}.sha256)
+          echo GITRAM_SHARD_PASS
+      - name: Upload the self-contained cell checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cell-${{ matrix.id }}
+          retention-days: 30
+          if-no-files-found: error
+          path: out/cell-*
+
+  fan-in:
+    name: Verify ALL 30 checkpoints, vacuum decomposition 7/0/0/1, seal
+    needs: cell
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cell-*
+          path: fan-in
+          merge-multiple: true
+      - name: Require ALL checkpoints, verify checksums and the vacuum decomposition, seal
+        run: |
+          set -euo pipefail
+          cd fan-in
+          count="$(ls cell-*.hbp | wc -l)"
+          echo "returned=$count expected=30"
+          for f in cell-*.sha256; do sha256sum -c "$f"; done
+          cat cell-*.hbp > YM3X3-SECTORS-GITRAM.hbp
+          # flat-vacuum decomposition from the r=27 build line of each sector (identical for every r)
+          f() { grep "^YM3X3_BUILD_r27|.*|sector=$1|" YM3X3-SECTORS-GITRAM.hbp | tr '|' '\n' | grep '^flat_states=' | cut -d= -f2; }
+          d="$(f 'Sx+Sy+')/$(f 'Sx+Sy-')/$(f 'Sx-Sy+')/$(f 'Sx-Sy-')"
+          echo "flat decomposition: $d"
+          if [ "$count" -eq 30 ] && [ "$d" = "7/0/0/1" ]; then st=PASS; else st=FAIL; fi
+          echo "GITRAM_SEAL|cells=$count|expected=30|flat_decomposition=$d|predicted=7/0/0/1|status=$st|json=0" >> YM3X3-SECTORS-GITRAM.hbp
+          sha256sum YM3X3-SECTORS-GITRAM.hbp > YM3X3-SECTORS-GITRAM.sha256
+          test "$st" = PASS
+      - name: Upload the sealed receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sealed-ym3x3-sectors
+          retention-days: 30
+          if-no-files-found: error
+          path: fan-in/YM3X3-SECTORS-GITRAM.*

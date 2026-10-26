@@ -134,6 +134,81 @@ $B/cloudb 6 harmonic build/rb_h6.matrix > /dev/null
 iv=$($B/cluster build/rb_h6.matrix 9 1 8 4 | grep "^CLUSTER_LEVEL|k=1|" | tr '|' '\n' | grep '^interval=' | cut -d= -f2 | tr -d '[]' | cut -d/ -f1)
 lo=$(( ${iv%,*} * 9 )); hi=$(( ${iv#*,} * 9 + 9 )); e1=$(fld "$secP" E_lowest)
 test "$e1" -ge "$lo" && test "$e1" -le "$hi"
+# 5k. Zero-momentum C2v sectors of the FULL operator (crates/torusl/src/bin/ymsec.rs):
+#     group relations (incl. semidirect), commutation with H, exact W-self-adjointness,
+#     predicted flat-vacuum decomposition 7/0/0/1 per sector (from the reflection
+#     action on commuting holonomy pairs), and spectral reconstruction:
+#     2x2 union == PR #14 zero-momentum sector, 12 levels exactly; 2x3 union contains
+#     the full operator's zero-momentum levels and its ground state exactly.
+for L in "2 2" "2 3"; do
+  i=0; for s in "1 1" "1 -1" "-1 1" "-1 -1"; do
+    set -- $L $s; want=$(echo "7 0 0 1" | cut -d' ' -f$((i+1))); i=$((i+1))
+    $B/ymsec $1 $2 $3 $4 build/ymsec_check.matrix | has "|flat_states=$want|.*|group_relations=PASS|commutes_with_H=PASS|.*|w_self_adjoint=PASS|"
+  done
+done
+python3 python/volume/ymsec_validate.py 2x2 27 | has "|flat_total=8|levels_compared=12|max_abs_diff=0|.*|result=PASS|"
+python3 python/volume/ymsec_validate.py 2x3 9 | has "|flat_total=8|ground_equal=1|union_levels_in_window=10|matched_with_multiplicity=10|.*|result=PASS|"
+#     exhaustive commutation on every gauge orbit (2x2: 1,393; 2x3: 47,449)
+YMSEC_CHECK_SAMPLES=0 $B/ymsec 2 2 1 1 build/ymsec_check.matrix | has "|gauge_orbits=1393|.*|group_relations=PASS|commutes_with_H=PASS|structural_samples=1393|"
+YMSEC_CHECK_SAMPLES=0 $B/ymsec 2 3 1 1 build/ymsec_check.matrix | has "|gauge_orbits=47449|.*|group_relations=PASS|commutes_with_H=PASS|structural_samples=47449|"
+#     sector completeness by exact spectral moments (no eigensolver): Tr(H^n), n=1..4
+mkdir -p build/ymsec
+for s in "1 1" "1 -1" "-1 1" "-1 -1"; do set -- $s; $B/ymsec 2 2 $1 $2 build/ymsec/m_$1_$2.matrix > /dev/null; done
+for jb in 1 27; do
+  python3 python/volume/trace_moments.py data/matrices/sector_pp.matrix 1 $jb 4 build/ymsec/m_1_1.matrix build/ymsec/m_1_-1.matrix build/ymsec/m_-1_1.matrix build/ymsec/m_-1_-1.matrix | has "^TRACE_MOMENTS|.*|result=PASS|"
+done
+#     sturmfast (O(log n) minimum-degree pivot search, same interval arithmetic)
+#     must reproduce sturmrs counts exactly: four 2x2 sectors x three thresholds
+negf() { { "$B/sturmfast" "$@" || true; } | tr '|' '\n' | grep '^negative=' | cut -d= -f2; }
+for s in "1 1" "1 -1" "-1 1" "-1 -1"; do set -- $s
+  for t in 13240 20000 60000; do
+    a=$(neg build/ymsec/m_$1_$2.matrix 1 1 $t 30); b=$(negf build/ymsec/m_$1_$2.matrix 1 1 $t 30)
+    [ -n "$a" ] && [ "$a" = "$b" ] || { echo "sturmfast mismatch $1,$2 t=$t: $a vs $b"; exit 1; }
+  done
+done
+#     shellschur (magnetic-shell Schur + Haynsworth inertia) must reproduce sturmrs
+#     counts exactly: full 2x2 at JB=27, and four 2x2 sectors at JB=9 and 27
+negs() { { "$B/shellschur" "$@" || true; } | tr '|' '\n' | grep '^negative=' | cut -d= -f2; }
+[ "$(negs data/matrices/torus2x2.matrix 1 27 64000)" = "$(neg data/matrices/torus2x2.matrix 1 27 64000 30)" ] || { echo "shellschur mismatch 2x2 JB=27"; exit 1; }
+for s in "1 1" "1 -1" "-1 1" "-1 -1"; do set -- $s
+  for jb in 9 27; do
+    a=$(neg build/ymsec/m_$1_$2.matrix 1 $jb 64000 30); b=$(negs build/ymsec/m_$1_$2.matrix 1 $jb 64000 -1 15 10)
+    [ -n "$a" ] && [ "$a" = "$b" ] || { echo "shellschur mismatch $1,$2 JB=$jb: $a vs $b"; exit 1; }
+  done
+done
+#     3x3 band-gap certificate at r=27 from committed receipts: sealed GitRAM
+#     cluster intervals + shellschur counts N(t1)=N(tB)=8 over the four sectors
+(cd data/volume/ym3x3 && sha256sum -c --quiet YM3X3-SECTORS-GITRAM.sha256)
+python3 python/volume/shell_gap_cert.py data/volume/ym3x3/YM3X3-SECTORS-GITRAM.hbp 27 data/volume/ym3x3/shellschur_r27.hbp | has "|r=27|N(t1)=8|N(tB)=8|.*|gap_E9_minus_E8_in=\[80161963,80163325\]/1000000|.*|result=PASS|"
+#     3x3 band-gap certificate at r=9: sealed GitRAM run 40272177676 (60 cells of
+#     shell-Schur columns, merged per sector at fan-in), re-checked from the receipt
+(cd data/volume/ym3x3 && sha256sum -c --quiet YM3X3-SHELLSCHUR-R9-SUMMARY.sha256 \
+  && [ "$(xz -dc YM3X3-SHELLSCHUR-R9-GITRAM.hbp.xz | sha256sum | cut -d' ' -f1)" = "$(cut -d' ' -f1 YM3X3-SHELLSCHUR-R9-GITRAM.sha256)" ])
+python3 python/volume/shell_gap_cert.py data/volume/ym3x3/YM3X3-SECTORS-GITRAM.hbp 9 data/volume/ym3x3/YM3X3-SHELLSCHUR-R9-SUMMARY.hbp | has "|r=9|N(t1)=8|N(tB)=8|.*|gap_E9_minus_E8_in=\\[23938578,23939630\\]/1000000|.*|result=PASS|"
+#     3x3 vacuum-cluster certificate at r=27: N(t0)=0 and N(ts)=1 give the cluster
+#     width and the first splitting E2-E1 (third-order law: 1994 micro-units)
+python3 python/volume/shell_gap_cert.py data/volume/ym3x3/YM3X3-SECTORS-GITRAM.hbp 27 data/volume/ym3x3/shellschur_r27.hbp data/volume/ym3x3/shellschur_r27_cluster.hbp | has "^SHELL_CLUSTER_CERT|.*|cluster_width_E8_minus_E1_in=\[11609,11692\]/1000000|.*|first_splitting_E2_minus_E1_in=\[1967,2059\]/1000000|result=PASS|"
+#     five-coupling ladder (sealed GitRAM run 40293785827): gap + cluster certificates
+#     at r = 9, 15, 27, 45, 81 rebuilt from receipts, then the monotone-cell
+#     continuation (E_k(r) non-decreasing since M >= 0) over r in [9, 243], plus
+#     the local r = 243 point (r243_cluster.hbp, shellschur_r243.hbp)
+(cd data/volume/ym3x3 && sha256sum -c --quiet YM3X3-SHELLSCHUR-LADDER-GITRAM.sha256)
+D=data/volume/ym3x3; SEC=$D/YM3X3-SECTORS-GITRAM.hbp; LAD=$D/YM3X3-SHELLSCHUR-LADDER-GITRAM.hbp
+{ python3 python/volume/shell_gap_cert.py $SEC 9 $LAD $D/YM3X3-SHELLSCHUR-R9-SUMMARY.hbp
+  python3 python/volume/shell_gap_cert.py $SEC 27 $D/shellschur_r27.hbp $D/shellschur_r27_cluster.hbp
+  for r in 15 45 81; do python3 python/volume/shell_gap_cert.py $SEC $r $LAD; done
+  python3 python/volume/shell_gap_cert.py $D/r243_cluster.hbp 243 $D/shellschur_r243.hbp; } > build/ym3x3_certs.hbp
+[ "$(grep -c '^SHELL_GAP_CERT|.*|result=PASS|' build/ym3x3_certs.hbp)" = 6 ]
+has "^SHELL_GAP_CERT|L=3x3|r=243|.*|gap_E9_minus_E8_in=\[728911221,728913186\]/1000000|" build/ym3x3_certs.hbp
+[ "$(grep -c '^SHELL_CLUSTER_CERT|.*|N(ts)=1|.*|result=PASS|' build/ym3x3_certs.hbp)" = 5 ]
+#     ray r >= 243: E8(r) <= 54 for every r (flatcomp: 7+1 flat states, M = 0,
+#     no flat-flat coupling, electric diagonal 54), matrices pinned to the GitRAM shas
+F=$D/flatcomp_3x3.hbp
+has "^FLATCOMP|matrix=s33_1_1.matrix|.*|flat_states=7|flat_electric_diag=\[54,54,54,54,54,54,54\]|flat_diag_max=54|flat_flat_couplings=0|" $F
+has "^FLATCOMP|matrix=s33_-1_-1.matrix|.*|flat_states=1|flat_electric_diag=\[54\]|flat_diag_max=54|flat_flat_couplings=0|" $F
+[ "$(grep -c '|flat_states=0|.*|flat_flat_couplings=0|' $F)" = 2 ]
+for h in $(grep '^MATRIX_SHA|' $F | cut -d'|' -f2 | cut -d' ' -f1); do has "^MATRIX_SHA|$h " $LAD; done
+python3 python/volume/monotone_cells.py --ray 54000000 build/ym3x3_certs.hbp | has "^MONOTONE_CELLS|L=3x3|points=9,15,27,45,81,243|r_range=\[9,infinity\]|cells=5|ray=1|min_gap_lower_bound=23357514/1000000|result=PASS|"
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"

@@ -1,0 +1,131 @@
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=22180|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r9_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=9000|t_milli=52420786|shell_max=-1|core=62|core_edges=108|H=288583|H_min_margin=56851704|H_max_offdiag_over_diag_permille_ceil=972|F=10^13|gs_sweeps_max=24|y_width_max=6|negative=0|positive_core=62|positive_H=288583|eliminated=62|ambiguous=0|result=PASS|ms=500978|json=0
+GITRAM_CELL|id=01|r=9|sx=1|sy=1|t=52420786|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=32002|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r9_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=9000|t_milli=52440620|shell_max=-1|core=62|core_edges=108|H=288583|H_min_margin=56137680|H_max_offdiag_over_diag_permille_ceil=972|F=10^13|gs_sweeps_max=24|y_width_max=6|negative=1|positive_core=61|positive_H=288583|eliminated=62|ambiguous=0|result=PASS|ms=440461|json=0
+GITRAM_CELL|id=02|r=9|sx=1|sy=1|t=52440620|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31546|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r9_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=9000|t_milli=52440620|shell_max=-1|core=29|core_edges=42|H=279357|H_min_margin=56137680|H_max_offdiag_over_diag_permille_ceil=972|F=10^13|gs_sweeps_max=22|y_width_max=9|negative=0|positive_core=29|positive_H=279357|eliminated=29|ambiguous=0|result=PASS|ms=239449|json=0
+GITRAM_CELL|id=03|r=9|sx=-1|sy=-1|t=52440620|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31539|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r15_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=15000|t_milli=53075973|shell_max=-1|core=10|core_edges=0|H=288635|H_min_margin=213948729|H_max_offdiag_over_diag_permille_ceil=887|F=10^13|gs_sweeps_max=17|y_width_max=9|negative=0|positive_core=10|positive_H=288635|eliminated=10|ambiguous=0|result=PASS|ms=71241|json=0
+GITRAM_CELL|id=04|r=15|sx=1|sy=1|t=53075973|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=27440|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r15_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=15000|t_milli=53082647|shell_max=-1|core=10|core_edges=0|H=288635|H_min_margin=213768531|H_max_offdiag_over_diag_permille_ceil=887|F=10^13|gs_sweeps_max=17|y_width_max=9|negative=1|positive_core=9|positive_H=288635|eliminated=10|ambiguous=0|result=PASS|ms=72310|json=0
+GITRAM_CELL|id=05|r=15|sx=1|sy=1|t=53082647|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31658|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r15_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=15000|t_milli=53082647|shell_max=-1|core=1|core_edges=0|H=279385|H_min_margin=747074124|H_max_offdiag_over_diag_permille_ceil=887|F=10^13|gs_sweeps_max=15|y_width_max=8|negative=0|positive_core=1|positive_H=279385|eliminated=1|ambiguous=0|result=PASS|ms=6227|json=0
+GITRAM_CELL|id=06|r=15|sx=-1|sy=-1|t=53082647|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=20092|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r15_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=15000|t_milli=53114486|shell_max=-1|core=10|core_edges=0|H=288635|H_min_margin=212908878|H_max_offdiag_over_diag_permille_ceil=887|F=10^12|gs_sweeps_max=14|y_width_max=861|negative=7|positive_core=3|positive_H=288635|eliminated=10|ambiguous=0|result=PASS|ms=33620|json=0
+GITRAM_CELL|id=07|r=15|sx=1|sy=1|t=53114486|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31643|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r15_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=15000|t_milli=53114486|shell_max=-1|core=1|core_edges=0|H=279385|H_min_margin=743635512|H_max_offdiag_over_diag_permille_ceil=887|F=10^12|gs_sweeps_max=12|y_width_max=512|negative=1|positive_core=0|positive_H=279385|eliminated=1|ambiguous=0|result=PASS|ms=5783|json=0
+GITRAM_CELL|id=08|r=15|sx=-1|sy=-1|t=53114486|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=32272|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r15_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=15000|t_milli=96486000|shell_max=-1|core=101|core_edges=144|H=288544|H_min_margin=617028000|H_max_offdiag_over_diag_permille_ceil=864|F=10^12|gs_sweeps_max=15|y_width_max=737|negative=7|positive_core=94|positive_H=288544|eliminated=101|ambiguous=0|result=PASS|ms=629017|json=0
+GITRAM_CELL|id=09|r=15|sx=1|sy=1|t=96486000|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31932|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r15_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=15000|t_milli=96486000|shell_max=-1|core=49|core_edges=46|H=279337|H_min_margin=198504000|H_max_offdiag_over_diag_permille_ceil=884|F=10^12|gs_sweeps_max=15|y_width_max=180|negative=1|positive_core=48|positive_H=279337|eliminated=49|ambiguous=0|result=PASS|ms=255230|json=0
+GITRAM_CELL|id=10|r=15|sx=-1|sy=-1|t=96486000|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy-|group=36|gauge_orbits=10097891|sector_states=277090|flat_states=0|nnz=14793166|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31578|json=0
+MATRIX_SHA|6c53ff4ac123b610f0d509a228c893be8bf0a088315180b4c381df98dc6d301b  build/ymsec/s33_1_-1.matrix
+r15_S1_-1|SHELL_SCHUR|matrix=s33_1_-1.matrix|n=277090|JE=1000|JB=15000|t_milli=96486000|shell_max=-1|core=0|core_edges=0|H=277090|H_min_margin=1135512000|H_max_offdiag_over_diag_permille_ceil=864|F=10^12|gs_sweeps_max=0|y_width_max=0|negative=0|positive_core=0|positive_H=277090|eliminated=0|ambiguous=0|result=PASS|ms=1477|json=0
+GITRAM_CELL|id=11|r=15|sx=1|sy=-1|t=96486000|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy+|group=36|gauge_orbits=10097891|sector_states=277090|flat_states=0|nnz=14793166|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=28954|json=0
+MATRIX_SHA|d8e07b51b835a8499832fc21527cc1b6082cf017760316d2612efd0f94675ddd  build/ymsec/s33_-1_1.matrix
+r15_S-1_1|SHELL_SCHUR|matrix=s33_-1_1.matrix|n=277090|JE=1000|JB=15000|t_milli=96486000|shell_max=-1|core=0|core_edges=0|H=277090|H_min_margin=1135512000|H_max_offdiag_over_diag_permille_ceil=864|F=10^12|gs_sweeps_max=0|y_width_max=0|negative=0|positive_core=0|positive_H=277090|eliminated=0|ambiguous=0|result=PASS|ms=1360|json=0
+GITRAM_CELL|id=12|r=15|sx=-1|sy=1|t=96486000|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31849|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r45_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=45000|t_milli=53697698|shell_max=-1|core=7|core_edges=0|H=288638|H_min_margin=2322604604|H_max_offdiag_over_diag_permille_ceil=400|F=10^13|gs_sweeps_max=10|y_width_max=6|negative=0|positive_core=7|positive_H=288638|eliminated=7|ambiguous=0|result=PASS|ms=24954|json=0
+GITRAM_CELL|id=13|r=45|sx=1|sy=1|t=53697698|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=20341|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r45_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=45000|t_milli=53698418|shell_max=-1|core=7|core_edges=0|H=288638|H_min_margin=2322603164|H_max_offdiag_over_diag_permille_ceil=400|F=10^13|gs_sweeps_max=10|y_width_max=6|negative=1|positive_core=6|positive_H=288638|eliminated=7|ambiguous=0|result=PASS|ms=18330|json=0
+GITRAM_CELL|id=14|r=45|sx=1|sy=1|t=53698418|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31947|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r45_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=45000|t_milli=53698418|shell_max=-1|core=1|core_edges=0|H=279385|H_min_margin=7252285428|H_max_offdiag_over_diag_permille_ceil=300|F=10^13|gs_sweeps_max=9|y_width_max=10|negative=0|positive_core=1|positive_H=279385|eliminated=1|ambiguous=0|result=PASS|ms=4690|json=0
+GITRAM_CELL|id=15|r=45|sx=-1|sy=-1|t=53698418|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=27063|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r45_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=45000|t_milli=53701954|shell_max=-1|core=7|core_edges=0|H=288638|H_min_margin=2322596092|H_max_offdiag_over_diag_permille_ceil=400|F=10^12|gs_sweeps_max=8|y_width_max=332|negative=7|positive_core=0|positive_H=288638|eliminated=7|ambiguous=0|result=PASS|ms=22783|json=0
+GITRAM_CELL|id=16|r=45|sx=1|sy=1|t=53701954|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=27657|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r45_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=45000|t_milli=53701954|shell_max=-1|core=1|core_edges=0|H=279385|H_min_margin=7252094484|H_max_offdiag_over_diag_permille_ceil=300|F=10^12|gs_sweeps_max=7|y_width_max=724|negative=1|positive_core=0|positive_H=279385|eliminated=1|ambiguous=0|result=PASS|ms=4075|json=0
+GITRAM_CELL|id=17|r=45|sx=-1|sy=-1|t=53701954|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=20974|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r45_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=45000|t_milli=188214000|shell_max=-1|core=62|core_edges=108|H=288583|H_min_margin=1526148000|H_max_offdiag_over_diag_permille_ceil=398|F=10^12|gs_sweeps_max=9|y_width_max=242|negative=7|positive_core=55|positive_H=288583|eliminated=62|ambiguous=0|result=PASS|ms=137418|json=0
+GITRAM_CELL|id=18|r=45|sx=1|sy=1|t=188214000|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=32097|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r45_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=45000|t_milli=188214000|shell_max=-1|core=29|core_edges=42|H=279357|H_min_margin=2944296000|H_max_offdiag_over_diag_permille_ceil=398|F=10^12|gs_sweeps_max=8|y_width_max=770|negative=1|positive_core=28|positive_H=279357|eliminated=29|ambiguous=0|result=PASS|ms=94182|json=0
+GITRAM_CELL|id=19|r=45|sx=-1|sy=-1|t=188214000|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy-|group=36|gauge_orbits=10097891|sector_states=277090|flat_states=0|nnz=14793166|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=20274|json=0
+MATRIX_SHA|6c53ff4ac123b610f0d509a228c893be8bf0a088315180b4c381df98dc6d301b  build/ymsec/s33_1_-1.matrix
+r45_S1_-1|SHELL_SCHUR|matrix=s33_1_-1.matrix|n=277090|JE=1000|JB=45000|t_milli=188214000|shell_max=-1|core=0|core_edges=0|H=277090|H_min_margin=4107144000|H_max_offdiag_over_diag_permille_ceil=299|F=10^12|gs_sweeps_max=0|y_width_max=0|negative=0|positive_core=0|positive_H=277090|eliminated=0|ambiguous=0|result=PASS|ms=1093|json=0
+GITRAM_CELL|id=20|r=45|sx=1|sy=-1|t=188214000|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy+|group=36|gauge_orbits=10097891|sector_states=277090|flat_states=0|nnz=14793166|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31503|json=0
+MATRIX_SHA|d8e07b51b835a8499832fc21527cc1b6082cf017760316d2612efd0f94675ddd  build/ymsec/s33_-1_1.matrix
+r45_S-1_1|SHELL_SCHUR|matrix=s33_-1_1.matrix|n=277090|JE=1000|JB=45000|t_milli=188214000|shell_max=-1|core=0|core_edges=0|H=277090|H_min_margin=4107144000|H_max_offdiag_over_diag_permille_ceil=299|F=10^12|gs_sweeps_max=0|y_width_max=0|negative=0|positive_core=0|positive_H=277090|eliminated=0|ambiguous=0|result=PASS|ms=1485|json=0
+GITRAM_CELL|id=21|r=45|sx=-1|sy=1|t=188214000|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=29105|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r81_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=81000|t_milli=53832588|shell_max=-1|core=7|core_edges=0|H=288638|H_min_margin=4266334824|H_max_offdiag_over_diag_permille_ceil=223|F=10^13|gs_sweeps_max=9|y_width_max=8|negative=0|positive_core=7|positive_H=288638|eliminated=7|ambiguous=0|result=PASS|ms=24449|json=0
+GITRAM_CELL|id=22|r=81|sx=1|sy=1|t=53832588|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=26803|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r81_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=81000|t_milli=53832807|shell_max=-1|core=7|core_edges=0|H=288638|H_min_margin=4266334386|H_max_offdiag_over_diag_permille_ceil=223|F=10^13|gs_sweeps_max=9|y_width_max=9|negative=1|positive_core=6|positive_H=288638|eliminated=7|ambiguous=0|result=PASS|ms=19923|json=0
+GITRAM_CELL|id=23|r=81|sx=1|sy=1|t=53832807|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=31758|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r81_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=81000|t_milli=53832807|shell_max=-1|core=1|core_edges=0|H=279385|H_min_margin=15021028422|H_max_offdiag_over_diag_permille_ceil=167|F=10^13|gs_sweeps_max=8|y_width_max=2|negative=0|positive_core=1|positive_H=279385|eliminated=1|ambiguous=0|result=PASS|ms=4211|json=0
+GITRAM_CELL|id=24|r=81|sx=-1|sy=-1|t=53832807|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=27095|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r81_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=81000|t_milli=53834020|shell_max=-1|core=7|core_edges=0|H=288638|H_min_margin=4266331960|H_max_offdiag_over_diag_permille_ceil=223|F=10^12|gs_sweeps_max=7|y_width_max=593|negative=7|positive_core=0|positive_H=288638|eliminated=7|ambiguous=0|result=PASS|ms=20386|json=0
+GITRAM_CELL|id=25|r=81|sx=1|sy=1|t=53834020|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=27138|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r81_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=81000|t_milli=53834020|shell_max=-1|core=1|core_edges=0|H=279385|H_min_margin=15020962920|H_max_offdiag_over_diag_permille_ceil=167|F=10^12|gs_sweeps_max=6|y_width_max=232|negative=1|positive_core=0|positive_H=279385|eliminated=1|ambiguous=0|result=PASS|ms=4229|json=0
+GITRAM_CELL|id=26|r=81|sx=-1|sy=-1|t=53834020|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy+|group=36|gauge_orbits=10097891|sector_states=288645|flat_states=7|nnz=15408669|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=27329|json=0
+MATRIX_SHA|ad0168f973d120a0da2b5ebaa33d4e80619ad7704cfca8f45f3e940dc757bd1b  build/ymsec/s33_1_1.matrix
+r81_S1_1|SHELL_SCHUR|matrix=s33_1_1.matrix|n=288645|JE=1000|JB=81000|t_milli=296568000|shell_max=-1|core=10|core_edges=0|H=288635|H_min_margin=767664000|H_max_offdiag_over_diag_permille_ceil=664|F=10^12|gs_sweeps_max=9|y_width_max=387|negative=7|positive_core=3|positive_H=288635|eliminated=10|ambiguous=0|result=PASS|ms=42344|json=0
+GITRAM_CELL|id=27|r=81|sx=1|sy=1|t=296568000|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy-|group=36|gauge_orbits=10097891|sector_states=279386|flat_states=1|nnz=14885170|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=19796|json=0
+MATRIX_SHA|67992a047c1d31b8a245a7a323c7e548f79f16ccb705c056263703adaf0f9239  build/ymsec/s33_-1_-1.matrix
+r81_S-1_-1|SHELL_SCHUR|matrix=s33_-1_-1.matrix|n=279386|JE=1000|JB=81000|t_milli=296568000|shell_max=-1|core=1|core_edges=0|H=279385|H_min_margin=1913328000|H_max_offdiag_over_diag_permille_ceil=664|F=10^12|gs_sweeps_max=8|y_width_max=128|negative=1|positive_core=0|positive_H=279385|eliminated=1|ambiguous=0|result=PASS|ms=2974|json=0
+GITRAM_CELL|id=28|r=81|sx=-1|sy=-1|t=296568000|json=0
+SSL_BUILD|L=3x3|sector=Sx+Sy-|group=36|gauge_orbits=10097891|sector_states=277090|flat_states=0|nnz=14793166|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=23955|json=0
+MATRIX_SHA|6c53ff4ac123b610f0d509a228c893be8bf0a088315180b4c381df98dc6d301b  build/ymsec/s33_1_-1.matrix
+r81_S1_-1|SHELL_SCHUR|matrix=s33_1_-1.matrix|n=277090|JE=1000|JB=81000|t_milli=296568000|shell_max=-1|core=0|core_edges=0|H=277090|H_min_margin=7561728000|H_max_offdiag_over_diag_permille_ceil=167|F=10^12|gs_sweeps_max=0|y_width_max=0|negative=0|positive_core=0|positive_H=277090|eliminated=0|ambiguous=0|result=PASS|ms=1155|json=0
+GITRAM_CELL|id=29|r=81|sx=1|sy=-1|t=296568000|json=0
+SSL_BUILD|L=3x3|sector=Sx-Sy+|group=36|gauge_orbits=10097891|sector_states=277090|flat_states=0|nnz=14793166|group_relations=PASS|commutes_with_H=PASS|structural_samples=97|targeted_samples=305|w_self_adjoint=PASS|write=ok|ms=20775|json=0
+MATRIX_SHA|d8e07b51b835a8499832fc21527cc1b6082cf017760316d2612efd0f94675ddd  build/ymsec/s33_-1_1.matrix
+r81_S-1_1|SHELL_SCHUR|matrix=s33_-1_1.matrix|n=277090|JE=1000|JB=81000|t_milli=296568000|shell_max=-1|core=0|core_edges=0|H=277090|H_min_margin=7561728000|H_max_offdiag_over_diag_permille_ceil=167|F=10^12|gs_sweeps_max=0|y_width_max=0|negative=0|positive_core=0|positive_H=277090|eliminated=0|ambiguous=0|result=PASS|ms=1201|json=0
+GITRAM_CELL|id=30|r=81|sx=-1|sy=1|t=296568000|json=0
+SHELL_GAP_CERT|L=3x3|r=9|N(t1)=8|N(tB)=8|t1=52533422/1000000|tB=76472000/1000000|sector_counts=1,1:7@52533422,1,-1:0@52533422,-1,1:0@52533422,-1,-1:1@52533422,1,1:7@76472000,1,-1:0@76472000,-1,1:0@76472000,-1,-1:1@76472000|E8_in=[52533412,52533422)/1000000|E9_in=[76472000,76473042]/1000000|gap_E9_minus_E8_in=[23938578,23939630]/1000000|cluster_intervals_below_t1=8|cluster_lowest_interval_lo=52420788/1000000|result=PASS|json=0
+SHELL_CLUSTER_CERT|L=3x3|r=9|N(t0)=0|t0=52420786/1000000|E1_in=[52420786,52420799]/1000000|cluster_width_E8_minus_E1_in=[112613,112636]/1000000|N(ts)=1|ts=52440620/1000000|sector_counts_ts=1,1:1@52440620,1,-1:0@52440620,-1,1:0@52440620,-1,-1:0@52440620|E2_in=[52440620,52440633]/1000000|first_splitting_E2_minus_E1_in=[19821,19847]/1000000|result=PASS|json=0
+SHELL_GAP_CERT|L=3x3|r=27|N(t1)=8|N(tB)=8|t1=53505037/1000000|tB=133667000/1000000|sector_counts=1,1:7@53505037,1,-1:0@53505037,-1,1:0@53505037,-1,-1:1@53505037,1,1:7@133667000,1,-1:0@133667000,-1,1:0@133667000,-1,-1:1@133667000|E8_in=[53504999,53505037)/1000000|E9_in=[133667000,133668324]/1000000|gap_E9_minus_E8_in=[80161963,80163325]/1000000|cluster_intervals_below_t1=8|cluster_lowest_interval_lo=53493347/1000000|result=PASS|json=0
+SHELL_CLUSTER_CERT|L=3x3|r=27|N(t0)=0|t0=53493345/1000000|E1_in=[53493345,53493390]/1000000|cluster_width_E8_minus_E1_in=[11609,11692]/1000000|N(ts)=1|ts=53495357/1000000|sector_counts_ts=1,1:1@53495357,1,-1:0@53495357,-1,1:0@53495357,-1,-1:0@53495357|E2_in=[53495357,53495404]/1000000|first_splitting_E2_minus_E1_in=[1967,2059]/1000000|result=PASS|json=0
+SHELL_GAP_CERT|L=3x3|r=15|N(t1)=8|N(tB)=8|t1=53114486/1000000|tB=96486000/1000000|sector_counts=1,1:7@53114486,1,-1:0@53114486,-1,1:0@53114486,-1,-1:1@53114486,1,1:7@96486000,1,-1:0@96486000,-1,1:0@96486000,-1,-1:1@96486000|E8_in=[53114469,53114486)/1000000|E9_in=[96486000,96487256]/1000000|gap_E9_minus_E8_in=[43371514,43372787]/1000000|cluster_intervals_below_t1=8|cluster_lowest_interval_lo=53075975/1000000|result=PASS|json=0
+SHELL_CLUSTER_CERT|L=3x3|r=15|N(t0)=0|t0=53075973/1000000|E1_in=[53075973,53075992]/1000000|cluster_width_E8_minus_E1_in=[38477,38513]/1000000|N(ts)=1|ts=53082647/1000000|sector_counts_ts=1,1:1@53082647,1,-1:0@53082647,-1,1:0@53082647,-1,-1:0@53082647|E2_in=[53082647,53082668]/1000000|first_splitting_E2_minus_E1_in=[6655,6695]/1000000|result=PASS|json=0
+SHELL_GAP_CERT|L=3x3|r=45|N(t1)=8|N(tB)=8|t1=53701954/1000000|tB=188214000/1000000|sector_counts=1,1:7@53701954,1,-1:0@53701954,-1,1:0@53701954,-1,-1:1@53701954,1,1:7@188214000,1,-1:0@188214000,-1,1:0@188214000,-1,-1:1@188214000|E8_in=[53701871,53701954)/1000000|E9_in=[188214000,188215970]/1000000|gap_E9_minus_E8_in=[134512046,134514099]/1000000|cluster_intervals_below_t1=8|cluster_lowest_interval_lo=53697700/1000000|result=PASS|json=0
+SHELL_CLUSTER_CERT|L=3x3|r=45|N(t0)=0|t0=53697698/1000000|E1_in=[53697698,53697783]/1000000|cluster_width_E8_minus_E1_in=[4088,4256]/1000000|N(ts)=1|ts=53698418/1000000|sector_counts_ts=1,1:1@53698418,1,-1:0@53698418,-1,1:0@53698418,-1,-1:0@53698418|E2_in=[53698418,53698503]/1000000|first_splitting_E2_minus_E1_in=[635,805]/1000000|result=PASS|json=0
+SHELL_GAP_CERT|L=3x3|r=81|N(t1)=8|N(tB)=8|t1=53834020/1000000|tB=296568000/1000000|sector_counts=1,1:7@53834020,1,-1:0@53834020,-1,1:0@53834020,-1,-1:1@53834020,1,1:7@296568000,1,-1:0@296568000,-1,1:0@296568000,-1,-1:1@296568000|E8_in=[53833873,53834020)/1000000|E9_in=[296568000,296569117]/1000000|gap_E9_minus_E8_in=[242733980,242735244]/1000000|cluster_intervals_below_t1=8|cluster_lowest_interval_lo=53832590/1000000|result=PASS|json=0
+SHELL_CLUSTER_CERT|L=3x3|r=81|N(t0)=0|t0=53832588/1000000|E1_in=[53832588,53832733]/1000000|cluster_width_E8_minus_E1_in=[1140,1432]/1000000|N(ts)=1|ts=53832807/1000000|sector_counts_ts=1,1:1@53832807,1,-1:0@53832807,-1,1:0@53832807,-1,-1:0@53832807|E2_in=[53832807,53832958]/1000000|first_splitting_E2_minus_E1_in=[74,370]/1000000|result=PASS|json=0
+GITRAM_SEAL|cells=30|expected=30|gap_certs=5/5|cluster_certs=5/5|status=PASS|json=0
