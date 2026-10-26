@@ -45,6 +45,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "rainbon"
+version = "0.1.0"
+dependencies = [
+ "num-bigint",
+ "num-traits",
+]
+
+[[package]]
 name = "sturmrs"
 version = "0.1.0"
 dependencies = [

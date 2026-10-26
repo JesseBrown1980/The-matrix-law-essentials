@@ -116,6 +116,24 @@ $B/jumpto build/ball/b33_k1.matrix 1 81 fixed 10 27 | has "1e7:53832774,1e8:5383
 ref=$(python3 python/matrix_tricks/sparse_mod_reference.py build/ball/b33_k1.matrix 1 81 998244353 1024 | tr '|' '\n' | grep -E '^(state_sum_mod|state_weighted_mod|v0_component0)=' | tr '\n' '|')
 jmp=$($B/jumpto build/ball/b33_k1.matrix 1 81 exact 998244353 1024 | tr '|' '\n' | grep -E '^(state_sum_mod|state_weighted_mod|v0_component0)=' | tr '\n' '|')
 test -n "$ref" && test "$ref" = "$jmp"
+# 5j. Symmetry-sector compression (crates/rainbon/src/bin/symsec.rs): the
+#     three-preon cloud model reduced by its 288 symmetries (48 cube operations x 6
+#     preon permutations; +-1 characters for the P-wave sector) must reproduce the
+#     full 46,656-state lattice at L=6 exactly: sector A (309 states) gives the
+#     full E0 and <r^2> to every digit, and sector Pz (1,680 states) gives an E1
+#     inside the block solver's certified interval (JE units x 9).
+full=$($B/cloud 6 harmonic 9 1 600 10000000)
+secA=$($B/symsec 6 harmonic A 9 1 800 10000000)
+secP=$($B/symsec 6 harmonic Pz 9 1 800 10000000)
+fld() { echo "$1" | tr '|' '\n' | grep "^$2=" | cut -d= -f2 | cut -d/ -f1; }
+test "$(fld "$full" E0)" = "$(fld "$secA" E_lowest)" && test "$(fld "$full" E0)" = 23960538
+test "$(fld "$full" r2_ground)" = "$(fld "$secA" r2)" && test "$(fld "$secA" r2)" = 2597261
+echo "$secA" | has "|sector_states=309|w_self_adjoint=PASS|"
+echo "$secP" | has "|sector_states=1680|w_self_adjoint=PASS|"
+$B/cloudb 6 harmonic build/rb_h6.matrix > /dev/null
+iv=$($B/cluster build/rb_h6.matrix 9 1 8 4 | grep "^CLUSTER_LEVEL|k=1|" | tr '|' '\n' | grep '^interval=' | cut -d= -f2 | tr -d '[]' | cut -d/ -f1)
+lo=$(( ${iv%,*} * 9 )); hi=$(( ${iv#*,} * 9 + 9 )); e1=$(fld "$secP" E_lowest)
+test "$e1" -ge "$lo" && test "$e1" -le "$hi"
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"
