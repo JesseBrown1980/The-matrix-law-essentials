@@ -2,6 +2,10 @@
 # End-to-end reproduction, integer-only. Every check fails closed.
 set -euo pipefail
 cd "$(dirname "$0")"
+# Match without closing the pipe early: grep -q exits at the first match, and a
+# producer that is still writing then dies of SIGPIPE under pipefail. grep -c
+# reads all of its input and still fails when nothing matches.
+has() { grep -c "$@" > /dev/null; }
 cargo build --release -q
 mkdir -p build
 B=target/release
@@ -24,14 +28,14 @@ n=0; for s in pp pm mp mm; do c=$(neg data/matrices/sector_$s.matrix 1 3 19300 3
 f=$(neg data/matrices/torus2x2.matrix 1 3 19300 30)
 test "$n" = "$f" && test "$f" = 1
 # 5. exact magnetic-end laws (second order): 2x2 -> sqrt14 - sqrt6, 2x3 -> 3
-python3 python/volume/second_order.py build/torus2x2.matrix | grep -q "gap_coeff_in=\[1.292167643,1.292167643\]"
-python3 python/volume/flat_law.py 2x3 | grep -q "gap_coeff_in=\[2.999999999,3.000000000\]"
+python3 python/volume/second_order.py build/torus2x2.matrix | has "gap_coeff_in=\[1.292167643,1.292167643\]"
+python3 python/volume/flat_law.py 2x3 | has "gap_coeff_in=\[2.999999999,3.000000000\]"
 # 5b. 3x3: second order verified scalar and degenerate (coefficient 0, NOT a vanishing gap),
 #     third-order splitting (9/8)(sqrt14-sqrt6); 4x4: fourth-order (5/4)(sqrt14-sqrt6).
 #     Exact perturbative laws, pending independent mathematical review.
-python3 python/volume/flat_law.py 3x3 | grep -q "^FLAT_LAW|L=3x3|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0$"
-python3 python/volume/flat_law3.py 3x3 | grep -q "gap_coeff3_in=\[1.453688599,1.453688599\]"
-python3 python/volume/flat_law4.py 4x4 | grep -q "gap_coeff4_in=\[1.615209554,1.615209554\]"
+python3 python/volume/flat_law.py 3x3 | has "^FLAT_LAW|L=3x3|second_order_degenerate=1|second_order_gap_coeff=0|next_order_required=3|json=0$"
+python3 python/volume/flat_law3.py 3x3 | has "gap_coeff3_in=\[1.453688599,1.453688599\]"
+python3 python/volume/flat_law4.py 4x4 | has "gap_coeff4_in=\[1.615209554,1.615209554\]"
 python3 - <<'PY'
 import math
 K = 10**30
@@ -42,12 +46,12 @@ print("CLOSED_FORM|3x3=(9/8)(sqrt14-sqrt6)|4x4=(5/4)(sqrt14-sqrt6)|status=PASS|r
 PY
 # 5c. archives: published 2x3 receipts unchanged; regenerated law archive complete
 test "$(sha256sum data/volume/volume_t23.hbp | cut -d' ' -f1)" = 53b29aeb421eed669aae9c538d2ffa6696988ddb1f5b014d29f48ed0729403df
-tail -1 data/volume/flat_law.hbp | grep -q "^FLAT_LAW|status=COMPLETE|"
+tail -1 data/volume/flat_law.hbp | has "^FLAT_LAW|status=COMPLETE|"
 # 5d. matrix-free 3x3 operator (10,097,891-state lattice, rows generated on demand):
 #     support after 4 applications from the trivial vacuum = 35,847 (independently
 #     reproduced count), exact W-self-adjointness at every step, pinned norm at (1,1)
 $B/onfly 3 3 1 1 4 | tee build/onfly.out
-tail -1 build/onfly.out | grep -q "|support=35847|norm_w=122922827987436|"
+tail -1 build/onfly.out | has "|support=35847|norm_w=122922827987436|"
 test "$(grep -c "sa_check=PASS" build/onfly.out)" = 3
 # 5e. Exact integer power-jump: the 64-step state MUST match sequential
 #     evaluation byte for byte, and the 4096-step state MUST match two
@@ -81,20 +85,37 @@ grep -q '|ritz_dim=24|E0_in=\[53493574,53493575\]/1000000|E1_in=\[53495589,53495
 #     (i) validation on 2x3: K=4 (34,890 states) reproduces the full 47,449-state
 #         Chebyshev measurement at r=9 (E0 34.470733 vs 34.470732, gap 0.341110).
 mkdir -p build/ball
-$B/ball 2 3 4 build/ball/b23_k4.matrix | grep -q "|states=34890|nnz=1023198|.*|w_self_adjoint=PASS|"
-$B/cheb build/ball/b23_k4.matrix 1 9 4000 341110 | grep -q "|E0=34470733/1000000|dE0=0|E1=34811843/1000000|dE1=0|gap=341110/1000000|"
+$B/ball 2 3 4 build/ball/b23_k4.matrix | has "|states=34890|nnz=1023198|.*|w_self_adjoint=PASS|"
+$B/cheb build/ball/b23_k4.matrix 1 9 4000 341110 | has "|E0=34470733/1000000|dE0=0|E1=34811843/1000000|dE1=0|gap=341110/1000000|"
 #     (ii) 3x3 K=1 (206 states): converged ball eigenvalues by dense matrix jump at r=27;
 #         they must sit at or below the 16-dim Krylov Ritz values of section 5f.
-$B/ball 3 3 1 build/ball/b33_k1.matrix | grep -q "|states=206|nnz=818|.*|w_self_adjoint=PASS|"
-$B/jump build/ball/b33_k1.matrix 1 27 27 6 | tee build/ball/b33_k1_r27.line | grep -q "|E0=53496482/1000000|dE0=0|E1=53498465/1000000|dE1=0|gap=1983/1000000|"
+$B/ball 3 3 1 build/ball/b33_k1.matrix | has "|states=206|nnz=818|.*|w_self_adjoint=PASS|"
+$B/jump build/ball/b33_k1.matrix 1 27 27 6 | tee build/ball/b33_k1_r27.line | has "|E0=53496482/1000000|dE0=0|E1=53498465/1000000|dE1=0|gap=1983/1000000|"
 test 53496482 -le 53496532 && test 53498465 -le 53498537
 # 5h. Block cluster eigensolver (crates/evolvers/src/bin/cluster.rs) on 3x3 vacuum balls:
 #     all 8 vacuum levels resolved at once, rigorous residual intervals (exact big
 #     integers), ordering certified by interval-Sturm counts between the intervals.
 #     Scope: the compressed operator (ball), not the full 3x3 lattice.
-$B/ball 3 3 2 build/ball/b33_k2.matrix | grep -q "|states=4454|nnz=33218|.*|w_self_adjoint=PASS|"
-python3 python/volume/cluster_certify.py build/ball/b33_k1.matrix 27 | tee build/ball/cert_k1_r27.hbp | grep -q "|E0_in=\[53496481,53496484\]/1000000|E1_in=\[53498464,53498467\]/1000000|gap_in=\[1980,1986\]/1000000|.*|count_t1=1|.*|count_t2=2|ordering=CERTIFIED|"
-python3 python/volume/cluster_certify.py build/ball/b33_k2.matrix 27 | tee build/ball/cert_k2_r27.hbp | grep -q "|E0_in=\[53493381,53493384\]/1000000|E1_in=\[53495393,53495396\]/1000000|gap_in=\[2009,2015\]/1000000|.*|count_t1=1|.*|count_t2=2|ordering=CERTIFIED|"
+$B/ball 3 3 2 build/ball/b33_k2.matrix | has "|states=4454|nnz=33218|.*|w_self_adjoint=PASS|"
+python3 python/volume/cluster_certify.py build/ball/b33_k1.matrix 27 | tee build/ball/cert_k1_r27.hbp | has "|E0_in=\[53496481,53496484\]/1000000|E1_in=\[53498464,53498467\]/1000000|gap_in=\[1980,1986\]/1000000|.*|count_t1=1|.*|count_t2=2|ordering=CERTIFIED|"
+python3 python/volume/cluster_certify.py build/ball/b33_k2.matrix 27 | tee build/ball/cert_k2_r27.hbp | has "|E0_in=\[53493381,53493384\]/1000000|E1_in=\[53495393,53495396\]/1000000|gap_in=\[2009,2015\]/1000000|.*|count_t1=1|.*|count_t2=2|ordering=CERTIFIED|"
+# 5i. Long jumps of the FULL evolution operator T = c - H with play-forward
+#     (crates/evolvers/src/bin/jumpto.rs). Exact mode keeps every component modulo
+#     a prime (no rounding): jump(1024) == 1024 sequential steps, jump(5e9)
+#     applied twice == jump(1e10), 27 frames played from 1e10 == jump(1e10+27).
+#     (The 1,393-state 2x2 run, ~4 min, is stored in data/jump/jumpto_runs.hbp;
+#     CI uses the 206-state 3x3 vacuum ball.) Fixed mode measures E at every
+#     stage 1..1e10; at 1e10 an exact residual radius puts an eigenvalue in
+#     [53.832773, 53.832776], the certified E0 interval of that ball.
+#     Modular mode = exact algebraic replay only (no real amplitudes or energies).
+#     One step = v <- (c - H) v, forward-Euler imaginary time, not exp(-tau H).
+$B/jumpto build/ball/b33_k1.matrix 1 81 exact 998244353 10000000000 | has "|seq1024_equal=1|composition_5000000000+5000000000_equal=1|replay27_equal=1|.*|rounding=NONE|"
+$B/jumpto build/ball/b33_k1.matrix 1 81 fixed 10 27 | has "1e7:53832774,1e8:53832774,1e9:53832774,1e10:53832774|play_from_1e10=+1:53832774,+2:53832774,+3:53832774,+27:53832774|E_at_1e10=53832774/1000000|eps_up=1/1000000|eigenvalue_in=\[53832773,53832776\]/1000000|"
+#     independent sparse-step reference (separate Python code reading the matrix file):
+#     its state fingerprints after 1024 steps must equal the jump's
+ref=$(python3 python/matrix_tricks/sparse_mod_reference.py build/ball/b33_k1.matrix 1 81 998244353 1024 | tr '|' '\n' | grep -E '^(state_sum_mod|state_weighted_mod|v0_component0)=' | tr '\n' '|')
+jmp=$($B/jumpto build/ball/b33_k1.matrix 1 81 exact 998244353 1024 | tr '|' '\n' | grep -E '^(state_sum_mod|state_weighted_mod|v0_component0)=' | tr '\n' '|')
+test -n "$ref" && test "$ref" = "$jmp"
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"

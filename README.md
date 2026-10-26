@@ -87,6 +87,7 @@ Every torus has exactly 8 flat vacua: the commuting holonomy pairs of S₃ up to
 | **Integer Chebyshev filter** | Three-term recurrence on ((a+b) − 2H)/(b − a) with doubling blocks: about √ as many steps as plain stepping. Matches the matrix jump to the micro-unit at r = 9 on 2×2. |
 | **Vacuum-ball compression** (`ball`) | H restricted to every gauge orbit within K moves of the 8 vacua, written in the standard matrix format so the evolvers run unchanged. By interlacing its energies are upper bounds that fall as K grows. 3×3: 206 / 4,454 / 59,246 / 518,177 states for K = 1–4, instead of 10,097,891. |
 | **Block cluster eigensolver** (`cluster`) | Resolves all 8 near-degenerate vacuum levels at once: Chebyshev-filtered subspace iteration on a 12-vector block, fixed-point Gram–Schmidt with re-randomisation of collapsed vectors, Rayleigh–Ritz by integer Jacobi rotations. Each level gets a rigorous residual interval computed in exact big integers, and interval-Sturm counts between the intervals certify which levels are E₀ and E₁ (`cluster_certify.py`). |
+| **Long jump + play-forward** (`jumpto`) | One cache of squarings T^(2^j) reaches any step N ≤ 2^(J+1) − 1, and the state can be played step by step from there. **Exact mode** (modulo a prime, exact algebraic replay only, no real amplitudes): the full 1,393-state 2×2 operator jumped to 10¹⁰ steps (33 squarings, ~4 min), with jump(1024) = 1,024 sequential steps, jump(5·10⁹)² = jump(10¹⁰), 27 replayed frames = jump(10¹⁰ + 27), and an independent Python sparse-step reference matching the state fingerprints at 1,024 steps. **Fixed-point mode** measures the energy at 10⁰ … 10¹⁰ steps (3×3 ball, r = 81: relaxes over 10⁴–10⁷ steps); at 10¹⁰ an exact residual radius places an eigenvalue in [53.832773, 53.832776], the certified E₀ interval of that ball. One step is v ← (c − H)v, a forward-Euler imaginary-time step 1 − H/c: not e^(−τH) and not years. A single relaxed vector suppresses the excited levels, so splittings are measured with `cluster`, and the ball remains a truncation of the full 3×3 operator. |
 | **Vacuum-neighbourhood perturbation** | The weak-coupling law needs only the 8 vacua and their one-, two- and three-step neighbours, never the full matrix, so it reaches 3×3, 4×4 and beyond. |
 
 ## Results: 2×2 torus
@@ -275,7 +276,7 @@ crates/torusl     Lx×Ly gauge-orbit operator builder (Rust 1.81, no external cr
                   + onfly: matrix-free H application for lattices too large to store (3×3)
                   + ball: vacuum-ball principal compression (upper bounds by interlacing)
 crates/sturmrs    interval Sturm / LDLᵀ inertia verifier (num-bigint)
-crates/evolvers   evolvers (sparse stepping), jump (matrix jump), cheb (Chebyshev), cluster (block eigensolver)
+crates/evolvers   evolvers (sparse stepping), jump (matrix jump), cheb (Chebyshev), cluster (block eigensolver), jumpto (long jump + play)
 python/ladder     ladder.py (milli), ladder2.py (micro, scaling trick), rungs.py
 python/testground HTTP-0 page and routes (127.0.0.1): /evolve, /svg, /jump, /cheb
 python/sweep      17-rung sector sweep
