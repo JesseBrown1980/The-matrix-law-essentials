@@ -19,7 +19,14 @@
 The compressed operator's E0, E1 are upper bounds on the full lattice's E0, E1
 (Cauchy interlacing); its gap is NOT a bound on the full gap.
 
-usage: cluster_certify.py BALL_MATRIX R [--no-inertia] [--digits D]
+Band mode (--band): solve 12 levels and certify the separation of the
+8-level vacuum cluster from the next band. With disjoint intervals around
+levels 6..9, Sturm counts of exactly 7, 8 and 9 at thresholds between them
+prove that the intervals hold E7 (top of the cluster) and E8 (bottom of the
+band), so the band gap E8 - E7 and the cluster width E7 - E0 get rigorous
+enclosures (E0 from a count of exactly 1 below a threshold above its interval).
+
+usage: cluster_certify.py BALL_MATRIX R [--no-inertia] [--digits D] [--band]
 Output json=0.
 """
 import os
@@ -53,8 +60,44 @@ def count_below(matrix, r, x_micro, digits):
     return int(f["negative"])
 
 
+def band(matrix, r, digits):
+    out = subprocess.run([CLUSTER, matrix, "1", str(r), "12", "4"], capture_output=True, text=True).stdout
+    levels, summary = [], None
+    for line in out.splitlines():
+        f = fields(line)
+        if line.startswith("CLUSTER_LEVEL"):
+            levels.append(interval(f["interval"]))
+        elif line.startswith("CLUSTER|"):
+            summary = f
+    name = os.path.basename(matrix)
+    if summary is None or summary.get("converged") != "1" or len(levels) < 10:
+        print("BAND_CERT|matrix=%s|r=%d|status=NOT_CONVERGED|json=0" % (name, r))
+        sys.exit(2)
+    # need disjoint intervals: 0|1, 6|7, 7|8, 8|9
+    for a, b in ((0, 1), (6, 7), (7, 8), (8, 9)):
+        if not levels[a][1] < levels[b][0]:
+            print("BAND_CERT|matrix=%s|r=%d|status=INTERVALS_OVERLAP|pair=%d,%d|json=0" % (name, r, a, b))
+            sys.exit(2)
+    th = {k: (levels[k - 1][1] + levels[k][0]) // 2 for k in (1, 7, 8, 9)}   # threshold below level k
+    want = {1: 1, 7: 7, 8: 8, 9: 9}
+    got = {k: count_below(matrix, r, th[k], digits) for k in th}
+    (lo0, hi0), (lo7, hi7), (lo8, hi8) = levels[0], levels[7], levels[8]
+    base = "BAND_CERT|matrix=%s|n=%s|r=%d|E0_in=[%d,%d]|E7_in=[%d,%d]|E8_in=[%d,%d]|cluster_width_in=[%d,%d]|band_gap_in=[%d,%d]|units=1/1000000|counts=%s" % (
+        name, summary["n"], r, lo0, hi0, lo7, hi7, lo8, hi8, lo7 - hi0, hi7 - lo0, lo8 - hi7, hi8 - lo7,
+        ",".join("t%d:%s" % (k, got[k]) for k in sorted(got)))
+    if all(got[k] == want[k] for k in want):
+        print(base + "|ordering=CERTIFIED|scope=compressed_operator_or_full_lattice_as_named|json=0")
+    else:
+        print(base + "|ordering=FAILED|json=0")
+        sys.exit(2)
+
+
 def main():
     matrix, r = sys.argv[1], int(sys.argv[2])
+    if "--band" in sys.argv:
+        digits = int(sys.argv[sys.argv.index("--digits") + 1]) if "--digits" in sys.argv else 40
+        band(matrix, r, digits)
+        return
     inertia = "--no-inertia" not in sys.argv
     digits = int(sys.argv[sys.argv.index("--digits") + 1]) if "--digits" in sys.argv else 40
     out = subprocess.run([CLUSTER, matrix, "1", str(r)], capture_output=True, text=True).stdout

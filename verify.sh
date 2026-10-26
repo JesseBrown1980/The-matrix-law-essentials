@@ -134,6 +134,20 @@ $B/cloudb 6 harmonic build/rb_h6.matrix > /dev/null
 iv=$($B/cluster build/rb_h6.matrix 9 1 8 4 | grep "^CLUSTER_LEVEL|k=1|" | tr '|' '\n' | grep '^interval=' | cut -d= -f2 | tr -d '[]' | cut -d/ -f1)
 lo=$(( ${iv%,*} * 9 )); hi=$(( ${iv#*,} * 9 + 9 )); e1=$(fld "$secP" E_lowest)
 test "$e1" -ge "$lo" && test "$e1" -le "$hi"
+# 5k. Zero-momentum C2v sectors of the FULL operator (crates/torusl/src/bin/ymsec.rs):
+#     group relations (incl. semidirect), commutation with H, exact W-self-adjointness,
+#     predicted flat-vacuum decomposition 7/0/0/1 per sector (from the reflection
+#     action on commuting holonomy pairs), and spectral reconstruction:
+#     2x2 union == PR #14 zero-momentum sector, 12 levels exactly; 2x3 union contains
+#     the full operator's zero-momentum levels and its ground state exactly.
+for L in "2 2" "2 3"; do
+  i=0; for s in "1 1" "1 -1" "-1 1" "-1 -1"; do
+    set -- $L $s; want=$(echo "7 0 0 1" | cut -d' ' -f$((i+1))); i=$((i+1))
+    $B/ymsec $1 $2 $3 $4 build/ymsec_check.matrix | has "|flat_states=$want|.*|group_relations=PASS|commutes_with_H=PASS|.*|w_self_adjoint=PASS|"
+  done
+done
+python3 python/volume/ymsec_validate.py 2x2 27 | has "|flat_total=8|levels_compared=12|max_abs_diff=0|.*|result=PASS|"
+python3 python/volume/ymsec_validate.py 2x3 9 | has "|flat_total=8|ground_equal=1|.*|result=PASS|"
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py
 echo "VERIFY|status=PASS|json=0"
