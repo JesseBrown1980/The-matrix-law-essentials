@@ -19,6 +19,8 @@
 //! excludes zero; ambiguous otherwise).
 //! Integer-only: i128 with checked arithmetic, BigInt for the dense elimination.
 //! usage: shellschur MATRIX JE JB TN [SHELL_MAX=-1] [FDIG=9] [TOL=1000] [MAXSWEEP=400]
+//! GitRAM split: SHELLSCHUR_COLS=a:b (compute core columns a..b-1, print SCOL
+//! lines), then SHELLSCHUR_MERGE=f1,f2,... (read them, finish the inertia).
 //! json=0
 #![forbid(unsafe_code)]
 #![deny(clippy::float_arithmetic, clippy::float_cmp, clippy::cast_precision_loss)]
@@ -208,7 +210,45 @@ fn run() -> Result<(), String> {
     let mut width_max = 0i128;
     let mut lo = vec![0i128; n];
     let mut hi = vec![0i128; n];
+    // GitRAM split: SHELLSCHUR_COLS=a:b computes only core columns a..b-1 and
+    // prints them as SCOL lines; SHELLSCHUR_MERGE=f1,f2,... reads SCOL lines
+    // (all columns, same matrix/coupling/threshold/core) instead of computing.
+    let cols: Option<(usize, usize)> = std::env::var("SHELLSCHUR_COLS").ok().and_then(|v| {
+        let (x, y) = v.split_once(':')?;
+        Some((x.parse().ok()?, y.parse().ok()?))
+    });
+    let merge: Option<String> = std::env::var("SHELLSCHUR_MERGE").ok();
+    let tag = format!("n={n}|JE={je}|JB={jb}|t_milli={tn}|shell_max={shell_max}|core={m}|F=10^{fdig}");
+    if let Some(files) = &merge {
+        let mut seen = vec![false; m];
+        for path in files.split(',') {
+            let text = std::fs::read_to_string(path).map_err(|e| format!("read {path}: {e}"))?;
+            for line in text.lines().filter(|l| l.starts_with("SCOL|")) {
+                if !line.contains(&format!("|{tag}|")) {
+                    return Err(format!("SCOL line from a different run in {path}"));
+                }
+                let fld = |k: &str| -> Result<i128, String> {
+                    line.split('|').find_map(|kv| kv.strip_prefix(k)).and_then(|v| v.parse().ok()).ok_or_else(|| format!("missing {k}"))
+                };
+                let (cb, ca) = (usize::try_from(fld("cb=")?).map_err(|_| "cb")?, usize::try_from(fld("ca=")?).map_err(|_| "ca")?);
+                if cb >= m || ca >= m {
+                    return Err("SCOL index out of range".into());
+                }
+                s_lo[ca][cb] = fld("lo=")?;
+                s_hi[ca][cb] = fld("hi=")?;
+                seen[cb] = true;
+                sweeps_max = sweeps_max.max(usize::try_from(fld("sweeps=")?).unwrap_or(0));
+                width_max = width_max.max(fld("ywidth=")?);
+            }
+        }
+        if seen.iter().any(|x| !x) {
+            return Err("merge is missing core columns".into());
+        }
+    }
     for (cb, &c) in cidx.iter().enumerate() {
+        if merge.is_some() || cols.is_some_and(|(x, y)| cb < x || cb >= y) {
+            continue;
+        }
         // b = B_{H,c}
         let mut b = vec![0i128; 0];
         b.resize(n, 0);
@@ -281,7 +321,14 @@ fn run() -> Result<(), String> {
             let bf = ck(bac.checked_mul(f))?;
             s_lo[ca][cb] = bf - acc_hi;
             s_hi[ca][cb] = bf - acc_lo;
+            if cols.is_some() {
+                println!("SCOL|{tag}|cb={cb}|ca={ca}|lo={}|hi={}|sweeps={sweeps}|ywidth={width}|json=0", s_lo[ca][cb], s_hi[ca][cb]);
+            }
         }
+    }
+    if let Some((x, y)) = cols {
+        println!("SHELL_SCHUR_COLS|{tag}|cols={x}:{}|gs_sweeps_max={sweeps_max}|y_width_max={width_max}|ms={}|json=0", y.min(m), t0.elapsed().as_millis());
+        return Ok(());
     }
     // symmetrize by intersecting the two valid enclosures
     let mut s: Vec<Vec<Iv>> = vec![vec![(BigInt::zero(), BigInt::zero()); m]; m];

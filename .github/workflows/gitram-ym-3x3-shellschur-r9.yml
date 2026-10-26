@@ -1,0 +1,187 @@
+# GitRAM lane: 3x3 band-gap certificate at r = JB/JE = 9 on the FULL zero-momentum
+# operator, by magnetic-shell Schur inertia (crates/sturmrs/src/bin/shellschur.rs).
+# Template: JesseBrown1980/GitRAM.
+# Threshold tB = 76.472000 (1 milli-unit below the E9 residual interval) leaves
+# Gershgorin cores of 1137 / 729 / 459 / 459 states in the four C2v sectors; the
+# Schur columns are independent, so each cell computes 50 of them (SCOL lines).
+# Threshold t1 = 52.533422 (just above the vacuum-cluster intervals) is one cell
+# per vacuum-carrying sector. Fan-in: all 60 cells present and checksummed, the
+# columns merged per sector into one interval LDL^T inertia count, and the
+# certificate N(t1) = N(tB) = 8 checked by python/volume/shell_gap_cert.py against
+# the sealed sector receipt data/volume/ym3x3/YM3X3-SECTORS-GITRAM.hbp.
+# Integer-only, json=0.
+name: GitRAM YM 3x3 shell-Schur gap certificate r=9 (60 cells)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ym-3x3-zero-momentum-sectors]
+    paths: ['.github/workflows/gitram-ym-3x3-shellschur-r9.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gitram-ym3x3-shellschur-r9-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cell:
+    name: Cell ${{ matrix.id }} (${{ matrix.sx }},${{ matrix.sy }}) t=${{ matrix.t }} cols=${{ matrix.cols }}
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        include:
+          - {id: "01", sx: 1, sy: 1, t: 76472000, cols: "0:50"}
+          - {id: "02", sx: 1, sy: 1, t: 76472000, cols: "50:100"}
+          - {id: "03", sx: 1, sy: 1, t: 76472000, cols: "100:150"}
+          - {id: "04", sx: 1, sy: 1, t: 76472000, cols: "150:200"}
+          - {id: "05", sx: 1, sy: 1, t: 76472000, cols: "200:250"}
+          - {id: "06", sx: 1, sy: 1, t: 76472000, cols: "250:300"}
+          - {id: "07", sx: 1, sy: 1, t: 76472000, cols: "300:350"}
+          - {id: "08", sx: 1, sy: 1, t: 76472000, cols: "350:400"}
+          - {id: "09", sx: 1, sy: 1, t: 76472000, cols: "400:450"}
+          - {id: "10", sx: 1, sy: 1, t: 76472000, cols: "450:500"}
+          - {id: "11", sx: 1, sy: 1, t: 76472000, cols: "500:550"}
+          - {id: "12", sx: 1, sy: 1, t: 76472000, cols: "550:600"}
+          - {id: "13", sx: 1, sy: 1, t: 76472000, cols: "600:650"}
+          - {id: "14", sx: 1, sy: 1, t: 76472000, cols: "650:700"}
+          - {id: "15", sx: 1, sy: 1, t: 76472000, cols: "700:750"}
+          - {id: "16", sx: 1, sy: 1, t: 76472000, cols: "750:800"}
+          - {id: "17", sx: 1, sy: 1, t: 76472000, cols: "800:850"}
+          - {id: "18", sx: 1, sy: 1, t: 76472000, cols: "850:900"}
+          - {id: "19", sx: 1, sy: 1, t: 76472000, cols: "900:950"}
+          - {id: "20", sx: 1, sy: 1, t: 76472000, cols: "950:1000"}
+          - {id: "21", sx: 1, sy: 1, t: 76472000, cols: "1000:1050"}
+          - {id: "22", sx: 1, sy: 1, t: 76472000, cols: "1050:1100"}
+          - {id: "23", sx: 1, sy: 1, t: 76472000, cols: "1100:1137"}
+          - {id: "24", sx: -1, sy: -1, t: 76472000, cols: "0:50"}
+          - {id: "25", sx: -1, sy: -1, t: 76472000, cols: "50:100"}
+          - {id: "26", sx: -1, sy: -1, t: 76472000, cols: "100:150"}
+          - {id: "27", sx: -1, sy: -1, t: 76472000, cols: "150:200"}
+          - {id: "28", sx: -1, sy: -1, t: 76472000, cols: "200:250"}
+          - {id: "29", sx: -1, sy: -1, t: 76472000, cols: "250:300"}
+          - {id: "30", sx: -1, sy: -1, t: 76472000, cols: "300:350"}
+          - {id: "31", sx: -1, sy: -1, t: 76472000, cols: "350:400"}
+          - {id: "32", sx: -1, sy: -1, t: 76472000, cols: "400:450"}
+          - {id: "33", sx: -1, sy: -1, t: 76472000, cols: "450:500"}
+          - {id: "34", sx: -1, sy: -1, t: 76472000, cols: "500:550"}
+          - {id: "35", sx: -1, sy: -1, t: 76472000, cols: "550:600"}
+          - {id: "36", sx: -1, sy: -1, t: 76472000, cols: "600:650"}
+          - {id: "37", sx: -1, sy: -1, t: 76472000, cols: "650:700"}
+          - {id: "38", sx: -1, sy: -1, t: 76472000, cols: "700:729"}
+          - {id: "39", sx: 1, sy: -1, t: 76472000, cols: "0:50"}
+          - {id: "40", sx: 1, sy: -1, t: 76472000, cols: "50:100"}
+          - {id: "41", sx: 1, sy: -1, t: 76472000, cols: "100:150"}
+          - {id: "42", sx: 1, sy: -1, t: 76472000, cols: "150:200"}
+          - {id: "43", sx: 1, sy: -1, t: 76472000, cols: "200:250"}
+          - {id: "44", sx: 1, sy: -1, t: 76472000, cols: "250:300"}
+          - {id: "45", sx: 1, sy: -1, t: 76472000, cols: "300:350"}
+          - {id: "46", sx: 1, sy: -1, t: 76472000, cols: "350:400"}
+          - {id: "47", sx: 1, sy: -1, t: 76472000, cols: "400:450"}
+          - {id: "48", sx: 1, sy: -1, t: 76472000, cols: "450:459"}
+          - {id: "49", sx: -1, sy: 1, t: 76472000, cols: "0:50"}
+          - {id: "50", sx: -1, sy: 1, t: 76472000, cols: "50:100"}
+          - {id: "51", sx: -1, sy: 1, t: 76472000, cols: "100:150"}
+          - {id: "52", sx: -1, sy: 1, t: 76472000, cols: "150:200"}
+          - {id: "53", sx: -1, sy: 1, t: 76472000, cols: "200:250"}
+          - {id: "54", sx: -1, sy: 1, t: 76472000, cols: "250:300"}
+          - {id: "55", sx: -1, sy: 1, t: 76472000, cols: "300:350"}
+          - {id: "56", sx: -1, sy: 1, t: 76472000, cols: "350:400"}
+          - {id: "57", sx: -1, sy: 1, t: 76472000, cols: "400:450"}
+          - {id: "58", sx: -1, sy: 1, t: 76472000, cols: "450:459"}
+          - {id: "59", sx: 1, sy: 1, t: 52533422, cols: "all"}
+          - {id: "60", sx: -1, sy: -1, t: 52533422, cols: "all"}
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain 1.81
+        run: |
+          rustup toolchain install 1.81.0 --profile minimal
+          rustup override set 1.81.0
+      - name: Build tools from in-repo source
+        run: cargo build --release -q
+      - name: One unit of work, gated on its own PASS markers
+        run: |
+          set -euo pipefail
+          mkdir -p out build/ymsec
+          o=out/cell-${{ matrix.id }}.hbp
+          m=build/ymsec/s33_${{ matrix.sx }}_${{ matrix.sy }}.matrix
+          target/release/ymsec 3 3 ${{ matrix.sx }} ${{ matrix.sy }} $m | sed "s/^YMSEC/SS9_BUILD/" | tee $o
+          grep -q '|commutes_with_H=PASS|' $o
+          grep -q '|w_self_adjoint=PASS|' $o
+          sha256sum $m | sed 's/^/MATRIX_SHA|/' >> $o
+          if [ "${{ matrix.cols }}" = all ]; then
+            target/release/shellschur $m 1000 9000 ${{ matrix.t }} -1 12 1000 4000 | sed "s/^/r9_S${{ matrix.sx }}_${{ matrix.sy }}|/" | tee -a $o
+            grep -q '|SHELL_SCHUR|.*|result=PASS|' $o
+          else
+            SHELLSCHUR_COLS=${{ matrix.cols }} target/release/shellschur $m 1000 9000 ${{ matrix.t }} -1 12 1000 4000 >> $o
+            tail -1 $o
+            grep -q '^SHELL_SCHUR_COLS|' $o
+          fi
+          echo "GITRAM_CELL|id=${{ matrix.id }}|sx=${{ matrix.sx }}|sy=${{ matrix.sy }}|t=${{ matrix.t }}|cols=${{ matrix.cols }}|json=0" >> $o
+          (cd out && sha256sum cell-${{ matrix.id }}.hbp > cell-${{ matrix.id }}.sha256)
+          echo GITRAM_SHARD_PASS
+      - name: Upload the self-contained cell checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cell-${{ matrix.id }}
+          retention-days: 30
+          if-no-files-found: error
+          path: out/cell-*
+
+  fan-in:
+    name: Verify ALL 60 checkpoints, merge Schur columns, certify, seal
+    needs: cell
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain 1.81
+        run: |
+          rustup toolchain install 1.81.0 --profile minimal
+          rustup override set 1.81.0
+      - name: Build tools from in-repo source
+        run: cargo build --release -q
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cell-*
+          path: fan-in
+          merge-multiple: true
+      - name: Require ALL checkpoints, merge per sector, certify, seal
+        run: |
+          set -euo pipefail
+          count="$(ls fan-in/cell-*.hbp | wc -l)"
+          echo "returned=$count expected=60"
+          (cd fan-in && for f in cell-*.sha256; do sha256sum -c "$f"; done)
+          test "$count" -eq 60
+          (cd data/volume/ym3x3 && sha256sum -c YM3X3-SECTORS-GITRAM.sha256)
+          mkdir -p build/ymsec
+          log=fan-in/merged.hbp; : > $log
+          for s in "1 1" "-1 -1" "1 -1" "-1 1"; do set -- $s
+            files=$(grep -l "^GITRAM_CELL|.*|sx=$1|sy=$2|t=76472000|" fan-in/cell-*.hbp | paste -sd,)
+            m=build/ymsec/s33_$1_$2.matrix; target/release/ymsec 3 3 $1 $2 $m > /dev/null
+            # every cell of this sector must have built the identical matrix
+            want=$(sha256sum $m | cut -d" " -f1)
+            for f in ${files//,/ }; do grep -q "^MATRIX_SHA|$want " $f; done
+            SHELLSCHUR_MERGE=$files target/release/shellschur $m 1000 9000 76472000 -1 12 1000 4000 | sed "s/^/r9_S$1_$2|/" | tee -a $log
+          done
+          grep -h '|SHELL_SCHUR|' fan-in/cell-*.hbp >> $log
+          cat fan-in/cell-*.hbp $log > YM3X3-SHELLSCHUR-R9-GITRAM.hbp
+          python3 python/volume/shell_gap_cert.py data/volume/ym3x3/YM3X3-SECTORS-GITRAM.hbp 9 $log | tee -a YM3X3-SHELLSCHUR-R9-GITRAM.hbp
+          if grep -q '^SHELL_GAP_CERT|.*|result=PASS|' YM3X3-SHELLSCHUR-R9-GITRAM.hbp; then st=PASS; else st=FAIL; fi
+          echo "GITRAM_SEAL|cells=$count|expected=60|certificate=$st|status=$st|json=0" >> YM3X3-SHELLSCHUR-R9-GITRAM.hbp
+          sha256sum YM3X3-SHELLSCHUR-R9-GITRAM.hbp > YM3X3-SHELLSCHUR-R9-GITRAM.sha256
+          test "$st" = PASS
+      - name: Upload the sealed receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sealed-ym3x3-shellschur-r9
+          retention-days: 30
+          if-no-files-found: error
+          path: YM3X3-SHELLSCHUR-R9-GITRAM.*
