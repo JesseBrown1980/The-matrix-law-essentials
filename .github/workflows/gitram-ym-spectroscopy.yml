@@ -1,0 +1,135 @@
+# GitRAM lane: finite S3 Yang-Mills spectroscopy across volumes (template: JesseBrown1980/GitRAM).
+# Separates the TOPOLOGICAL splitting (the 8-vacuum cluster, E1 - E0) from the LOCAL
+# excitation gap (top of the cluster to the 9th level) on 2x2, 2x3 and 3x3 vacuum balls.
+# 30 stateless cells; integer-only, deterministic; all-or-nothing fan-in seals one receipt.
+#   levels cells: block solver `cluster`, 12 levels (8 cluster + 4 band), exact residual intervals
+#   order cells : interval-Sturm ordering certificate for the 59,246-state 3x3 K=3 ball
+# Scope: ball results are for the compressed operator (upper bounds on full-lattice levels);
+# levels without an inertia certificate have ordering UNVERIFIED.
+name: GitRAM Yang-Mills spectroscopy (30 cells)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gitram-ym-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cell:
+    name: Cell ${{ matrix.id }} ${{ matrix.kind }} ${{ matrix.lat }} r=${{ matrix.r }}
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        include:
+          - {id: "01", kind: levels, lat: t22, r: 3}
+          - {id: "02", kind: levels, lat: t22, r: 5}
+          - {id: "03", kind: levels, lat: t22, r: 9}
+          - {id: "04", kind: levels, lat: t22, r: 15}
+          - {id: "05", kind: levels, lat: t22, r: 27}
+          - {id: "06", kind: levels, lat: t22, r: 45}
+          - {id: "07", kind: levels, lat: t22, r: 81}
+          - {id: "08", kind: levels, lat: t23, r: 3}
+          - {id: "09", kind: levels, lat: t23, r: 5}
+          - {id: "10", kind: levels, lat: t23, r: 9}
+          - {id: "11", kind: levels, lat: t23, r: 15}
+          - {id: "12", kind: levels, lat: t23, r: 27}
+          - {id: "13", kind: levels, lat: t23, r: 45}
+          - {id: "14", kind: levels, lat: t23, r: 81}
+          - {id: "15", kind: levels, lat: b33k3, r: 3}
+          - {id: "16", kind: levels, lat: b33k3, r: 5}
+          - {id: "17", kind: levels, lat: b33k3, r: 9}
+          - {id: "18", kind: levels, lat: b33k3, r: 15}
+          - {id: "19", kind: levels, lat: b33k3, r: 27}
+          - {id: "20", kind: levels, lat: b33k3, r: 45}
+          - {id: "21", kind: levels, lat: b33k3, r: 81}
+          - {id: "22", kind: levels, lat: b33k4, r: 3}
+          - {id: "23", kind: levels, lat: b33k4, r: 5}
+          - {id: "24", kind: levels, lat: b33k4, r: 9}
+          - {id: "25", kind: levels, lat: b33k4, r: 15}
+          - {id: "26", kind: levels, lat: b33k4, r: 27}
+          - {id: "27", kind: levels, lat: b33k4, r: 45}
+          - {id: "28", kind: levels, lat: b33k4, r: 81}
+          - {id: "29", kind: order, lat: b33k3, r: 27}
+          - {id: "30", kind: order, lat: b33k3, r: 81}
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain 1.81
+        run: |
+          rustup toolchain install 1.81.0 --profile minimal
+          rustup override set 1.81.0
+      - name: Build tools from in-repo source
+        run: cargo build --release -q
+      - name: Build the operator for this cell
+        run: |
+          set -euo pipefail
+          mkdir -p out build
+          case "${{ matrix.lat }}" in
+            t22)   cp data/matrices/torus2x2.matrix build/m.matrix ;;
+            t23)   target/release/torusl 2 3 build/m.matrix | tee out/build.line ;;
+            b33k3) target/release/ball 3 3 3 build/m.matrix | tee out/build.line ;;
+            b33k4) target/release/ball 3 3 4 build/m.matrix | tee out/build.line ;;
+          esac
+          sha256sum build/m.matrix | tee out/matrix.sha256
+      - name: One unit of work, gated on its own PASS marker
+        run: |
+          set -euo pipefail
+          o=out/cell-${{ matrix.id }}.hbp
+          if [ "${{ matrix.kind }}" = levels ]; then
+            target/release/cluster build/m.matrix 1 ${{ matrix.r }} 12 4 | sed "s/^CLUSTER/YM_${{ matrix.lat }}_r${{ matrix.r }}_CLUSTER/" | tee $o
+            grep -q '|converged=1|' $o
+          else
+            python3 python/volume/cluster_certify.py build/m.matrix ${{ matrix.r }} | sed "s/^CLUSTER_CERT/YM_${{ matrix.lat }}_r${{ matrix.r }}_CERT/" | tee $o
+            grep -q '|ordering=CERTIFIED|' $o
+          fi
+          cat out/matrix.sha256 | sed 's/^/MATRIX_SHA|/' >> $o
+          echo "GITRAM_CELL|id=${{ matrix.id }}|kind=${{ matrix.kind }}|lat=${{ matrix.lat }}|r=${{ matrix.r }}|json=0" >> $o
+          (cd out && sha256sum cell-${{ matrix.id }}.hbp > cell-${{ matrix.id }}.sha256)
+          echo GITRAM_SHARD_PASS
+      - name: Upload the self-contained cell checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cell-${{ matrix.id }}
+          retention-days: 30
+          if-no-files-found: error
+          path: out/cell-*
+
+  fan-in:
+    name: Verify ALL 30 checkpoints and seal one receipt
+    needs: cell
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cell-*
+          path: fan-in
+          merge-multiple: true
+      - name: Require ALL checkpoints, verify checksums, seal (no duplicate work)
+        run: |
+          set -euo pipefail
+          cd fan-in
+          count="$(ls cell-*.hbp | wc -l)"
+          echo "returned=$count expected=30"
+          for f in cell-*.sha256; do sha256sum -c "$f"; done
+          cat cell-*.hbp > YM-SPECTROSCOPY-GITRAM.hbp
+          if [ "$count" -eq 30 ]; then st=PASS; else st=INCOMPLETE; fi
+          echo "GITRAM_SEAL|cells=$count|expected=30|status=$st|json=0" >> YM-SPECTROSCOPY-GITRAM.hbp
+          sha256sum YM-SPECTROSCOPY-GITRAM.hbp > YM-SPECTROSCOPY-GITRAM.sha256
+          test "$count" -eq 30
+      - name: Upload the sealed receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sealed-ym-spectroscopy
+          retention-days: 30
+          if-no-files-found: error
+          path: fan-in/YM-SPECTROSCOPY-GITRAM.*
