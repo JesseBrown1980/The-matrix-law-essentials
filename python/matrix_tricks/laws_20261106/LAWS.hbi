@@ -1,0 +1,9 @@
+HBI|name=hash_answer.py|bytes=2182|sha256=9813fa58254394601a6568ab9c9be14532c34abce5d31f0c252b2db4e7d2cbd8|sh=9813fa5825439460|json=0
+HBI|name=jump3_jump.py|bytes=2911|sha256=49807d1807b3b0eb2d9718e0128a6b97e93ef8e0def173dca2da32325ff42e67|sh=49807d1807b3b0eb|json=0
+HBI|name=pascal_pyramid.py|bytes=2024|sha256=720a3ff5a4f9ab34155a86cd57c77ba2035724e5dce26adc25293faa6076622f|sh=720a3ff5a4f9ab34|json=0
+HBI|name=pow27_mod3.py|bytes=810|sha256=1bddf6f43b8f33083e5ebd5ed0918868ef89bf82080f9bc9dc2100e5164018f6|sh=1bddf6f43b8f3308|json=0
+HBI|name=hash_answer.out.hbp|bytes=474|sha256=49ec8beb43cea9f60e1451ade33a448b52f2b328292ccf4ebc2059b9aecb39b3|sh=49ec8beb43cea9f6|json=0
+HBI|name=jump3_jump.out.hbp|bytes=1296|sha256=c22db2f9539fc104c6d239a6fde83b8085a6dcad6d8ca83584561c546b4dcffd|sh=c22db2f9539fc104|json=0
+HBI|name=pascal_pyramid.out.hbp|bytes=374|sha256=e02c780a341bf07356adbb3645228b39344a9f6d8e344eaa6e9679d2584e949c|sh=e02c780a341bf073|json=0
+HBI|name=pow27_mod3.out.hbp|bytes=142|sha256=de35546c01ad1b8554a29f77f4934d328ac4d758816f132880a275f7d54d175b|sh=de35546c01ad1b85|json=0
+HBI|name=verify_laws.sh|bytes=1712|sha256=a6edc51c4c407de92be9956ba59310e708eaf8baeee044fa0506507dc28d06ee|sh=a6edc51c4c407de9|json=0

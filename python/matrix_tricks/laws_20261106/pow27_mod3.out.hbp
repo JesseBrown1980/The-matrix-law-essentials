@@ -1,0 +1,2 @@
+POW27_MOD3|step=I+R+R^2|ring=27|equals_zero=1|equals_identity=0|json=0
+POW27_MOD3|step=I+R-R^2|ring=27|equals_zero=0|equals_identity=1|json=0

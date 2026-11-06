@@ -1,0 +1,4 @@
+PASCAL_PYRAMID|L=6|positions=9|path_counts_equal_folded_trinomials=1|counts=63,81,90|json=0
+PASCAL_PYRAMID|L=9|positions=9|path_counts_equal_folded_trinomials=1|counts=2106,2187,2268|json=0
+LUCAS_JUMP_MOD3|step=I+R+R^2|ring=27|k=1,2,3|M^(3^k)=I+R^(3^k)(+/-)R^(2*3^k)_mod_3=1|json=0
+LUCAS_JUMP_MOD3|step=I+R-R^2|ring=27|k=1,2,3|M^(3^k)=I+R^(3^k)(+/-)R^(2*3^k)_mod_3=1|json=0
