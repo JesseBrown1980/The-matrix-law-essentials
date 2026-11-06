@@ -70,6 +70,34 @@ grep -q '^TRIADIC_LADDER|rungs=1,2,3,5,6,8,9,27,81,243|all_exact_match=PASS|' bu
 grep -q '^INBETWEEN_SAMPLING|.*|exact_sequential_match=PASS|' build/time_jump_ladder.hbp
 grep -q '^HASH_CHANGE_JUMP|.*|inbetween_measured_match=PASS|' build/time_jump_ladder.hbp
 grep -q '^TIME_JUMP_VERIFY|status=PASS|' build/time_jump_ladder.hbp
+# 5e-3. Power-of-three jump law (docs/LAW-POWER-OF-THREE-JUMP.md): a step that is the
+#       same at every site of a ring reaches step 3^k by k cubings and, when the ring
+#       size divides p - 1 = 1000080, by the integer NTT (exact mod 1000081). The Python
+#       reference and the Rust crate (crates/jump3) must print the same rows byte for
+#       byte, equal to the committed receipts; the frozen predictions (b4df487, written
+#       before the code) are re-checked and must reproduce the committed check file.
+python3 python/matrix_tricks/jump3_ntt.py --self-test > build/jump3_py.hbp
+$B/jump3 --self-test > build/jump3_rs.hbp
+cmp build/jump3_py.hbp build/jump3_rs.hbp
+cmp build/jump3_py.hbp data/jump3/JUMP3-SELFTEST.hbp
+has '^JUMP3|case=signed_return|k=40|n=12157665459056928801|cubings=40|cube_mulmods=1575369|ntt_mulmods=2079|cube_equals_ntt=1|.*|leaf_forward=1|leaf_back=1|sha256=177066f133a5c9ef' build/jump3_py.hbp
+has '^JUMP3_CASE|case=curved_sum|.*|zero_modes=2|zero_mode_list=9,18|backward=REFUSED_ZERO_MODE|' build/jump3_py.hbp
+has '^JUMP3_CASE|case=ring81|.*|ntt=REFUSED_RING_DOES_NOT_DIVIDE_P_MINUS_1|' build/jump3_py.hbp
+has '^JUMP3_VERIFY|status=PASS|cases=5|jump_rows=27|' build/jump3_py.hbp
+python3 python/matrix_tricks/transposition_memo.py --self-test > build/transmemo_py.hbp
+$B/transmemo --self-test > build/transmemo_rs.hbp
+cmp build/transmemo_py.hbp build/transmemo_rs.hbp
+cmp build/transmemo_py.hbp data/jump3/TRANSMEMO-SELFTEST.hbp
+has '^TRANSPOSITION|L=6|paths=729|.*|counts=000:63,012:81,021:81,102:81,111:90,120:81,201:81,210:81,222:90|' build/transmemo_py.hbp
+has '^TRANSMEMO_VERIFY|status=PASS|' build/transmemo_py.hbp
+python3 python/matrix_tricks/jump3_ntt.py --ring 54 --stencil 0:1,1:-2,3:5 --ks 1,4,30 --direct-max 4 --case ring54 --step 'I-2R+5R^3' > build/jump3_cli_py.hbp
+$B/jump3 --ring 54 --stencil 0:1,1:-2,3:5 --ks 1,4,30 --direct-max 4 --case ring54 --step 'I-2R+5R^3' > build/jump3_cli_rs.hbp
+cmp build/jump3_cli_py.hbp build/jump3_cli_rs.hbp
+cmp build/jump3_cli_py.hbp data/jump3/JUMP3-CLI-RING54.hbp
+(cd data/jump3 && sha256sum -c --quiet PREDICTIONS-20261106.sha256 && sha256sum -c --quiet JUMP3-RECEIPTS.sha256)
+python3 data/jump3/check_predictions.py data/jump3/PREDICTIONS-20261106.hbp build/jump3_py.hbp build/transmemo_py.hbp > build/jump3_predict_check.hbp
+cmp build/jump3_predict_check.hbp data/jump3/PREDICTIONS-CHECK-20261106.hbp
+has '^PREDICT_SUMMARY|predictions=366|met=366|missed=0|no_row=0|ambiguous=0|' build/jump3_predict_check.hbp
 # 5f. Actual 3x3 vacuum-ball principal compression via the repository's
 #     comb-tree lattice source: do NOT confuse Ritz-gap intervals with a
 #     certified full 10,097,891-state gap.
@@ -210,7 +238,7 @@ has "^FLATCOMP|matrix=s33_-1_-1.matrix|.*|flat_states=1|flat_electric_diag=\[54\
 for h in $(grep '^MATRIX_SHA|' $F | cut -d'|' -f2 | cut -d' ' -f1); do has "^MATRIX_SHA|$h " $LAD; done
 python3 python/volume/monotone_cells.py --ray 54000000 build/ym3x3_certs.hbp | has "^MONOTONE_CELLS|L=3x3|points=9,15,27,45,81,243|r_range=\[9,infinity\]|cells=5|ray=1|min_gap_lower_bound=23357514/1000000|result=PASS|"
 # 6. integer-only audit of every Python tool
-python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py python/matrix_tricks/laws_20261106/*.py
+python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py data/jump3/*.py python/matrix_tricks/laws_20261106/*.py
 # 7. the laws of November 6, 2026: the HBI -> HBP -> SHA -> SH -> HASH chain and an independent replay
 bash python/matrix_tricks/laws_20261106/verify_laws.sh
 echo "VERIFY|status=PASS|json=0"
