@@ -179,6 +179,43 @@ for example r = 27, K = 2 gives [0.002009, 0.002015]. Receipts:
 | **Predict-then-verify ladder + SHA-keyed ledger** | The second-order law picks the next jump, one certificate verifies it; reruns resume from the ledger. |
 | **Symmetry-sector compression** (`symsec`) | The same reduction for the three-preon cloud (`crates/rainbon`): 151–200× fewer states, exact against the full lattice. |
 
+## Laws of November 6, 2026
+
+The operator stated three laws on November 6, 2026. Each check below is an exact-integer Python script in [`python/matrix_tricks/laws_20261106/`](python/matrix_tricks/laws_20261106/), with its recorded output beside it. Status: measured by the seat's scripts. The full code, a Rust 1.81 crate, CI tests and an independent attack follow in a second PR.
+
+### 1. The power-of-three jump
+
+A fixed linear step M reaches step 3^k in k cubings, skipping the 3^k steps. Some steps are the same at every site of a ring whose size divides p − 1. The integer NTT splits such a step into independent modes, and the jump then costs one power per mode.
+
+- **Measured** (`jump3_jump.py`): a 27-site ring with M = I + R − R² mod 1,000,081, where 27 divides 1,000,080. Cubing, the NTT route and direct stepping give the same state at step 3^k, with the same SHA-256 at k = 3, 6, 9, 10, 20 and 40.
+- **Timings:**
+  - 3^40 ≈ 1.2 × 10^19 steps take 40 cubings, 223 ms.
+  - The NTT route takes under 1 ms.
+  - Stepping through 3^10 = 59,049 steps takes 235 ms.
+- **Leaves:** one step forward from the jump equals the jump to 3^k + 1. The state at 3^k − 1, from the inverse eigenvalues, steps onto the jump.
+- **Scope:** a fixed linear step. Dense cubing costs about D³ per cube. Going backward needs every eigenvalue nonzero.
+
+### 2. Pascal's pyramid and the mod-3 collapse
+
+- **Paths.** On the 27-cube each turn adds 1 mod 3 to one digit. The 3^L move orders reach 9 positions, because the digit sum mod 3 equals L mod 3.
+  - Each position's count is a sum of trinomial coefficients L!/(i! j! k!), grouped by (i, j, k) mod 3 (`pascal_pyramid.py`, `hash_answer.py`).
+  - The counts are 63, 81 and 90 at L = 6; 2,106, 2,187 and 2,268 at L = 9; and 58,806, 59,049 and 59,535 at L = 12.
+  - Computing each position once under its hash replaces 81, 2,187 and 59,049 paths per position on average.
+  - Results that depend on the counts keep the recurrence C_{n+1}(s) = Σ_{p→s} C_n(p) in exact integers.
+- **The collapse.** For commuting operators mod 3, (A + B + C)^(3^k) = A^(3^k) + B^(3^k) + C^(3^k), by Frobenius and Lucas's theorem.
+  - **Measured** on the 27-ring for k = 1, 2, 3: (I + R ± R²)^(3^k) = I + R^(3^k) ± R^(2·3^k).
+  - The 27-step tests (`pow27_mod3.py`): (I + R + R²)^27 = 0 and (I + R − R²)^27 = I (mod 3).
+  - **Scope:** arithmetic mod 3 with commuting operators.
+- **What the hash does.** In a finite space, a state's SHA-256 alone identifies the state by hashing the candidates: at most 27 here, or 9 with the invariant. An input with no structure, 64 bits, would take 2^64 candidates. At the measured 765,864 hashes per second that is about 764,000 years.
+
+### 3. Freeze and play
+
+A state frozen with its HBI → HBP → SHA → SH → HASH chain can be played forward from later, and backward where the step is reversible. A tree of frozen slices on a ternary schedule lets any later read start from the nearest leaf.
+
+Status OPEN: the test on the polariton quantum engine is running. It covers freeze, play, refusal of a tampered file, the backward bound and the time saved.
+
+**Reproduce:** run `python3 -I python/matrix_tricks/laws_20261106/<script>.py` and compare its output with `<script>.out.hbp`. The timing and hash-rate fields vary with the machine.
+
 ## The model
 
 Kogut–Susskind Hamiltonian with finite group S₃.

@@ -1,0 +1,7 @@
+JUMP3_HEAD|p=1000081|sites=27|M=I+R-R^2|eigenvalues_nonzero=1|root27=951846|json=0
+JUMP3|k=3|n=3^3=27|cubings=3|cube_ms=10|ntt_ms=0|cube_equals_ntt=1|hash=7d05096afc24b08c|steps=27|step_ms=0|step_equals_jump=1|leaf_forward_equals_jump_n+1=1|leaf_back_steps_to_jump=1|json=0
+JUMP3|k=6|n=3^6=729|cubings=6|cube_ms=24|ntt_ms=0|cube_equals_ntt=1|hash=cc3581ab163de3a7|steps=729|step_ms=2|step_equals_jump=1|leaf_forward_equals_jump_n+1=1|leaf_back_steps_to_jump=1|json=0
+JUMP3|k=9|n=3^9=19683|cubings=9|cube_ms=38|ntt_ms=0|cube_equals_ntt=1|hash=ee4b40fb753713ab|steps=19683|step_ms=64|step_equals_jump=1|leaf_forward_equals_jump_n+1=1|leaf_back_steps_to_jump=1|json=0
+JUMP3|k=10|n=3^10=59049|cubings=10|cube_ms=42|ntt_ms=0|cube_equals_ntt=1|hash=81323c66a0e8a92f|steps=59049|step_ms=188|step_equals_jump=1|leaf_forward_equals_jump_n+1=1|leaf_back_steps_to_jump=1|json=0
+JUMP3|k=20|n=3^20=3486784401|cubings=20|cube_ms=86|ntt_ms=0|cube_equals_ntt=1|hash=8ef1ccc86cd3ff0c|steps_needed=3486784401|step_ms=NOT_RUN|leaf_forward_equals_jump_n+1=1|leaf_back_steps_to_jump=1|json=0
+JUMP3|k=40|n=3^40=12157665459056928801|cubings=40|cube_ms=181|ntt_ms=0|cube_equals_ntt=1|hash=177066f133a5c9ef|steps_needed=12157665459056928801|step_ms=NOT_RUN|leaf_forward_equals_jump_n+1=1|leaf_back_steps_to_jump=1|json=0

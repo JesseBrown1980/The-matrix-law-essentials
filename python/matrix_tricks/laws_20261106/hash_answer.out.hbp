@@ -1,0 +1,5 @@
+FINITE_RECOVER|space=27|moves_hidden=10|hashes_tried=4|recovered=0,1,0|equals_hidden=1|json=0
+TRANSPOSITION|L=6|paths=729|distinct_positions=9|reuse_ratio=81|json=0
+TRANSPOSITION|L=9|paths=19683|distinct_positions=9|reuse_ratio=2187|json=0
+TRANSPOSITION|L=12|paths=531441|distinct_positions=9|reuse_ratio=59049|json=0
+UNSTRUCTURED_SEARCH|space=2^64|hashes_per_second_measured=1067866|full_search_years_at_that_rate=547767|space=2^256_for_a_sha256_preimage_in_general|json=0
