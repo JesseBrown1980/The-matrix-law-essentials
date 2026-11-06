@@ -214,7 +214,9 @@ A state frozen with its HBI → HBP → SHA → SH → HASH chain can be played 
 
 Status OPEN: the test on the polariton quantum engine is running. It covers freeze, play, refusal of a tampered file, the backward bound and the time saved.
 
-**Reproduce:** run `python3 -I python/matrix_tricks/laws_20261106/<script>.py` and compare its output with `<script>.out.hbp`. The timing and hash-rate fields vary with the machine.
+**Reproduce and verify:** `bash python/matrix_tricks/laws_20261106/verify_laws.sh`, which `verify.sh` also runs.
+- **The chain it checks:** the HBI index `LAWS.hbi`, one row per file with bytes, sha256 and its 16-hex SH; the HBP records `*.out.hbp`; the SHA list `SHA256SUMS`; and the HASH seal `LAWS.seal`, the sha256 of `SHA256SUMS` followed by `LAWS.hbi`.
+- **The replay:** it reruns every check and compares the output byte for byte, with the timing and hash-rate fields masked. Any changed byte fails it.
 
 ## The model
 
