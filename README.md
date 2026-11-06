@@ -214,6 +214,20 @@ A fixed linear step M reaches step 3^k in k cubings, skipping the 3^k steps. Som
 
 A state frozen with its HBI → HBP → SHA → SH → HASH chain can be played forward from later, and backward where the step is reversible. A tree of frozen slices on a ternary schedule lets any later read start from the nearest leaf.
 
+**Four guarantees, stated separately:**
+- **Integrity:** every frozen state's bytes match their recorded digest.
+- **Provenance:** the root seal matches a seal pinned independently, in a committed GitHub record or an earlier frozen, trusted record.
+- **Replay:** resuming from a frozen state reproduces the reference calculation byte for byte.
+- **Scope:** backward replay holds for reversible dynamics with every needed part of the state retained.
+
+**Status: FILED.** Final acceptance stays OPEN until both conditions are met:
+- **The two MEDIUM holds resolve.**
+  - H1: play checks the outside anchor, which the negative control in [`freeze_play/ANCHOR-CONTROL.hbp`](python/matrix_tricks/laws_20261106/freeze_play/ANCHOR-CONTROL.hbp) reads. That control replaces a leaf and its whole internal chain: it plays against the internal chain alone (measured) and must be refused against the anchor.
+  - H2: a back-read check independent of the engine's own printed bound.
+- **The expanded chain passes.**
+
+The record: all eight holds with their dispositions are in [`freeze_play/HOLDS-DISPOSITIONS.hbp`](python/matrix_tricks/laws_20261106/freeze_play/HOLDS-DISPOSITIONS.hbp). Both lanes' reports are in [`BUILD-REPORT.md`](python/matrix_tricks/laws_20261106/freeze_play/BUILD-REPORT.md) and [`CHECK-REPORT.md`](python/matrix_tricks/laws_20261106/freeze_play/CHECK-REPORT.md).
+
 **Measured** on the polariton quantum engine: a copy at QNN `e4fc6ba` with `polariton_freeze_play.rs` (sha256 `4a903f22…`), freezing a leaf every 9 windows on the tree of 9, 27, 81 and 243. An independent check passed it with holds. The records are [`freeze_play/PREDICTION.hbp`](python/matrix_tricks/laws_20261106/freeze_play/PREDICTION.hbp), committed before the code, and [`freeze_play/RESULTS.hbp`](python/matrix_tricks/laws_20261106/freeze_play/RESULTS.hbp).
 
 - **Play equals the uninterrupted run, byte for byte:** 14 of 14 plays, from leaves 1 to 263 windows before the read, including N = 6561 at K = 1200 and 1600. 31 of 31 leaves written again by a play are the same bytes.

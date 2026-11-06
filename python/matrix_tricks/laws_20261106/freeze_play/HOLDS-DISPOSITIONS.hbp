@@ -1,0 +1,9 @@
+FP_HOLDS|law=3_freeze_and_play|checker=the_independent_check_of_the_freeze-play_lane|verdict=PASS_WITH_HOLDS|holds=8|medium=2|acceptance=OPEN_until_H1_and_H2_resolve_and_the_expanded_chain_passes|json=0
+FP_HOLD|id=H1|file=polariton-first-correction/freeze-play/README.md_and_src/bin/polariton_freeze_play.rs_(from_leaf)|severity=MEDIUM|disposition=OPEN|resolves_by=play_taking_anchor=<pinned_seal>_and_refusing_any_tree_or_leaf_whose_seal_differs;the_negative_control_of_ANCHOR-CONTROL.hbp_reading_REFUSED|json=0
+FP_HOLD|id=H2|file=polariton-first-correction/freeze-play/check.py_(section_8)|severity=MEDIUM|disposition=OPEN|resolves_by=a_back-read_check_derived_independently_of_the_engine_printed_bound(the_check_lane_measured_its_own_catches_M04_and_M16)|json=0
+FP_HOLD|id=H3|file=src/bin/polariton_freeze_play.rs_(check_leaf)|severity=LOW|disposition=CARRIED|to=the_QNN_landing_PR_of_polariton_freeze_play.rs,where_it_applies_to_that_file|json=0
+FP_HOLD|id=H4|file=src/bin/polariton_freeze_play.rs_(tests)|severity=LOW|disposition=CARRIED|to=the_QNN_landing_PR_of_polariton_freeze_play.rs,where_it_applies_to_that_file|json=0
+FP_HOLD|id=H5|file=src/bin/polariton_freeze_play.rs_(Freezer::new)|severity=LOW|disposition=CARRIED|to=the_QNN_landing_PR_of_polariton_freeze_play.rs,where_it_applies_to_that_file|json=0
+FP_HOLD|id=H6|file=src/bin/polariton_freeze_play.rs_(from_leaf,_after_times_are_sorted)|severity=NOTE|disposition=CARRIED|to=the_QNN_landing_PR_of_polariton_freeze_play.rs,where_it_applies_to_that_file|json=0
+FP_HOLD|id=H7|file=polariton-first-correction/freeze-play/README.md|severity=NOTE|disposition=CARRIED|to=the_QNN_landing_PR_of_polariton_freeze_play.rs,where_it_applies_to_that_file|json=0
+FP_HOLD|id=H8|file=polariton-first-correction/freeze-play/README.md|severity=NOTE|disposition=CARRIED|to=the_QNN_landing_PR_of_polariton_freeze_play.rs,where_it_applies_to_that_file|json=0
