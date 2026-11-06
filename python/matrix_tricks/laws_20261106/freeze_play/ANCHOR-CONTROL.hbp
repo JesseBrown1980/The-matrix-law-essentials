@@ -1,0 +1,3 @@
+ANCHOR_CONTROL|law=3|what=a_leaf_and_its_whole_internal_chain_both_replaced(eps_tail_changed;SHA,SH,HASH_and_the_TREE.hbi_seal_recomputed)|json=0
+ANCHOR_CONTROL_READ|against=the_internal_chain_alone|result=PLAYS(exit_0,rows_differ_from_the_uninterrupted_run)|tag=MEASURED_by_the_check_lane_at_2_of_2_points(A_w63,D_w126)|json=0
+ANCHOR_CONTROL_READ|against=the_outside_anchor(the_tree_seal_pinned_in_a_committed_record)|expected=REFUSED|status=OPEN_until_play_takes_anchor=(hold_H1)|json=0

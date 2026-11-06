@@ -4,7 +4,7 @@
 # SHA = SHA256SUMS; SH = the first 16 hex of each sha256; HASH = LAWS.seal = sha256(SHA256SUMS bytes || LAWS.hbi bytes).
 set -euo pipefail
 cd "$(dirname "$0")"
-FILES="hash_answer.py jump3_jump.py pascal_pyramid.py pow27_mod3.py hash_answer.out.hbp jump3_jump.out.hbp pascal_pyramid.out.hbp pow27_mod3.out.hbp verify_laws.sh"
+FILES="freeze_play/SHA256SUMS hash_answer.py jump3_jump.py pascal_pyramid.py pow27_mod3.py hash_answer.out.hbp jump3_jump.out.hbp pascal_pyramid.out.hbp pow27_mod3.out.hbp verify_laws.sh"
 build_hbi() {
   for f in $FILES; do
     s=$(sha256sum "$f" | cut -d' ' -f1)
@@ -22,6 +22,7 @@ if [ "${1:-}" = "--build" ]; then
   exit 0
 fi
 sha256sum --strict -c --quiet SHA256SUMS
+(cd freeze_play && sha256sum --strict -c --quiet SHA256SUMS)
 cmp <(build_hbi) LAWS.hbi
 cmp <(build_seal) LAWS.seal
 T=$(mktemp -d)

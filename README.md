@@ -183,7 +183,7 @@ for example r = 27, K = 2 gives [0.002009, 0.002015]. Receipts:
 
 ## Laws of November 6, 2026
 
-The operator stated three laws on November 6, 2026. Each check below is an exact-integer Python script in [`python/matrix_tricks/laws_20261106/`](python/matrix_tricks/laws_20261106/), with its recorded output beside it. Status: measured by the seat's scripts. The full code, a Rust 1.81 crate, CI tests and an independent attack follow in a second PR.
+The operator stated three laws on November 6, 2026. Each check below is an exact-integer Python script in [`python/matrix_tricks/laws_20261106/`](python/matrix_tricks/laws_20261106/), with its recorded output beside it. Status: measured by the seat's scripts. The power-of-three law's full code, Rust crate and independent attack are in [`docs/LAW-POWER-OF-THREE-JUMP.md`](docs/LAW-POWER-OF-THREE-JUMP.md).
 
 ### 1. The power-of-three jump
 
@@ -214,7 +214,33 @@ A fixed linear step M reaches step 3^k in k cubings, skipping the 3^k steps. Som
 
 A state frozen with its HBI → HBP → SHA → SH → HASH chain can be played forward from later, and backward where the step is reversible. A tree of frozen slices on a ternary schedule lets any later read start from the nearest leaf.
 
-Status OPEN: the test on the polariton quantum engine is running. It covers freeze, play, refusal of a tampered file, the backward bound and the time saved.
+**Four guarantees, stated separately:**
+- **Integrity:** every frozen state's bytes match their recorded digest.
+- **Provenance:** the root seal matches a seal pinned independently, in a committed GitHub record or an earlier frozen, trusted record.
+- **Replay:** resuming from a frozen state reproduces the reference calculation byte for byte.
+- **Scope:** backward replay holds for reversible dynamics with every needed part of the state retained.
+
+**Status: FILED.** Final acceptance stays OPEN until both conditions are met:
+- **The two MEDIUM holds resolve.**
+  - H1: play checks the outside anchor, which the negative control in [`freeze_play/ANCHOR-CONTROL.hbp`](python/matrix_tricks/laws_20261106/freeze_play/ANCHOR-CONTROL.hbp) reads. That control replaces a leaf and its whole internal chain: it plays against the internal chain alone (measured) and must be refused against the anchor.
+  - H2: a back-read check independent of the engine's own printed bound.
+- **The expanded chain passes.**
+
+The record: all eight holds with their dispositions are in [`freeze_play/HOLDS-DISPOSITIONS.hbp`](python/matrix_tricks/laws_20261106/freeze_play/HOLDS-DISPOSITIONS.hbp). Both lanes' reports are in [`BUILD-REPORT.md`](python/matrix_tricks/laws_20261106/freeze_play/BUILD-REPORT.md) and [`CHECK-REPORT.md`](python/matrix_tricks/laws_20261106/freeze_play/CHECK-REPORT.md).
+
+**Measured** on the polariton quantum engine: a copy at QNN `e4fc6ba` with `polariton_freeze_play.rs` (sha256 `4a903f22…`), freezing a leaf every 9 windows on the tree of 9, 27, 81 and 243. An independent check passed it with holds. The records are [`freeze_play/PREDICTION.hbp`](python/matrix_tricks/laws_20261106/freeze_play/PREDICTION.hbp), committed before the code, and [`freeze_play/RESULTS.hbp`](python/matrix_tricks/laws_20261106/freeze_play/RESULTS.hbp).
+
+- **Play equals the uninterrupted run, byte for byte:** 14 of 14 plays, from leaves 1 to 263 windows before the read, including N = 6561 at K = 1200 and 1600. 31 of 31 leaves written again by a play are the same bytes.
+- **Any changed byte is refused:** a byte in the state, the record, the index, the SHA, the SH or the seal, or a truncation, each exits with no row, 10 of 10.
+- **A later read from the nearest leaf** (one engine process at a time):
+  - at N = 6561, K = 1200: 6.75× faster (15.5 s against 104.9 s) and 39.2× (2.2 s against 87.2 s);
+  - at K = 1600: 7.37× and 38.4×.
+- **Backward play:** 11 of 11 back reads lie inside the forward read's certified interval.
+- **The anchor:** a seal proves a leaf's bytes are intact; it does not prove who wrote them. A leaf with a changed accumulator and its chain resealed plays, and so does one paired with a resealed tree (measured). Play therefore trusts a seal kept outside the leaves: one pinned in a committed record on GitHub, or in the frozen prediction.
+- **Projection (DERIVED) to the full space at N = 6561, 10,768,242 states:**
+  - leaves of 172 MB each, 2.4 GB to t = 2;
+  - t = 2 from t = 0 in about 1.4 h;
+  - any later read in at most 8 windows, about 5 min.
 
 **Reproduce and verify:** `bash python/matrix_tricks/laws_20261106/verify_laws.sh`, which `verify.sh` also runs.
 - **The chain it checks:** the HBI index `LAWS.hbi`, one row per file with bytes, sha256 and its 16-hex SH; the HBP records `*.out.hbp`; the SHA list `SHA256SUMS`; and the HASH seal `LAWS.seal`, the sha256 of `SHA256SUMS` followed by `LAWS.hbi`.
