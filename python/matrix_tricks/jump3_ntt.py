@@ -6,7 +6,7 @@ site of a ring of D sites,
 
     x'[i] = sum over the stencil of c_s * x[(i - s) mod D]   (mod p),
 
-reaches step n = 3^k two ways, and neither takes the n steps:
+reaches step n = 3^k two ways, each in work that grows with k = log_3 n:
   cube : M <- M*M*M, k times. D^3 products per matrix product; this route
          serves any fixed linear map, translation-invariant or not.
   ntt  : when D divides p - 1, the integer NTT of size D diagonalizes M with
@@ -288,7 +288,8 @@ def run_case(name, d, stencil, label, ks, direct_max, out, flags):
             leaf_f = "NOT_DEFINED"
         if has_ntt and not zeros:
             b = ntt_unstep(ring, lam, xc, scratch)
-            ok = step(ring, b, scratch) == xc and b == ntt_jump(ring, lam, x0, n - 1, scratch)
+            ok = (step(ring, b, scratch) == xc and b == ntt_jump(ring, lam, x0, n - 1, scratch)
+                  and ntt_unstep(ring, lam, step(ring, x0, scratch), scratch) == x0)
             leaf_b = mark(ok)
             flags["leaf_b"] &= ok
         elif has_ntt:

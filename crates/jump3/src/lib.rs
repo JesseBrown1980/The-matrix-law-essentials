@@ -634,8 +634,10 @@ pub fn run_case(case: &Case, out: &mut Vec<String>, flags: &mut Flags) -> Result
         };
         let leaf_b = if has_ntt && zeros.is_empty() {
             let b = ntt_unstep(&ring, &lam, &xc, &mut scratch).ok_or("zero eigenvalue")?;
+            let x1 = step(&ring, &x0, &mut scratch);
             let ok = step(&ring, &b, &mut scratch) == xc
-                && b == ntt_jump(&ring, &lam, &x0, n - 1, &mut scratch);
+                && b == ntt_jump(&ring, &lam, &x0, n - 1, &mut scratch)
+                && ntt_unstep(&ring, &lam, &x1, &mut scratch).as_ref() == Some(&x0);
             flags.leaf_b &= ok;
             mark(ok)
         } else if has_ntt {

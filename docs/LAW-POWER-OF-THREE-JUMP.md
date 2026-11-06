@@ -16,7 +16,7 @@ Everything below is exact integer arithmetic modulo the kernel prime
 primitive root 7). Every claim carries one tag:
 - **MEASURED:** a value printed by a named run, kept in `data/jump3/`.
 - **DERIVED:** follows from the stated algebra.
-- **CONJECTURE:** expected, with no derivation in hand.
+- **CONJECTURE:** expected; its derivation is open.
 - **CANNOT_SEE:** outside what this lane read or ran.
 
 ## Exact form
@@ -52,9 +52,9 @@ its 16-hex prefixes are reproduced exactly.
 
 ## Conditions (DERIVED)
 
-1. **One fixed linear map.** The same M at every step. A nonlinear rule
-   sampled as an ensemble lies outside the law. Its linear part can be jumped.
-2. **Dense cubing costs about D³ per cube and stores D² entries.** At
+1. **One fixed linear map.** The same M at every step. For a nonlinear rule
+   sampled as an ensemble, the jumpable piece is its linear part.
+2. **Dense cubing costs 2D³ products per cube (two matrix products) and stores D² entries.** At
    D = 6,561 one matrix holds 43,046,721 entries, and one product takes
    282,429,536,481 multiply-adds. The seat records 10.77 million states for
    the polariton's full space at N = 6,561. A dense matrix on that space holds
@@ -68,11 +68,17 @@ its 16-hex prefixes are reproduced exactly.
    cube route still serves it. A ring of 81 or 6,561 sites jumps by NTT under
    a prime p′ ≡ 1 (mod 81) or (mod 6,561). Dirichlet's theorem guarantees
    infinitely many such primes.
-4. **Playing backwards needs every eigenvalue nonzero.** Unitary evolution
-   qualifies: the shift R, a permutation, has eigenvalues w^m, and its
-   backward leaf holds (measured). The step j = I + R + R² on a 27-ring has
-   1 + z + z² = 0 exactly when z is a primitive cube root of unity, so it has
-   zero modes m = 9 and 18 (measured).
+4. **Playing back to the start needs every eigenvalue nonzero.** An
+   invertible step qualifies: the shift R, a permutation, has eigenvalues
+   w^m, and its backward leaf holds (measured). The step j = I + R + R² on a
+   27-ring has 1 + z + z² = 0 exactly when z is a primitive cube root of
+   unity, so it has zero modes m = 9 and 18 (measured). The first step erases
+   the start's parts in those modes (873,486 and 121,663 for x₀), so x₀ is one
+   of p² preimages of x₁. For n ≥ 2 the state x_{n−1} lies in the range of M
+   (M is diagonalizable because D | p − 1), and the inverse on the nonzero
+   modes returns it exactly (check lane, measured at n = 2, 3, 4, 9, 27, 3⁴⁰).
+   The code's refusal of the backward leaf for such a step is the
+   conservative convention.
 5. **The hash fingerprints and verifies a computed state.** Recovering a
    state from its hash means hashing candidates, so the size of the space sets
    the work: 27 positions on the 3×3×3 cube, 9 with the digit-sum invariant,
@@ -106,7 +112,9 @@ k = 10 `81323c66a0e8a92f`, k = 20 `8ef1ccc86cd3ff0c`, k = 40
 | 40 | 1.2158·10¹⁹ | 1,575,369 | 2,079 | 984,770,902,183,611,232,881 |
 | 80 | 1.4781·10³⁸ | 3,150,009 | 2,241 | 11,972,515,182,562,019,788,602,740,026,717,047,105,681 |
 
-The NTT products stay between 1,593 and 2,322 for every k (bound 2,565). The
+The NTT products stay between 1,593 and 2,322 at the nine measured k, between
+1,593 and 2,430 for every k ≤ 80 (the code's range; 2,430 at k = 79), and at
+most 2,457 for every k (k = 371), under the bound 2,565. The
 cube products grow as 2kD³, which is linear in k, i.e. logarithmic in n.
 
 **Wall clock** (`data/jump3/TIMING-20261106.hbp`, this machine, with one
@@ -174,19 +182,31 @@ SHA-256 of its three digit bytes. Every later arrival is a memo hit.
 
 ## How it answers the operator's aim
 
-The seat's measurement is the model for it. Stepping 3⁴⁰ times is 10²¹
-products, about 126,000 years in Rust at the measured rate. The jump takes
-2,079 products and 9.5 µs, and gives the same state, checked against direct
-stepping wherever direct stepping is affordable. To use it as a test:
+The seat's measurement is the model for it. Stepping 3⁴⁰ times one step at a
+time is 10²¹ products, about 126,000 years in Rust at the measured rate. The
+jump takes 2,079 products and 9.5 µs. The jumped state is the exact integer
+state reduced mod p (a rational coefficient c/d enters as c·d⁻¹ mod p, p ∤ d).
+Mod p the states repeat with period ord(M), the lcm of the orders of the
+nonzero eigenvalues, which divides p − 1 = 1,000,080 when D | p − 1
+(signed_return: 1,000,080; shift: 27). The state at 3⁴⁰ is therefore the
+state at step ((3⁴⁰ − 1) mod ord(M)) + 1 = 38,961, which direct stepping
+reaches in 3,155,841 products; stepped this way, all 27 jump rows, the 7
+NOT_RUN rows included, give the printed hashes (check lane, measured). A state
+hash names n modulo ord(M): signed_return at step 1,000,080 hashes to the
+start state `39127f35…`. To use it as a test:
 
 1. **Write the step as one fixed linear map.** If it is the same at every
    site of a ring whose size divides p − 1, jump by NTT to any step n. The
    cost is flat in n. If it is linear but site-dependent and D is a few
    hundred or less, cube: 2kD³ products to 3^k.
 2. **Verify by hash at small k, then jump.** Agreement of the jump with
-   direct stepping at k ≤ 10 checks the implementation. M^(3^k) = (M^(3^(k−1)))³
-   is exact algebra for every k, so the large-k states carry the same
-   identity. Their SHA-256 pins them for every later run.
+   direct stepping at k ≤ 10 checks the stepping, the transforms and the
+   cubing. The exponent reduction n mod (p − 1) first acts at k = 13
+   (3¹³ = 1,594,323 > p − 1); cube = NTT at some k ≥ 13, or direct stepping to
+   the reduced step ((n − 1) mod ord(M)) + 1, checks it (a planted n mod p
+   passes every row with k ≤ 10 and fails cube = NTT at k = 20, 40, 80).
+   M^(3^k) = (M^(3^(k−1)))³ is exact algebra for every k. The SHA-256 of a
+   jumped state pins its residue for every later run.
 3. **Land between the powers.** Use the leaves (n ± 1), the NTT at any n, or
    the triadic composition of `time_jump_ladder.py` (n written in base 3).
 4. **Count paths by recurrence, then jump the recurrence.** When many orders
@@ -201,7 +221,9 @@ stepping wherever direct stepping is affordable. To use it as a test:
 bridge's frozen blind runs and their folders untouched. Whether the
 polariton's step, or a part of it, is one translation-invariant linear map on
 a ring is the seat's call. Rule 3 then picks the prime: 6,561 = 3⁸ needs
-p′ ≡ 1 (mod 6,561).
+p′ ≡ 1 (mod 6,561); the smallest such primes are 39,367 and, above 10⁶,
+1,102,249. For 81 sites, p′ = 1,000,999 gives NTT = polynomial route at
+k = 1..20 and direct = polynomial route at k ≤ 4 (check lane, measured).
 
 ## Predictions first
 
@@ -211,7 +233,9 @@ runs. They break down as 44 known from the seat, 318 derived and 4
 conjectures. `data/jump3/check_predictions.py` re-reads them against the
 outputs: 366 met, 0 missed (`data/jump3/PREDICTIONS-CHECK-20261106.hbp`). The
 4 conjectures were ring45 having no zero mode, and 9 positions nonzero mod p
-at 3³, 3⁴ and 3⁴⁰ turns. Correction beside `b4df487`: its commit message
+at 3³, 3⁴ and 3⁴⁰ turns. The first is now DERIVED: λ = 2 − z + 3z⁻¹ vanishes
+only at z = 3 or −1, and 3⁴⁵ ≡ 833,125, (−1)⁴⁵ ≡ −1 (mod p), so neither is a
+45th root of unity (check lane). Correction beside `b4df487`: its commit message
 says 369 PREDICT rows. The file holds 366 PREDICT rows and 3 PREDICT_NOTE
 rows under its header.
 
