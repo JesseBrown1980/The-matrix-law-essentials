@@ -34,6 +34,8 @@ FLIGHT_TIME = FLIGHT_LENGTH / SPEED
 CONTRAST = D("0.30")
 BESSEL_CUTOFF = 18
 SPATIAL_GRIDS = (9, 27, 81, 243, 729)
+VIRTUAL_GRID = 3**16                  # 43,046,721; never allocate all the samples
+MAX_TERNARY_EXPONENT = 16
 PHASES = (0, 1, 2, 3)
 
 
@@ -179,6 +181,25 @@ def sampled_visibility(modes,n):
     return (CONTRAST/TWO)*i1.norm2().sqrt()/((ONE-CONTRAST/TWO)*i0)
 
 
+def first_harmonic_without_alias(modes, size):
+    """Mathematical certificate: no congruent intensity Fourier mode aliases
+    to +-1 mod size, given the explicitly truncated finite Fourier series.
+
+    Computes the result from spectral coefficients: NEVER constructs a
+    43-million-element array. Does not certify the original untruncated
+    physical wavefunction, experimental apparatus or real quantum particles.
+    """
+    max_wave = max(abs(k) for k in modes)
+    max_intensity = 2*max_wave
+    alias = [q for q in range(-max_intensity,max_intensity+1)
+             if q != 1 and (q-1)%size==0]
+    alias_minus = [q for q in range(-max_intensity,max_intensity+1)
+                   if q != -1 and (q+1)%size==0]
+    if alias or alias_minus:
+        return None, max_wave, max_intensity
+    return spectral_visibility(modes), max_wave, max_intensity
+
+
 def classical_straight_ray_visibility():
     # Deliberately simplified reference, NOT the paper's classical
     # trajectories, which include the optical dipole force.
@@ -219,6 +240,15 @@ def read_registered_predictions():
 
 def main():
     prediction_rows=read_registered_predictions()
+    high_pred_path = Path(__file__).resolve().parents[2] / "data/vienna_nanoparticle/PREDICTIONS-43046721-20261106.hbp"
+    high_preds = [line for line in high_pred_path.read_text(encoding="utf-8").splitlines()
+                  if line.startswith("PREDICT|id=")]
+    assert len(high_preds)==8
+    assert VIRTUAL_GRID == 43046721
+    assert 3**17 > 45000000
+    report("VIENNA_POWER_OF_THREE",bound=45000000,exponent=MAX_TERNARY_EXPONENT,
+           level=VIRTUAL_GRID,next_power=3**17,
+           interpretation="VIRTUAL_SPATIAL_FOURIER_CERTIFICATE_NOT_43M_PARTICLES")
     report("VIENNA_INPUT",article_DOI="10.1038/s41586-025-09917-9",
            source_data_DOI="10.5281/zenodo.17502163",
            measured_visibility_1="0.10+-0.01",
@@ -253,6 +283,18 @@ def main():
                    delta_visibility=ff(delta),
                    classical_no_force_visibility=ff(classical),
                    model="TOY_COHERENT_THREE_GRATING")
+        virtual, wave_band, density_band = first_harmonic_without_alias(modes,VIRTUAL_GRID)
+        assert virtual is not None
+        assert wave_band == 19 and density_band == 38
+        assert abs(virtual-high)<D("1e-65")
+        assert abs(row[81]-virtual)<D("1e-10")
+        report("VIENNA_VIRTUAL_SLICE",G2_phase_radians=phi,
+               samples=VIRTUAL_GRID,stored_samples=0,
+               wave_mode_max=wave_band,intensity_mode_max=density_band,
+               first_harmonic_alias="NONE",
+               virtual_visibility=ff(virtual),
+               spectral_reference_visibility=ff(high),
+               model="FINITE_FOURIER_TRUNCATION_NOT_43M_PARTICLE_SIMULATION")
         predicted[phi]=row
         report("VIENNA_QUANTUM",phase_radians=phi,
                spectral_visibility=ff(high),
@@ -275,7 +317,7 @@ def main():
     # Fourier momentum modes; free flight is a fixed linear operator.
     max_error=ZERO
     jumps=0
-    for k in range(1,6):
+    for k in range(1,MAX_TERNARY_EXPONENT+1):
         n=3**k
         for mode in (1,2,3,5,11):
             theta=-PI*RATIO*D(mode*mode)
@@ -291,6 +333,13 @@ def main():
                whole_flight_s=ff(FLIGHT_TIME),
                max_phase_amplitude_error=ff(max_error),
                exact_real_arithmetic="NO_DECIMAL_75")
+    assert jumps==5*MAX_TERNARY_EXPONENT
+    report("VIENNA_HIGH_JUMP",ticks=VIRTUAL_GRID,
+           step_time_s=ff(FLIGHT_TIME/D(VIRTUAL_GRID)),
+           whole_flight_s=ff(FLIGHT_TIME),
+           checked_modes=5,ternary_cubings=MAX_TERNARY_EXPONENT,
+           max_phase_amplitude_error=ff(max_error),
+           method="MATRIX_FREE_SPECTRAL_MODE_PHASES")
     report("VIENNA_NORM",intensity_before_G2=ff(sum(a.norm2() for a in g1_state().values())),
            intensity_after_first_free_flight=ff(
                sum(a.norm2() for a in free_flight(g1_state()).values())),
@@ -312,7 +361,14 @@ def main():
     report("VIENNA_RED",case="nine_cell_aliasing",verdict="REJECT")
     red+=1
     assert red==4
+    assert VIRTUAL_GRID!=45000000
+    assert all(first_harmonic_without_alias(output_modes(phi),9)[0] is None for phi in PHASES)
+    report("VIENNA_HIGH_RED",case="3_power_equals_45million",verdict="REJECT")
+    report("VIENNA_HIGH_RED",case="virtual_points_are_allocated_particles",verdict="REJECT")
+    report("VIENNA_HIGH_RED",case="9_point_alias_is_exact_spectrum",verdict="REJECT")
+    report("VIENNA_HIGH_RED",case="toy_model_proves_original_experiment",verdict="REJECT")
     report("VIENNA_VERIFY",status="PASS",frozen_predictions=len(prediction_rows),
+           frozen_high_level_predictions=len(high_preds),largest_ternary_level=VIRTUAL_GRID,
            spatial_slices="27,81,243",independent_reference=729,
            phase_cases=len(PHASES),temporal_ternary_checks=jumps,
            red_controls=red,
