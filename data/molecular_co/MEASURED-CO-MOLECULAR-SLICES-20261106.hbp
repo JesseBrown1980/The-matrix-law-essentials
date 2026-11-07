@@ -1,0 +1,26 @@
+# Hosted test receipt. Frozen predictions: 2e4b7e84f4360e6233af54b9e5aaf2ea6ea7a36f
+# GitHub Actions run 42327155410; job 128264970929; initial code head 000c0fba7fec9819af7a4bb0e60feedebddecd92
+# No binary floats; Decimal 65 digits; exact rational 3/9 power checks.
+CO_MODEL|name=12C16O_stretch|omega_e_cm1=2169.81|beta_inverse_angstrom=2.298|De_eV=11.07|r_eq_angstrom=1.128|initial_displacement_angstrom=0.050|scope=CLASSICAL_MORSE_NOT_QUANTUM_CHEMISTRY|json=0
+CO_SCALES|space_fine_angstrom=4.774922683526E-4|space_middle_angstrom=1.432476805058E-3|space_coarse_angstrom=4.297430415174E-3|time_fine_fs=8.464489069548E-2|time_middle_fs=2.539346720864E-1|time_coarse_fs=7.618040162593E-1|assumed_planck_coordinates=1|json=0
+CO_MORSE|scale=1|dt_fs=8.464489069548E-2|samples=6|max_abs_bond_error_angstrom=2.917008941648E-5|max_relative_energy_drift=2.822114658076E-4|final_bond_angstrom=1.177306908937E+0|final_ref_bond_angstrom=1.177277738848E+0|sha256=a49dcb7ed152986813b826276a84da863410effcc65b57803dfb6d6e119bdf3d|json=0
+CO_MORSE|scale=3|dt_fs=2.539346720864E-1|samples=6|max_abs_bond_error_angstrom=2.412020474387E-4|max_relative_energy_drift=2.539852079174E-3|final_bond_angstrom=1.177518940895E+0|final_ref_bond_angstrom=1.177277738848E+0|sha256=322bba0cc394f4ffb527a5d72bba9f900917ffe06d6533f8a1bcc58832c5c620|json=0
+CO_MORSE|scale=9|dt_fs=7.618040162593E-1|samples=6|max_abs_bond_error_angstrom=1.469730138644E-3|max_relative_energy_drift=2.285396330184E-2|final_bond_angstrom=1.177672990339E+0|final_ref_bond_angstrom=1.177277738848E+0|sha256=8c6d156da96f80abaddb77d7ff8f6d2e75951534872229a64cce579326374ff1|json=0
+CO_MORSE_COMPARE|error_order=FINE_LT_MIDDLE_LT_COARSE|max_ratio_middle_to_fine=8.268814126517E+0|max_ratio_coarse_to_middle=6.093356811233E+0|result=PASS|json=0
+CO_SNAPSHOT|fine_ticks=9|time_fs=7.618040162593E-1|reference_bond_angstrom=1.175970441254E+0|coarse_measured_bins=2463,821,274|reference_sha256=348dcad6ec2a14cfdbda84199a29891af399470313ac0fa3d85ff6418044ae69|json=0
+CO_SNAPSHOT|fine_ticks=27|time_fs=2.285412048778E+0|reference_bond_angstrom=1.160568348887E+0|coarse_measured_bins=2431,810,270|reference_sha256=12c3354c03293b0b759fe43dd08bd3d0d57ac3877f83f3135b4452103c6294c0|json=0
+CO_SNAPSHOT|fine_ticks=81|time_fs=6.856236146334E+0|reference_bond_angstrom=1.086465184199E+0|coarse_measured_bins=2275,758,253|reference_sha256=419099183f24661b0c30bc1c3e06112698afc5b6d3e8365a69c6b5f8272003eb|json=0
+CO_SNAPSHOT|fine_ticks=243|time_fs=2.056870843900E+1|reference_bond_angstrom=1.109765261810E+0|coarse_measured_bins=2324,775,258|reference_sha256=47047ff423471d6824735a1693374144b17b187ab1ac4e99c5be7993cd155468|json=0
+CO_SNAPSHOT|fine_ticks=729|time_fs=6.170612531700E+1|reference_bond_angstrom=1.177919605814E+0|coarse_measured_bins=2467,822,274|reference_sha256=9dce640ea178fad61fadc48febb7b89403be47868e750a319bdd468812c778c9|json=0
+CO_SNAPSHOT|fine_ticks=2187|time_fs=1.851183759510E+2|reference_bond_angstrom=1.177277738848E+0|coarse_measured_bins=2466,822,274|reference_sha256=564a7e54ec08c4bc7700841a1ca6c23880c8ca5a38bc400a085444ec74caa303|json=0
+CO_HARMONIC_EXACT|fractional_matrix_power=FINE_CUBED_AND_NINTH|exact_3_9=PASS|naive_coarse_equal=FALSE|json=0
+CO_HARMONIC|fine_ticks=9|block3=IDENTICAL_BY_POWER_LAW|block9=IDENTICAL_BY_POWER_LAW|jump_vs_sequential_angstrom=1.000000000000E-66|jump_vs_continuum_angstrom=2.378837773560E-7|json=0
+CO_HARMONIC|fine_ticks=27|block3=IDENTICAL_BY_POWER_LAW|block9=IDENTICAL_BY_POWER_LAW|jump_vs_sequential_angstrom=0.000000000000E-54|jump_vs_continuum_angstrom=1.873026024245E-6|json=0
+CO_HARMONIC|fine_ticks=81|block3=IDENTICAL_BY_POWER_LAW|block9=IDENTICAL_BY_POWER_LAW|jump_vs_sequential_angstrom=1.000000000000E-66|jump_vs_continuum_angstrom=2.325665369131E-6|json=0
+CO_HARMONIC|fine_ticks=243|block3=IDENTICAL_BY_POWER_LAW|block9=IDENTICAL_BY_POWER_LAW|jump_vs_sequential_angstrom=1.800000000000E-65|jump_vs_continuum_angstrom=1.784012177311E-5|json=0
+CO_HARMONIC_LONG|k=15|fine_ticks=14348907|elapsed_fs=1.214561664615E+6|triadic_vs_binary_angstrom=2.183960000000E-61|difference_from_continuum_angstrom=1.696656816327E-2|precision=DECIMAL_65_NOT_EXACT_RATIONAL|json=0
+CO_RED|case=wrong_Morse_force_sign|verdict=REJECT|json=0
+CO_RED|case=wrong_3_vs_9_block|verdict=REJECT|json=0
+CO_RED|case=tampered_state|verdict=REJECT|json=0
+CO_RED|case=off_slice_clock|verdict=REJECT|json=0
+CO_VERIFY|status=PASS|frozen_predictions=13|red_controls=4|temporal_slices=3|spatial_slices=3|molecular_trajectory=CLASSICAL_MODEL_NOT_OBSERVED|quantum_molecule=NOT_TESTED|Yang_Mills_SU2=NOT_TESTED|continuum_equivalence=NOT_PROVED|json_zero=1|json=0
