@@ -54,3 +54,20 @@ python3 python/matrix_tricks/vienna_nanoparticle_slices_20261106.py > MEASURED-2
 ```
 
 GitHub workflow `.github/workflows/vienna-nanoparticle-43m.yml` publishes the numerical receipt with SHA-256 verification as an artifact, and subsequently checks the complete committed receipt byte-for-byte when one is present.
+
+## Actual hosted results — measured November 7, 2026 UTC
+
+The original two prediction freezes preceded implementation and extension. [Hosted GitHub Actions run 42328971963](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42328971963) **PASS**, 59 HBP output records preserved in [MEASURED-20261106.hbp](../data/vienna_nanoparticle/MEASURED-20261106.hbp). The workflow also executes 8 red checks: 4 perturbations of the toy physics and 4 false interpretations/alias claims. A later replay re-compares every record byte-for-byte to the committed receipt.
+
+| Middle-grating phase φ, chosen model radians | Toy visibility at 43,046,721 virtual samples | Physical comparison status |
+| ---: | ---: | --- |
+| 0 | 0.010525865726 | **NOT A FIT** to measured laser power |
+| 1 | 0.095778254134 | **NOT A FIT** to measured laser power |
+| 2 | 0.107343875060 | **NOT A FIT** to measured laser power |
+| 3 | 0.039192841218 | **NOT A FIT** to measured laser power |
+
+Every 43,046,721-point virtual readout is obtained from the truncated finite Fourier coefficients with `stored_samples=0`, not by sampling tens of millions of particles. The explicit 9-site test at φ=3 instead read `0.046113860849` versus the fine spectral value `0.039192841218`, a discrepancy of **0.006921019631** due to aliasing. This red check demonstrates the importance of finite spatial resolution.
+
+The temporal jump covered **43,046,721 hypothetical substeps** over a single model flight of **0.00614375 s**, each about `1.427228336392916e-10 s`, with **16** power-three cubings. 5 Fourier momentum modes were verified independently at each k=1..16: **80 comparisons**. Maximum amplitude discrepancy versus the separately calculated whole-flight phase was `6.100616890818564e-68` in 75-digit Decimal arithmetic. That number is **not** an experimental accuracy and is not a calibrated physical prediction.
+
+**Context for the real published data:** the *Nature* paper's reported two independent measurement visibilities, `0.10±0.01` and `0.08±0.01`, are at the specified UV grating laser powers; they **cannot** be compared to arbitrary φ values without a verified laser-power-to-phase map, photodepletion efficiency, mass and velocity distributions, and decoherence corrections. A numerical proximity between a toy φ prediction and a measured visibility is not an experimental fit.
