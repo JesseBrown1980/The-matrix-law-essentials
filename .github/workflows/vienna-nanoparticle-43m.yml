@@ -1,0 +1,46 @@
+name: Vienna nanoparticle 43M ternary virtual-slice test
+on:
+  push:
+    branches: [gpt6-vienna-nanoparticle-quantum-ternary-slices-20261106, main]
+    paths:
+      - 'python/matrix_tricks/vienna_nanoparticle_slices_20261106.py'
+      - 'data/vienna_nanoparticle/**'
+      - 'docs/VIENNA-NANOPARTICLE-INTERFERENCE-20261106.md'
+      - '.github/workflows/vienna-nanoparticle-43m.yml'
+  pull_request:
+    paths:
+      - 'python/matrix_tricks/vienna_nanoparticle_slices_20261106.py'
+      - 'data/vienna_nanoparticle/**'
+      - 'docs/VIENNA-NANOPARTICLE-INTERFERENCE-20261106.md'
+      - '.github/workflows/vienna-nanoparticle-43m.yml'
+jobs:
+  quantum-virtual-43m:
+    runs-on: ubuntu-24.04
+    permissions: {contents: read}
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify prediction freeze and compute actual numerical result
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/vienna
+          test "$(grep -c '^PREDICT|id=' data/vienna_nanoparticle/PREDICTIONS-20261106.hbp)" -eq 12
+          test "$(grep -c '^PREDICT|id=' data/vienna_nanoparticle/PREDICTIONS-43046721-20261106.hbp)" -eq 8
+          python3 python/matrix_tricks/vienna_nanoparticle_slices_20261106.py | tee build/vienna/MEASURED-20261106.hbp
+          grep -F 'VIENNA_POWER_OF_THREE|bound=45000000|exponent=16|level=43046721|next_power=129140163|' build/vienna/MEASURED-20261106.hbp
+          grep -F 'VIENNA_HIGH_JUMP|ticks=43046721|' build/vienna/MEASURED-20261106.hbp
+          test "$(grep -c '^VIENNA_VIRTUAL_SLICE|' build/vienna/MEASURED-20261106.hbp)" -eq 4
+          test "$(grep -c '^VIENNA_HIGH_RED|' build/vienna/MEASURED-20261106.hbp)" -eq 4
+          test "$(grep -c '^VIENNA_RED|' build/vienna/MEASURED-20261106.hbp)" -eq 4
+          grep -F 'VIENNA_VERIFY|status=PASS|frozen_predictions=12|frozen_high_level_predictions=8|largest_ternary_level=43046721|' build/vienna/MEASURED-20261106.hbp
+          if test -f data/vienna_nanoparticle/MEASURED-20261106.hbp; then
+            tail -n +4 data/vienna_nanoparticle/MEASURED-20261106.hbp | cmp - build/vienna/MEASURED-20261106.hbp
+          fi
+          (cd build/vienna && sha256sum MEASURED-20261106.hbp > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vienna-43million-triadic-nanoparticle-receipts
+          path: build/vienna/
+          if-no-files-found: warn
