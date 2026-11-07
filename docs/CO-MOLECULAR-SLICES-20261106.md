@@ -49,3 +49,20 @@ python3 python/matrix_tricks/co_molecular_slices_20261106.py > MEASURED-CO-MOLEC
 ```
 
 The hosted job `.github/workflows/co-molecular-slices.yml` runs the script, checks the preregistered gates and saves a SHA256SUMS-sealed HBP receipt.
+
+## Hosted measurements — November 6 local / November 7 UTC
+
+Recorded under the unchanged frozen `PREDICT` commit `2e4b7e8`. Initial hosted execution [run 42327155410](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42327155410) **PASS**. The exact output was committed to [MEASURED-CO-MOLECULAR-SLICES-20261106.hbp](../data/molecular_co/MEASURED-CO-MOLECULAR-SLICES-20261106.hbp), and [the plotted molecular snapshots](../data/molecular_co/CO-MOLECULAR-SLICES-OBSERVATIONS.svg) were computed from that receipt. The final-head workflow additionally checks byte equality of the receipt.
+
+| Molecular time step | Maximum absolute bond position error vs independent RK4 over six common times | Maximum relative bond-energy drift | Final modeled bond length at ~185.12 fs |
+| --- | ---: | ---: | ---: |
+| Fine 0.0846449 fs | 0.0000291701 Å | 0.000282211 | 1.177306909 Å |
+| Middle 0.2539347 fs | 0.000241202 Å | 0.00253985 | 1.177518941 Å |
+| Coarse 0.7618040 fs | 0.001469730 Å | 0.02285396 | 1.177672990 Å |
+| Independent RK4 reference, fine/9 | Reference | Reference | 1.177277739 Å |
+
+All six registered observation times were measured at **the same physical times** across each slice: 0.7618, 2.2854, 6.8562, 20.5687, 61.7061 and 185.1184 fs. Position readout at the three specified Planck-coordinate bin widths passed the half-bin bound.
+
+The harmonic matrix's exact **rational** 3- and 9-step block identities passed, while re-integrating naively at 3h and 9h was provably different. Triadic repeated cubing through `3^15 = 14,348,907` fine steps (~**1.21456 ns**) matched separate binary matrix exponentiation within `2.184e-61 Å` at Decimal precision 65; however, the result differed from the continuous harmonic cosine by **0.0169666 Å** at that time. This negative long-time comparison is essential: matrix-jump correctness **does not entail physical continuum agreement**.
+
+All four registered red guards rejected their bad cases. The frozen conjecture that the maximum Morse bond error increases with coarser time steps was met in this run. These measurements are for the **calibrated classical 1D CO potential** only. No real single-molecule motion or quantum effect was compared.
