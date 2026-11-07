@@ -1,0 +1,19 @@
+# Frozen predictions commit: 6734e0c0aba6cb79292b427ad6a6491e389e5534
+# Actual hosted CI run 42328026246 job 128267780570; CO harmonic model, coupled toy uncalibrated.
+# Sixteen HBP rows follow; not a measurement of actual CO-CO dynamics.
+CO_PAIR_SETUP|molecules=2|model=CO_CLASSICAL_HARMONIC_STRETCH|coupling=OMEGA_SQUARED_DIVIDED_BY_9_UNCALIBRATED|coupling_measurement=NONE|prediction_commit=6734e0c0aba6cb79292b427ad6a6491e389e5534|json=0
+CO_PAIR_IN_PHASE|ticks=2187|elapsed_fs=1.851183759510E+2|mean_signed_error_angstrom=-4.934822563104E-5|individual_rmse_angstrom=4.934822563104E-5|vanished=NO|json=0
+CO_PAIR_OPPOSITE_PHASE|ticks=2187|elapsed_fs=1.851183759510E+2|mean_signed_error_angstrom=0.000000000000E-54|individual_rmse_angstrom=4.934822563104E-5|vanished_in_mean=YES|individual_error_vanished=NO|json=0
+CO_PAIR_COUPLED_ANTI|ticks=2187|elapsed_fs=1.851183759510E+2|collective_frequency_squared_ratio=11/9|mean_signed_error_angstrom=0.000000000000E+12|individual_rmse_angstrom=2.351629515739E-4|result=NONZERO_MOLECULE_ERROR|json=0
+CO_PAIR_COUPLED_COHERENT|ticks=2187|mean_signed_error_angstrom=-4.934822563104E-5|individual_rmse_angstrom=4.934822563104E-5|coupling_force=ZERO_BUT_TIME_ERROR_NONZERO|json=0
+CO_PAIR_DIRECT|ticks=2187|antisymmetric_mismatch_angstrom=2.860000000000E-64|coherent_mismatch_angstrom=1.760000000000E-64|validation=PASS|json=0
+CO_PAIR_IN_PHASE|ticks=14348907|elapsed_fs=1.214561664615E+6|mean_signed_error_angstrom=1.696656816327E-2|individual_rmse_angstrom=1.696656816327E-2|vanished=NO|json=0
+CO_PAIR_OPPOSITE_PHASE|ticks=14348907|elapsed_fs=1.214561664615E+6|mean_signed_error_angstrom=0.000000000000E-54|individual_rmse_angstrom=1.696656816327E-2|vanished_in_mean=YES|individual_error_vanished=NO|json=0
+CO_PAIR_COUPLED_ANTI|ticks=14348907|elapsed_fs=1.214561664615E+6|collective_frequency_squared_ratio=11/9|mean_signed_error_angstrom=0.000000000000E+12|individual_rmse_angstrom=1.874201561826E-2|result=NONZERO_MOLECULE_ERROR|json=0
+CO_PAIR_COUPLED_COHERENT|ticks=14348907|mean_signed_error_angstrom=1.696656816327E-2|individual_rmse_angstrom=1.696656816327E-2|coupling_force=ZERO_BUT_TIME_ERROR_NONZERO|json=0
+CO_PAIR_JUMP|fine_ticks=14348907|triadic_binary_difference_angstrom=1.449978000000E-60|continuous_model_difference_angstrom=1.874201561826E-2|discrete_step_execution=PASS|continuum_equivalence=NOT_EXACT|json=0
+CO_PAIR_RED|case=coherent_average_must_cancel|verdict=REJECT|json=0
+CO_PAIR_RED|case=opposite_phase_rmse_zero|verdict=REJECT|json=0
+CO_PAIR_RED|case=coupling_is_measured_CO_CO_force|verdict=REJECT|json=0
+CO_PAIR_RED|case=wrong_coupling_frequency|verdict=REJECT|json=0
+CO_PAIR_VERIFY|status=PASS|registered_predictions=8|molecules=2|red_controls=4|phase_average_cancellation=1|individual_error_survives=1|real_CO_CO_measurement=NOT_PROVIDED|quantum_molecule=NOT_SIMULATED|YM4_continuum=NOT_PROVED|json_zero=1|json=0
