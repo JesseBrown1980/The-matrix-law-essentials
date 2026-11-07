@@ -38,6 +38,7 @@ jobs:
           grep -F 'CO_MORSE_COMPARE|error_order=FINE_LT_MIDDLE_LT_COARSE|' build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp
           grep -F 'CO_HARMONIC_LONG|k=15|fine_ticks=14348907|' build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp
           test "$(grep -c '^CO_RED|' build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp)" -eq 4
+          tail -n +4 data/molecular_co/MEASURED-CO-MOLECULAR-SLICES-20261106.hbp | cmp - build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp
           (cd build/co_molecular && sha256sum MEASURED-CO-MOLECULAR-SLICES.hbp > SHA256SUMS)
       - uses: actions/upload-artifact@v4
         if: always()
