@@ -1,0 +1,47 @@
+name: CO molecular ternary slice and jump test
+on:
+  push:
+    branches:
+      - gpt6-co-molecular-slices-jump-20261106
+      - main
+    paths:
+      - 'python/matrix_tricks/co_molecular_slices_20261106.py'
+      - 'data/molecular_co/**'
+      - '.github/workflows/co-molecular-slices.yml'
+      - 'docs/CO-MOLECULAR-SLICES-20261106.md'
+  pull_request:
+    paths:
+      - 'python/matrix_tricks/co_molecular_slices_20261106.py'
+      - 'data/molecular_co/**'
+      - '.github/workflows/co-molecular-slices.yml'
+      - 'docs/CO-MOLECULAR-SLICES-20261106.md'
+jobs:
+  co-model-three-scale:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check frozen prediction exists and precedes test
+        shell: bash
+        run: |
+          test -s data/molecular_co/PREDICT-CO-MOLECULAR-SLICES-20261106.hbp
+          test "$(grep -c '^PREDICT|id=' data/molecular_co/PREDICT-CO-MOLECULAR-SLICES-20261106.hbp)" -eq 13
+      - name: Execute independent high precision Morse and triadic matrix test
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/co_molecular
+          python3 python/matrix_tricks/co_molecular_slices_20261106.py | tee build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp
+          grep -F 'CO_VERIFY|status=PASS|frozen_predictions=13|red_controls=4|temporal_slices=3|spatial_slices=3|' build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp
+          grep -F 'CO_HARMONIC_EXACT|fractional_matrix_power=FINE_CUBED_AND_NINTH|exact_3_9=PASS|naive_coarse_equal=FALSE' build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp
+          grep -F 'CO_MORSE_COMPARE|error_order=FINE_LT_MIDDLE_LT_COARSE|' build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp
+          grep -F 'CO_HARMONIC_LONG|k=15|fine_ticks=14348907|' build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp
+          test "$(grep -c '^CO_RED|' build/co_molecular/MEASURED-CO-MOLECULAR-SLICES.hbp)" -eq 4
+          (cd build/co_molecular && sha256sum MEASURED-CO-MOLECULAR-SLICES.hbp > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: co-molecular-three-slice-receipt
+          path: build/co_molecular/
+          if-no-files-found: warn
