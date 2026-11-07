@@ -15,6 +15,22 @@ Results carry one of four labels:
 - **Measured:** precise Euclidean-evolution or eigensolver values.
 - **Exact:** closed-form weak-coupling laws in exact integer arithmetic.
 
+## Latest cross-scale results: 43-million jumps, molecule slices and Shadow Cats (November 6–7, 2026)
+
+The matrix-law toolkit now has **three distinct kinds of evidence**: the certified *finite* `S₃` Hamiltonian calculations below, exact or high-precision **algorithm tests**, and deliberately simplified **physical models**. They must not be treated as interchangeable claims.
+
+| Track | Status and specific result | Reproduce / scope |
+|---|---|---|
+| **Power-of-three quantum-wave jump** | [**PR #7, MERGED**](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/7). Exactly **`3^16 = 43,046,721`** model time subdivisions reached by **16 cubings** of Fourier free-flight factors. **80/80** independent modal comparisons passed, with maximum reported high-precision amplitude difference `6.10e-68`. | [Hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42329111050) · [model note](docs/VIENNA-NANOPARTICLE-INTERFERENCE-20261106.md) · [59-row measurement receipt](data/vienna_nanoparticle/MEASURED-20261106.hbp). |
+| **Spatial slices / synthetic observations** | The finite, truncated three-grating wave model gives the same first Fourier harmonic at virtual **43,046,721** sample sites as the analytical spectral readout **without allocating a 43-million-element state**; a 9-point slice fails by `0.00692102` at one chosen grating phase. Synthetic detector profiles are committed. | [Model camera frames](data/vienna_nanoparticle/VIRTUAL-43M-DETECTOR-SNAPSHOTS.svg). Inspired by [Pedalino et al., *Nature* (2026)](https://doi.org/10.1038/s41586-025-09917-9): real **sodium nanoparticles**, not viruses, and **not quantum cloning**. The raw measured interference curve was **not** reproduced. |
+| **Molecular interactions / ensemble stress tests** | [PR #6, DRAFT](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/6). CO Morse bond stretch at three temporal/spatial slices and exact harmonic time jumps; tests of **1–729** phase-balanced and coupled-model coordinates, plus a directly tested two-molecule case. Two opposite-phase errors cancel in the signed mean even when the RMS per molecule remains nonzero. | [Original hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42327155410) · [ensemble hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42327754135) · [two-molecule hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42328026246). A **classical fitted CO force model** and an uncalibrated interaction toy, not ab initio molecular proof. |
+| **Finite three-scale `S₃` gauge transfer** | [YM4 PR #33, DRAFT](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/pull/33). In a solvable **1+1D** `S₃` gauge model, exact 9→3→1 spatial blocking reproduces selected gauge-invariant correlation functions when the induced interaction is retained. | [Hosted PASS](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/actions/runs/42326608078). Not a 4D SU(2) continuum result. |
+| **Retained `C0/C1/C2` Shadow Cat residue** | [YM4 PR #34, DRAFT](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/pull/34). `(C0+C1+C2) mod 3` is preserved under 27→9→3→1 blocking and ternary permutation jumps to `3^16`. An exhaustive **1,296-case** `S₃` test shows a *candidate* signed holonomy flips under gauge conjugation, whereas its Wilson character is invariant. | [Hosted PR #34 proof-boundary gate PASS](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/actions/runs/42330584710) · [finite bridge PR #125, DRAFT](https://github.com/JesseBrown1980/Finite-universe-Yang-mills-existence-and-mass-gap-using-HEB-C/pull/125). A retained ternary residual is **not** itself a mass-gap eigenvalue. |
+
+**Interpretation:** Repeated cubing certifies the *chosen* transfer rule, and finite Fourier bandlimits certify the stated virtual observation. Neither establishes that spacetime is discrete, that a nonlinear molecular system can always be fast-forwarded, or that the Clay four-dimensional Yang–Mills existence and physical mass gap are proved. The continuum work still requires a gauge-invariant excitation observable and a lower physical gap bound uniform in lattice spacing; see [the 4D companion proof ledger](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/blob/main/PROBLEM.md).
+
+These exploratory experiments run in their **own GitHub Actions workflows** and are **not claimed to be covered by `./verify.sh`**. The original strict integer-only certificate pipeline remains the separately verified core.
+
 The execution backend and the larger-volume runs live in
 [Finite-universe Yang–Mills (HEB-C)](https://github.com/JesseBrown1980/Finite-universe-Yang-mills-existence-and-mass-gap-using-HEB-C),
 which uses these tools unchanged.
@@ -283,8 +299,8 @@ python/audit      integer-only AST audit
 data/             operators, ledgers, sweeps, volume runs, 3×3 certificates, jump3 predictions and receipts (json=0)
 ```
 
-Rules throughout:
-- integers only: no float, Decimal, Fraction or float timing;
+Rules for the certified finite-`S₃` core (not the separately labeled exploratory wave/molecule scripts):
+- integers only in the proof/certificate path: no float, Decimal, Fraction or float timing;
 - outward-rounded integer division in certificates;
 - `json=0` on every receipt line;
 - Rust 1.81 with `clippy -D warnings`.
