@@ -1,0 +1,48 @@
+name: CO 1-to-729 molecule ensemble stress test
+on:
+  push:
+    branches: [gpt6-co-molecular-slices-jump-20261106, main]
+    paths:
+      - 'python/matrix_tricks/co_molecular_ensemble_20261106.py'
+      - 'python/matrix_tricks/co_molecular_slices_20261106.py'
+      - 'data/molecular_co/PREDICT-CO-ENSEMBLES-20261106.hbp'
+      - 'data/molecular_co/MEASURED-CO-ENSEMBLES-20261106.hbp'
+      - '.github/workflows/co-molecular-ensemble.yml'
+  pull_request:
+    paths:
+      - 'python/matrix_tricks/co_molecular_ensemble_20261106.py'
+      - 'python/matrix_tricks/co_molecular_slices_20261106.py'
+      - 'data/molecular_co/PREDICT-CO-ENSEMBLES-20261106.hbp'
+      - 'data/molecular_co/MEASURED-CO-ENSEMBLES-20261106.hbp'
+      - '.github/workflows/co-molecular-ensemble.yml'
+jobs:
+  coupled-co-array:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify prediction was registered first
+        run: |
+          set -euo pipefail
+          test "$(grep -c '^PREDICT|id=' data/molecular_co/PREDICT-CO-ENSEMBLES-20261106.hbp)" -eq 11
+      - name: Compute molecule-count scaling and compare to independent continuum harmonic mode
+        run: |
+          set -euo pipefail
+          mkdir -p build/co_ensemble
+          python3 python/matrix_tricks/co_molecular_ensemble_20261106.py | tee build/co_ensemble/MEASURED-CO-ENSEMBLES.hbp
+          grep -F 'CO_ENSEMBLE_VERIFY|status=PASS|registered_predictions=11|molecules_max=729|red_controls=4|' build/co_ensemble/MEASURED-CO-ENSEMBLES.hbp
+          grep -F 'CO_ENSEMBLE_HARMONIC|fine_ticks=14348907|molecules=729|group=balanced_phases|' build/co_ensemble/MEASURED-CO-ENSEMBLES.hbp
+          grep -F 'CO_ENSEMBLE_COUPLED|molecules=729|step_count=2187|' build/co_ensemble/MEASURED-CO-ENSEMBLES.hbp
+          test "$(grep -c '^CO_ENSEMBLE_RED|' build/co_ensemble/MEASURED-CO-ENSEMBLES.hbp)" -eq 4
+          if test -f data/molecular_co/MEASURED-CO-ENSEMBLES-20261106.hbp; then
+            tail -n +4 data/molecular_co/MEASURED-CO-ENSEMBLES-20261106.hbp | cmp - build/co_ensemble/MEASURED-CO-ENSEMBLES.hbp
+          fi
+          (cd build/co_ensemble && sha256sum MEASURED-CO-ENSEMBLES.hbp > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: co-1-to-729-molecule-ensemble-evidence
+          path: build/co_ensemble/
+          if-no-files-found: warn
