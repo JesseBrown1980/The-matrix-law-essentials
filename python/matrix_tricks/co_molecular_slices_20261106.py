@@ -84,7 +84,9 @@ def harmonic(s):
 
 
 def matpow(a,n):
-    identity=((ONE,ZERO),(ZERO,ONE))
+    unit=Fraction(1,1) if isinstance(a[0][0],Fraction) else ONE
+    nil=Fraction(0,1) if isinstance(a[0][0],Fraction) else ZERO
+    identity=((unit,nil),(nil,unit))
     outm=identity
     while n:
         if n%2:
