@@ -1,0 +1,20 @@
+# FROZEN PREDICTIONS -- VIENNA NANOPARTICLE QUANTUM INTERFERENCE, 2026-11-06
+# File deliberately committed before the target experimental-validation script.
+# Literature: Pedalino et al., Nature 649, 866-870 (2026), doi:10.1038/s41586-025-09917-9
+# Original code/data: doi:10.5281/zenodo.17502163 (archive not retrieved here).
+# Not a virus. Not quantum cloning. No first-principles experimental replay.
+# Model is a simplified one-period coherent grating, not source's Wigner-Weyl theory.
+# All model parameters except m,v,d,L are explicitly CHOSEN, not experimentally fitted.
+PREDICT|id=01|check=EXPERIMENTAL_ANCHOR|mean_mass_kDa=172|diameter_nm=8|grating_period_nm=133|grating_spacing_m=0.983|published_visibilities=0.10+-0.01,0.08+-0.01|G2_mW=15.2+-0.3|status=LITERATURE|json=0
+PREDICT|id=02|check=DEBROGLIE_TALBOT|mass_Da=172000|speed_m_per_s=160|lambda_m_approx=1.4499683e-14|Talbot_length_m_approx=1.219958|L_div_LT_approx=0.805766|status=DERIVED|json=0
+PREDICT|id=03|check=MODEL_SPEC|G1_G3_amplitude_contrast=0.30|G2_phase_radians=0,1,2,3|readout=swept_G3_transmission|no_photodepletion=1|no_velocity_spread=1|no_dipole_force=1|status=DECLARED|json=0
+PREDICT|id=04|check=FINE_VS_COARSE_SLICES|points=27,81,243|reference_points=729|quantum_visibility_difference_lt=1e-10|phase=0,1,2,3|status=DERIVED|json=0
+PREDICT|id=05|check=PHASE_ONLY_GRATING|quantum_visibility_depends_on_phase=YES|classical_straight_ray_visibility=CONSTANT|status=DERIVED|json=0
+PREDICT|id=06|check=QUANTUM_TOY_VISIBILITY|phase_1=ABOUT_0.09574|phase_2=ABOUT_0.10730|phase_3=ABOUT_0.03918|classical=ABOUT_0.03065|status=THEORY_GUIDED|json=0
+PREDICT|id=07|check=TIME_JUMP|free_segment_s=0.00614375|power_three_jumps=3,9,27,81,243|jump_vs_one_shot_phase_error_lt=1e-40|status=DERIVED|json=0
+PREDICT|id=08|check=LOW_RESOLUTION_ALIAS|nine_point_slice_phase_3_differs_from_high_resolution_gt=1e-3|status=DERIVED|json=0
+PREDICT|id=09|check=NORM_BEFORE_G2|norm_conserved_by_free_flight=1|status=DERIVED|json=0
+PREDICT|id=10|check=NEGATIVE_CONTROLS|wrong_mass=REJECT|wrong_period=REJECT|phase_grating_omission=REJECT|low_resolution_alias=REJECT|status=RED|json=0
+PREDICT|id=11|check=SOURCE_DATA_ACCESS|zenodo_dataset_DOI=10.5281/zenodo.17502163|raw_archive=NOT_RETRIEVED|full_experiment_fit=NOT_CLAIMED|status=LIMIT|json=0
+PREDICT|id=12|check=PHYSICAL_SCOPE|measured_nanoparticle_interference=REFERENCED_NOT_RECREATED|no_quantum_cloning=1|no_virus=1|Yang_Mills_4D_gap=NOT_TESTED|fundamental_spacetime_discreteness=NOT_INFERRED|status=LIMIT|json=0
+PREDICTION_SUMMARY|registered=12|prediction_first=1|execution_status=NOT_RUN|json=0

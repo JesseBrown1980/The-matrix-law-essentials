@@ -1,0 +1,15 @@
+# VIRTUAL-43046721 PREDICTION FREEZE, before extension to the simulator test.
+# Anchors: 2026 Nature sodium nanoparticle interference (not viruses, not cloning).
+# Users' upper bound: 45,000,000. Greatest power of 3 not exceeding bound is 43,046,721.
+# Spectral certificate refers to truncated toy wavefunction Fourier series only:
+# initial mask modes -1,0,1 and phase-grating cutoff +-18 => max |k|=19;
+# intensity modes <=38. The first harmonic integral has no alias for N>=40.
+PREDICT|id=01|check=MAX_TERNARY_SIZE|bound=45000000|exponent=16|value=43046721|next=129140163|status=DERIVED|json=0
+PREDICT|id=02|check=TEMPORAL_JUMP|n=43046721|k=16|segment_length_m=0.983|whole_flight_time_s=0.00614375|step_time_s_approx=1.427228336393e-10|status=DERIVED|json=0
+PREDICT|id=03|check=TEMPORAL_COMPOSITION|modes=1,2,3,5,11|cube_to_3^16_vs_direct_phase=WITHIN_DECIMAL_TOLERANCE|tolerance=1e-40|status=DERIVED|json=0
+PREDICT|id=04|check=VIRTUAL_SPATIAL_SAMPLE|N=43046721|explicit_array_length=0|method=FOURIER_NO_ALIAS_CERTIFICATE|same_as_analytic_spectral=YES|status=DERIVED|json=0
+PREDICT|id=05|check=FOURIER_BANDLIMIT|grating_fourier_cutoff=18|max_absolute_wave_mode=19|max_absolute_intensity_mode=38|safe_N_min=40|status=DERIVED|json=0
+PREDICT|id=06|check=THREE_POWER_SLICES|N=27,81,243,43046721|9_cell_alias=CONTROL|81_to_43046721_exact_spectral_under_truncation=YES|status=DERIVED|json=0
+PREDICT|id=07|check=NEGATIVE_CONTROLS|pretend_3^16_is_45000000=REJECT|virtual_sample_is_explicit_massive_array=REJECT|9_cell_spectrum_alias_is_exact=REJECT|model_equals_experiment=REJECT|status=RED|json=0
+PREDICT|id=08|check=PHYSICAL_SCOPE|actual_nanoparticle_count=NOT_EXPANDED|full_Wigner_Weyl_data_fit=NOT_DONE|4D_Yang_Mills_gap=NOT_TESTED|status=LIMIT|json=0
+PREDICTION_SUMMARY|rows=8|frozen_before_extended_test=1|results=NOT_RUN|json=0
