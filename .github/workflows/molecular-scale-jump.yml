@@ -7,12 +7,14 @@ on:
       - 'python/matrix_tricks/render_molecular_shots.py'
       - '.github/workflows/molecular-scale-jump.yml'
       - 'docs/MOLECULAR-SCALE-JUMP-20261106.md'
+      - 'data/molecular_camera/**'
   pull_request:
     paths:
       - 'python/matrix_tricks/molecular_scale_jump.py'
       - 'python/matrix_tricks/render_molecular_shots.py'
       - '.github/workflows/molecular-scale-jump.yml'
       - 'docs/MOLECULAR-SCALE-JUMP-20261106.md'
+      - 'data/molecular_camera/**'
 
 jobs:
   exact-molecular-jump:
@@ -37,6 +39,7 @@ jobs:
           python3 python/matrix_tricks/render_molecular_shots.py build/molecular/MOLECULAR-RESULTS.hbp build/molecular/shots > build/molecular/SHOTS.hbp
           grep -F 'MOLECULAR_SHOTS|count=6|all_source_hashes_verified=1|status=PASS|' build/molecular/SHOTS.hbp
           test "$(find build/molecular/shots -name 'shot_*.svg' | wc -l)" -eq 6
+          for f in build/molecular/shots/*.svg; do cmp "$f" "data/molecular_camera/$(basename "$f")"; done
           (cd build/molecular && sha256sum MOLECULAR-RESULTS.hbp SHOTS.hbp shots/*.svg > SHA256SUMS)
       - uses: actions/upload-artifact@v4
         with:
