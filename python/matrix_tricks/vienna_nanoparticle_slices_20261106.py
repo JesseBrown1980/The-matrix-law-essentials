@@ -177,7 +177,7 @@ def g1_classical():
     return q(m(A,rho1),m(B,rho0))
 
 def old_file(path,blob_sha):
-    raw=(ROOT/path).read_bytes()
+    raw=ROOT.joinpath(path).read_bytes()
     obj=b"blob "+str(len(raw)).encode()+bytes((0,))+raw
     require(sha1(obj).hexdigest()==blob_sha,"historical_git_blob_pin")
     return raw.decode("utf-8")
