@@ -239,6 +239,10 @@ for h in $(grep '^MATRIX_SHA|' $F | cut -d'|' -f2 | cut -d' ' -f1); do has "^MAT
 python3 python/volume/monotone_cells.py --ray 54000000 build/ym3x3_certs.hbp | has "^MONOTONE_CELLS|L=3x3|points=9,15,27,45,81,243|r_range=\[9,infinity\]|cells=5|ray=1|min_gap_lower_bound=23357514/1000000|result=PASS|"
 # 6. integer-only audit of every Python tool
 python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/*.py python/sweep/*.py python/volume/*.py python/matrix_tricks/*.py data/jump3/*.py python/matrix_tricks/laws_20261106/*.py
+# 6b. Preserve the original Vienna Decimal code as historical evidence,
+#      but certify the simplified model again using INTEGER fixed-point math.
+python3 -I python/matrix_tricks/vienna_nanoparticle_slices_20261106.py --self-test > build/vienna_integer_replay.hbp
+grep -q '^VIENNA_INT_VERIFY|status=PASS|engine=INTEGER_FIXED_POINT|' build/vienna_integer_replay.hbp
 # 7. the laws of November 6, 2026: the HBI -> HBP -> SHA -> SH -> HASH chain and an independent replay
 bash python/matrix_tricks/laws_20261106/verify_laws.sh
 echo "VERIFY|status=PASS|json=0"

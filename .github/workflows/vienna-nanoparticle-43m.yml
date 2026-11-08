@@ -27,20 +27,15 @@ jobs:
           mkdir -p build/vienna
           test "$(grep -c '^PREDICT|id=' data/vienna_nanoparticle/PREDICTIONS-20261106.hbp)" -eq 12
           test "$(grep -c '^PREDICT|id=' data/vienna_nanoparticle/PREDICTIONS-43046721-20261106.hbp)" -eq 8
-          python3 python/matrix_tricks/vienna_nanoparticle_slices_20261106.py | tee build/vienna/MEASURED-20261106.hbp
-          grep -F 'VIENNA_POWER_OF_THREE|bound=45000000|exponent=16|level=43046721|next_power=129140163|' build/vienna/MEASURED-20261106.hbp
-          grep -F 'VIENNA_HIGH_JUMP|ticks=43046721|' build/vienna/MEASURED-20261106.hbp
-          test "$(grep -c '^VIENNA_VIRTUAL_SLICE|' build/vienna/MEASURED-20261106.hbp)" -eq 4
-          test "$(grep -c '^VIENNA_HIGH_RED|' build/vienna/MEASURED-20261106.hbp)" -eq 4
-          test "$(grep -c '^VIENNA_RED|' build/vienna/MEASURED-20261106.hbp)" -eq 4
-          grep -F 'VIENNA_VERIFY|status=PASS|frozen_predictions=12|frozen_high_level_predictions=8|largest_ternary_level=43046721|' build/vienna/MEASURED-20261106.hbp
-          if test -f data/vienna_nanoparticle/MEASURED-20261106.hbp; then
-            tail -n +4 data/vienna_nanoparticle/MEASURED-20261106.hbp | cmp - build/vienna/MEASURED-20261106.hbp
-          fi
-          (cd build/vienna && sha256sum MEASURED-20261106.hbp > SHA256SUMS)
+          python3 python/audit/integer_only_audit.py python/matrix_tricks/vienna_nanoparticle_slices_20261106.py
+          python3 -I python/matrix_tricks/vienna_nanoparticle_slices_20261106.py --self-test | tee build/vienna/INTEGER-REPLAY-20261108.hbp
+          test "$(grep -c '^VIENNA_INT_PHASE|' build/vienna/INTEGER-REPLAY-20261108.hbp)" -eq 4
+          grep -F 'VIENNA_INT_VERIFY|status=PASS|engine=INTEGER_FIXED_POINT|' build/vienna/INTEGER-REPLAY-20261108.hbp
+          grep -F '|original_measured_unchanged=1|' build/vienna/INTEGER-REPLAY-20261108.hbp
+          (cd build/vienna && sha256sum INTEGER-REPLAY-20261108.hbp > SHA256SUMS)
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: vienna-43million-triadic-nanoparticle-receipts
+          name: vienna-43million-integer-crosscheck-receipts
           path: build/vienna/
           if-no-files-found: warn

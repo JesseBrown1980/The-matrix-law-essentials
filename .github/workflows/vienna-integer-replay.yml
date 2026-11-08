@@ -1,0 +1,25 @@
+name: Vienna integer-only archived-model crosscheck
+on:
+  push:
+    branches:
+      - gpt6-integer-vienna-replay-preserve-decimal-evidence-20261108
+  pull_request:
+    paths:
+      - 'python/matrix_tricks/vienna_nanoparticle_slices_20261106.py'
+      - 'data/vienna_nanoparticle/evidence/ORIGINAL-DECIMAL-SOURCE-20261106.txt'
+      - '.github/workflows/vienna-integer-replay.yml'
+      - 'verify.sh'
+jobs:
+  integer-vienna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Strict Python integer audit of new Vienna solver
+        run: python3 python/audit/integer_only_audit.py python/matrix_tricks/vienna_nanoparticle_slices_20261106.py
+      - name: Recompute toy visibilities from integers and compare historical evidence
+        run: |
+          set -euo pipefail
+          python3 -I python/matrix_tricks/vienna_nanoparticle_slices_20261106.py --self-test | tee /tmp/vienna-integer.hbp
+          grep -q '^VIENNA_INT_VERIFY|status=PASS|engine=INTEGER_FIXED_POINT|' /tmp/vienna-integer.hbp
+          grep -q '^VIENNA_INT_SOURCE|old_decimal_git_blob=cd153dfaae045ff85ee2026da82268ce2299d353|' /tmp/vienna-integer.hbp
