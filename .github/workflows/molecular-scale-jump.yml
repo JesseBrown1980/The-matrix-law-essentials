@@ -1,0 +1,48 @@
+name: planck-to-molecular-jump-observations
+on:
+  push:
+    branches: [gpt6-planck-molecular-jump-camera-20261106, main]
+    paths:
+      - 'python/matrix_tricks/molecular_scale_jump.py'
+      - 'python/matrix_tricks/render_molecular_shots.py'
+      - '.github/workflows/molecular-scale-jump.yml'
+      - 'docs/MOLECULAR-SCALE-JUMP-20261106.md'
+      - 'data/molecular_camera/**'
+  pull_request:
+    paths:
+      - 'python/matrix_tricks/molecular_scale_jump.py'
+      - 'python/matrix_tricks/render_molecular_shots.py'
+      - '.github/workflows/molecular-scale-jump.yml'
+      - 'docs/MOLECULAR-SCALE-JUMP-20261106.md'
+      - 'data/molecular_camera/**'
+
+jobs:
+  exact-molecular-jump:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Real upstream integer-NTT jump versus independent advection sampling
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/molecular
+          python3 python/matrix_tricks/molecular_scale_jump.py > build/molecular/MOLECULAR-RESULTS.hbp
+          grep -F 'MOLECULAR_SETUP|dimension=45|prime=1000081|dx_planck_lengths=58149737003040059690390169|dt_planck_times=10301051460877537453973547267843|' build/molecular/MOLECULAR-RESULTS.hbp
+          grep -F 'arm=isolated_pulse|coarse_steps=9|' build/molecular/MOLECULAR-RESULTS.hbp
+          grep -F 'sha256=212d3ebf2f5cc27564ed9a26df35814a2e6f8422459498d2d50785c1490fab41|' build/molecular/MOLECULAR-RESULTS.hbp
+          grep -F 'sha256=eaab5095521dbc9e487cddab49993331da0b0d7f52836c8a6a8654337479551e|' build/molecular/MOLECULAR-RESULTS.hbp
+          grep -F 'DIFFUSION_COUNTEREXAMPLE|discrete_one_tick_amplitude=0|continuum_one_tick_amplitude=exp(-pi_squared/4)_positive|result=NOT_EQUAL|' build/molecular/MOLECULAR-RESULTS.hbp
+          grep -F 'MOLECULAR_VERIFY|status=PASS|' build/molecular/MOLECULAR-RESULTS.hbp
+          test "$(grep -c '^MOLECULAR_RED|' build/molecular/MOLECULAR-RESULTS.hbp)" -eq 4
+          python3 python/matrix_tricks/render_molecular_shots.py build/molecular/MOLECULAR-RESULTS.hbp build/molecular/shots > build/molecular/SHOTS.hbp
+          grep -F 'MOLECULAR_SHOTS|count=6|all_source_hashes_verified=1|status=PASS|' build/molecular/SHOTS.hbp
+          test "$(find build/molecular/shots -name 'shot_*.svg' | wc -l)" -eq 6
+          for f in build/molecular/shots/*.svg; do cmp "$f" "data/molecular_camera/$(basename "$f")"; done
+          (cd build/molecular && sha256sum MOLECULAR-RESULTS.hbp SHOTS.hbp shots/*.svg > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: molecular-jump-measurements-and-camera-frames
+          path: build/molecular/
+          if-no-files-found: error
