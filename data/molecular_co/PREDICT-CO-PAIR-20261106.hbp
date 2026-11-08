@@ -1,0 +1,14 @@
+# FROZEN_BEFORE_TEST: 2026-11-06, two-molecule molecular CO harmonic ensemble
+# One- and two-molecule comparison of classical vibrational stretch model.
+# Equal-phase errors reinforce; opposite-phase signed errors cancel but individual errors persist.
+# Coupled pair model: x_i'' = -omega^2 x_i - kappa(x_i-x_j), kappa=omega^2/9.
+# This is a MODEL with an uncalibrated coupling, not physical CO-CO experimental data.
+PREDICT|id=01|case=coherent_pair|N=2|mean_error=single_molecule_error|rms_error=absolute_single_molecule_error|status=DERIVED|json=0
+PREDICT|id=02|case=opposite_phase_pair|N=2|mean_error=ZERO|rms_error=absolute_single_molecule_error|status=DERIVED|json=0
+PREDICT|id=03|case=coupled_pair_antisymmetric|N=2|kappa=omega_squared_over_9|frequency_squared=11_over_9_omega_squared|status=DERIVED|json=0
+PREDICT|id=04|case=coupled_pair_antisymmetric|N=2|mean_signed_error=ZERO|rms_individual_error=NONZERO|status=DERIVED|json=0
+PREDICT|id=05|case=coupled_pair_coherent|N=2|coupling_force=ZERO|mean_signed_error=NONZERO|status=DERIVED|json=0
+PREDICT|id=06|case=matrix_jump|n=3^15|triadic_equals_binary=WITHIN_DECIMAL_TOLERANCE|continuum_difference=NONZERO|status=DERIVED|json=0
+PREDICT|id=07|case=red_controls|no_cancellation_claim_for_coherent=REJECT|zero_rms_claim=REJECT|false_physical_calibration=REJECT|wrong_coupling=REJECT|status=RED|json=0
+PREDICT|id=08|case=scope|real_molecules=NOT_MEASURED|continuum_YM4=NOT_PROVED|more_than_one_implies_error_zero=FALSE|json=0
+PREDICTION_SUMMARY|rows=8|frozen_before_code=1|results=NOT_RUN|json=0
