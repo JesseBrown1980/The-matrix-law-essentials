@@ -1,0 +1,21 @@
+# PREDICT-CO-MOLECULAR-SLICES-20261106.hbp
+# PRECOMMITTED BEFORE TEST IMPLEMENTATION/EXECUTION.
+# A physically parameterized classical MODEL of the 12C16O stretch, NOT quantum chemistry or Yang-Mills.
+# Source: CO spectroscopic/Morse parameters, ω_e=2169.81 cm-1,
+# beta=2.298 inverse angstrom, De=11.07 eV, re=1.128 angstrom.
+# Reference: https://pmc.ncbi.nlm.nih.gov/articles/PMC8659027/
+# Planck scale uses assumed coordinates only, not an observed Planck clock.
+PREDICT|id=01|check=INITIAL_BOND|r_eq_angstrom=1.128|displacement_angstrom=0.050|model=MORSE_CO|status=DERIVED|json=0
+PREDICT|id=02|check=TIME_SLICES|fine=3^57_tP|middle=3^58_tP|coarse=3^59_tP|ratio=1:3:9|status=DERIVED|json=0
+PREDICT|id=03|check=SPACE_SLICES|fine=3^45_lP|middle=3^46_lP|coarse=3^47_lP|ratio=1:3:9|status=DERIVED|json=0
+PREDICT|id=04|check=MORSE_REFERENCE|method=RK4_at_fine_dt_over_9|potential=De*(1-exp(-beta*(r-re)))^2|classical_only=1|status=DERIVED|json=0
+PREDICT|id=05|check=VERLET_COMPARE|all_three_scales_same_physical_times=1|initial_conditions_identical=1|sampled_times_fine_ticks=9,27,81,243,729,2187|status=DERIVED|json=0
+PREDICT|id=06|check=MORSE_SLICE_ORDER|error_bound=MORE_COARSE_THAN_FINE|metric=maximum_absolute_bond_error_over_registered_times|status=CONJECTURE|json=0
+PREDICT|id=07|check=MORSE_NOT_EXACT|physical_ref_vs_discrete=NONZERO_ERROR|status=DERIVED|json=0
+PREDICT|id=08|check=HARMONIC_JUMP|M_fine^3=exact_block3|M_fine^9=exact_block9|M_fine^(3^15)=3_power_jump|status=DERIVED|json=0
+PREDICT|id=09|check=HARMONIC_NAIVE_COARSE|M(3h)!=M(h)^3|M(9h)!=M(h)^9|status=DERIVED|json=0
+PREDICT|id=10|check=HARMONIC_CONTINUUM|M_fine_trajectory_near_cosine_for_short_times=1|at_nanosecond_exact_equivalence=NOT_ASSUMED|status=DERIVED|json=0
+PREDICT|id=11|check=SPACE_BINS|error_bound_half_cell=1|coarse_quantization_nonzero=1|status=DERIVED|json=0
+PREDICT|id=12|check=RED_CONTROLS|wrong_Morse_force=REJECT|wrong_block_3_vs_9=REJECT|state_tamper=REJECT|bad_clock=REJECT|status=RED|json=0
+PREDICT|id=13|check=PHYSICAL_SCOPE|CO_parameterized_model=1|observed_trajectory=NO|quantum_CO=NOT_SOLVED|YM4_SU2=NOT_TESTED|physical_vacuum=NOT_SIMULATED|json=0
+PREDICT_SUMMARY|rows=13|locked_before_test=1|results=NOT_RUN|json=0

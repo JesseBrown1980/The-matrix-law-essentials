@@ -1,0 +1,46 @@
+name: CO two-molecule phase and coupling falsifier
+on:
+  push:
+    branches: [gpt6-co-molecular-slices-jump-20261106, main]
+    paths:
+      - 'python/matrix_tricks/co_molecular_pair_20261106.py'
+      - 'python/matrix_tricks/co_molecular_slices_20261106.py'
+      - 'data/molecular_co/PREDICT-CO-PAIR-20261106.hbp'
+      - 'data/molecular_co/MEASURED-CO-PAIR-20261106.hbp'
+      - '.github/workflows/co-molecular-pair.yml'
+  pull_request:
+    paths:
+      - 'python/matrix_tricks/co_molecular_pair_20261106.py'
+      - 'python/matrix_tricks/co_molecular_slices_20261106.py'
+      - 'data/molecular_co/PREDICT-CO-PAIR-20261106.hbp'
+      - 'data/molecular_co/MEASURED-CO-PAIR-20261106.hbp'
+      - '.github/workflows/co-molecular-pair.yml'
+jobs:
+  pair-phase-falsifier:
+    runs-on: ubuntu-24.04
+    permissions: {contents: read}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure pre-committed predictions
+        run: |
+          set -euo pipefail
+          test "$(grep -c '^PREDICT|id=' data/molecular_co/PREDICT-CO-PAIR-20261106.hbp)" -eq 8
+      - name: Measure two CO trajectories and coupled normal modes
+        run: |
+          set -euo pipefail
+          mkdir -p build/co_pair
+          python3 python/matrix_tricks/co_molecular_pair_20261106.py | tee build/co_pair/MEASURED-CO-PAIR.hbp
+          grep -F 'CO_PAIR_VERIFY|status=PASS|registered_predictions=8|molecules=2|red_controls=4|' build/co_pair/MEASURED-CO-PAIR.hbp
+          grep -F 'CO_PAIR_OPPOSITE_PHASE|ticks=14348907|' build/co_pair/MEASURED-CO-PAIR.hbp
+          grep -F 'CO_PAIR_COUPLED_ANTI|ticks=14348907|' build/co_pair/MEASURED-CO-PAIR.hbp
+          test "$(grep -c '^CO_PAIR_RED|' build/co_pair/MEASURED-CO-PAIR.hbp)" -eq 4
+          if test -f data/molecular_co/MEASURED-CO-PAIR-20261106.hbp; then
+            tail -n +4 data/molecular_co/MEASURED-CO-PAIR-20261106.hbp | cmp - build/co_pair/MEASURED-CO-PAIR.hbp
+          fi
+          (cd build/co_pair && sha256sum MEASURED-CO-PAIR.hbp > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: co-2-molecule-phase-coupling-falsifier
+          path: build/co_pair/
+          if-no-files-found: warn
