@@ -58,7 +58,7 @@ def main():
         d,values=frames[(arm,n)]
         name=f'shot_{arm}_{n:03}.svg'
         s=image(d,values)
-        (folder/name).write_text(s,encoding='utf-8')
+        folder.joinpath(name).write_text(s,encoding='utf-8')
         print(f'MOLECULAR_SHOT|file={name}|source_sha256={d["sha256"]}|svg_sha256={sha256(s.encode()).hexdigest()}|status=PASS|json=0')
     print('MOLECULAR_SHOTS|count=6|all_source_hashes_verified=1|status=PASS|json=0')
 if __name__=='__main__':

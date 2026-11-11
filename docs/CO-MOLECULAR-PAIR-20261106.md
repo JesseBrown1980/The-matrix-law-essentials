@@ -1,5 +1,7 @@
 # Two CO molecules: whether the first pair erases discrete/continuous error
 
+> **Status, November 11, 2026.** The 65-digit Decimal script that produced the receipt below is kept byte for byte, unexecuted, at `data/molecular_co/evidence/ORIGINAL-DECIMAL-PAIR-SOURCE-20261106.txt`. The repository's integer-only rule now applies to this test: [`co_molecular_integer_replay_20261106.py`](../python/matrix_tricks/co_molecular_integer_replay_20261106.py) recomputes every row in 100-digit integer fixed point and compares it with the retained receipt, which is unchanged. See [the integer replay note](CO-MOLECULAR-INTEGER-REPLAY-20261111.md).
+
 **Experiment:** An exact preregistered *classical harmonic CO stretch model*. This is not a measurement of two actual molecules. The same CO harmonic constants were used as in [the molecular slice study](CO-MOLECULAR-SLICES-20261106.md). The model is chosen to test the hypothesis "adding more than one molecule makes the errors disappear".
 
 **Chronology:** predicted at commit `6734e0c0aba6cb79292b427ad6a6491e389e5534` before code. [Hosted run 42328026246](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42328026246) passed the preregistered checks. Its actual output is [the 16-row receipt](../data/molecular_co/MEASURED-CO-PAIR-20261106.hbp). Four false controls rejected. Tests at 2,187 fine ticks (~185.118 fs) and `3^15` fine ticks (~1.21456 ns).
@@ -36,7 +38,8 @@ This test validates the **mathematical possibility** of two-molecule cancellatio
 ## Reproduce
 
 ```bash
-python3 python/matrix_tricks/co_molecular_pair_20261106.py > MEASURED-CO-PAIR.hbp
+python3 -I python/matrix_tricks/co_molecular_integer_replay_20261106.py --self-test   # compares with the retained receipts
+python3 -I python/matrix_tricks/co_molecular_integer_replay_20261106.py --rows        # prints the replayed rows
 ```
 
-The workflow `.github/workflows/co-molecular-pair.yml` checks four red controls and byte-for-byte fidelity to the published hosted receipt.
+The original hosted run above executed the Decimal script and matched this receipt byte for byte. The current gate is `.github/workflows/co-molecular-integer-replay.yml`, which `./verify.sh` also runs: it checks the Git blob of the archived source and of the receipt, recomputes the rows from integers and refuses any field that differs.

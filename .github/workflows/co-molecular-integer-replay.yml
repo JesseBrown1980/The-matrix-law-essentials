@@ -1,0 +1,47 @@
+name: CO molecular integer-only replay of retained receipts
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'python/matrix_tricks/co_molecular_integer_replay_20261106.py'
+      - 'data/molecular_co/**'
+      - '.github/workflows/co-molecular-integer-replay.yml'
+  pull_request:
+    paths:
+      - 'python/matrix_tricks/co_molecular_integer_replay_20261106.py'
+      - 'data/molecular_co/**'
+      - '.github/workflows/co-molecular-integer-replay.yml'
+jobs:
+  integer-co:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Frozen predictions are present
+        run: |
+          set -euo pipefail
+          test "$(grep -c '^PREDICT|id=' data/molecular_co/PREDICT-CO-MOLECULAR-SLICES-20261106.hbp)" -eq 13
+          test "$(grep -c '^PREDICT|id=' data/molecular_co/PREDICT-CO-PAIR-20261106.hbp)" -eq 8
+          test -s data/molecular_co/PREDICT-CO-ENSEMBLES-20261106.hbp
+      - name: Strict Python integer audit of the replay
+        run: python3 python/audit/integer_only_audit.py python/matrix_tricks/co_molecular_integer_replay_20261106.py
+      - name: Recompute all three receipts from integers and compare every field
+        run: |
+          set -euo pipefail
+          mkdir -p build/co_integer
+          python3 -I python/matrix_tricks/co_molecular_integer_replay_20261106.py --self-test | tee build/co_integer/CO-INTEGER-REPLAY.hbp
+          grep -q '^CO_INT_VERIFY|status=PASS|engine=INTEGER_FIXED_POINT|precision_decimal_digits=100|receipts=3|fields_identical=436|fields_below_1e-40_both=30|fields_engine_label=15|fields_mismatched=0|' build/co_integer/CO-INTEGER-REPLAY.hbp
+          grep -q '^CO_INT_RECEIPT|name=slices|rows=23|' build/co_integer/CO-INTEGER-REPLAY.hbp
+          grep -q '^CO_INT_RECEIPT|name=pair|rows=16|' build/co_integer/CO-INTEGER-REPLAY.hbp
+          grep -q '^CO_INT_RECEIPT|name=ensemble|rows=33|' build/co_integer/CO-INTEGER-REPLAY.hbp
+          python3 -I python/matrix_tricks/co_molecular_integer_replay_20261106.py --rows > build/co_integer/CO-INTEGER-ROWS.hbp
+          test "$(grep -c '_RED|' build/co_integer/CO-INTEGER-ROWS.hbp)" -eq 12
+          (cd build/co_integer && sha256sum CO-INTEGER-REPLAY.hbp CO-INTEGER-ROWS.hbp > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: co-molecular-integer-replay
+          path: build/co_integer/
+          if-no-files-found: warn

@@ -15,21 +15,35 @@ Results carry one of four labels:
 - **Measured:** precise Euclidean-evolution or eigensolver values.
 - **Exact:** closed-form weak-coupling laws in exact integer arithmetic.
 
-## Latest cross-scale results: 43-million jumps, molecule slices and Shadow Cats (November 6–7, 2026)
+## Where the repository stands (November 11, 2026)
+
+| Work | State | Checked by |
+|---|---|---|
+| Certified finite-`S₃` results, the matrix tricks and the three laws of November 6 | On `main` (PRs #1–#4) | `./verify.sh` |
+| Vienna nanoparticle toy model, 3^16 = 43,046,721 jumps | On `main` (PR #7). Integer-only since [PR #9](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/9), merged November 8; the original Decimal source and receipt are kept as evidence. | `./verify.sh` and its own workflow |
+| Planck-coordinate transport on the 45-site ring, with six stills | [PR #5](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/5), brought up to date with `main` on November 11 | `./verify.sh` and its own workflow |
+| CO molecule slices, two-molecule case and 1-to-729 ensembles | [PR #6](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/6), brought up to date with `main` on November 11 and replayed integer-only: 436 of 481 receipt fields identical, 30 rounding residues below 10⁻⁴⁰, 15 engine labels, 0 mismatches. [Note](docs/CO-MOLECULAR-INTEGER-REPLAY-20261111.md). | `./verify.sh` and its own workflow |
+
+Every Python tool in the repository now passes the integer-only audit. Where a test was first written with `Decimal`, its original source is kept byte for byte as unexecuted text under `data/*/evidence/`, and its original receipt is unchanged.
+
+## Latest cross-scale results: 43-million jumps, molecule slices and Shadow Cats (November 6–11, 2026)
 
 The matrix-law toolkit now has **three distinct kinds of evidence**: the certified *finite* `S₃` Hamiltonian calculations below, exact or high-precision **algorithm tests**, and deliberately simplified **physical models**. They must not be treated as interchangeable claims.
 
 | Track | Status and specific result | Reproduce / scope |
 |---|---|---|
-| **Power-of-three quantum-wave jump** | [**PR #7, MERGED**](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/7). Exactly **`3^16 = 43,046,721`** model time subdivisions reached by **16 cubings** of Fourier free-flight factors. **80/80** independent modal comparisons passed, with maximum reported high-precision amplitude difference `6.10e-68`. | [Hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42329111050) · [model note](docs/VIENNA-NANOPARTICLE-INTERFERENCE-20261106.md) · [59-row measurement receipt](data/vienna_nanoparticle/MEASURED-20261106.hbp). |
+| **Power-of-three quantum-wave jump** | [**PR #7, MERGED**](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/7). Exactly **`3^16 = 43,046,721`** model time subdivisions reached by **16 cubings** of Fourier free-flight factors. **80/80** independent modal comparisons passed, with maximum reported high-precision amplitude difference `6.10e-68` in the original Decimal run. The 100-digit integer replay of [PR #9](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/9) repeats the 80 comparisons and agrees with all 24 retained visibilities to 10⁻¹². | [Hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42329111050) · [model note](docs/VIENNA-NANOPARTICLE-INTERFERENCE-20261106.md) · [59-row measurement receipt](data/vienna_nanoparticle/MEASURED-20261106.hbp) · [integer replay note](docs/VIENNA-INTEGER-REPLAY-20261108.md). |
 | **Spatial slices / synthetic observations** | The finite, truncated three-grating wave model gives the same first Fourier harmonic at virtual **43,046,721** sample sites as the analytical spectral readout **without allocating a 43-million-element state**; a 9-point slice fails by `0.00692102` at one chosen grating phase. Synthetic detector profiles are committed. | [Model camera frames](data/vienna_nanoparticle/VIRTUAL-43M-DETECTOR-SNAPSHOTS.svg). Inspired by [Pedalino et al., *Nature* (2026)](https://doi.org/10.1038/s41586-025-09917-9): real **sodium nanoparticles**, not viruses, and **not quantum cloning**. The raw measured interference curve was **not** reproduced. |
-| **Molecular interactions / ensemble stress tests** | [PR #6, DRAFT](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/6). CO Morse bond stretch at three temporal/spatial slices and exact harmonic time jumps; tests of **1–729** phase-balanced and coupled-model coordinates, plus a directly tested two-molecule case. Two opposite-phase errors cancel in the signed mean even when the RMS per molecule remains nonzero. | [Original hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42327155410) · [ensemble hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42327754135) · [two-molecule hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42328026246). A **classical fitted CO force model** and an uncalibrated interaction toy, not ab initio molecular proof. |
+| **Planck-coordinate transport, noiseless control and diffusion counterexample** | [PR #5](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/5), up to date with `main`. A 45-site ring in `F_1000081` on the repository's own `jump3_ntt` kernel, with one coarse cell assigned 3^54 Planck lengths and one coarse tick 3^65 Planck times. The NTT jump equals sampled rigid advection out to 3^15 coarse ticks; one injected disturbance stays one cell and is not amplified; 4 red controls are rejected. One step of the `[1/4, 1/2, 1/4]` diffusion rule sends the alternating mode to exactly zero, where the continuum heat equation keeps `exp(−π²/4) > 0`. | [Model note](docs/MOLECULAR-SCALE-JUMP-20261106.md) · [six stills](data/molecular_camera/), byte-identical to the renderer's output. A specified transport model: no molecule, no physical vacuum, and the stills are simulator output, not camera recordings. |
+| **Molecular interactions / ensemble stress tests** | [PR #6](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/6), up to date with `main`. CO Morse bond stretch at three temporal/spatial slices and exact harmonic time jumps; tests of **1–729** phase-balanced and coupled-model coordinates, plus a directly tested two-molecule case. Two opposite-phase errors cancel in the signed mean even when the RMS per molecule remains nonzero. | [Original hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42327155410) · [ensemble hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42327754135) · [two-molecule hosted PASS](https://github.com/JesseBrown1980/The-matrix-law-essentials/actions/runs/42328026246) · [integer replay of all three receipts](docs/CO-MOLECULAR-INTEGER-REPLAY-20261111.md). Notes: [slices](docs/CO-MOLECULAR-SLICES-20261106.md), [pair](docs/CO-MOLECULAR-PAIR-20261106.md), [ensembles](docs/CO-MOLECULAR-ENSEMBLE-20261106.md). A **classical fitted CO force model** and an uncalibrated interaction toy, not ab initio molecular proof. |
 | **Finite three-scale `S₃` gauge transfer** | [YM4 PR #33, DRAFT](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/pull/33). In a solvable **1+1D** `S₃` gauge model, exact 9→3→1 spatial blocking reproduces selected gauge-invariant correlation functions when the induced interaction is retained. | [Hosted PASS](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/actions/runs/42326608078). Not a 4D SU(2) continuum result. |
 | **Retained `C0/C1/C2` Shadow Cat residue** | [YM4 PR #34, DRAFT](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/pull/34). `(C0+C1+C2) mod 3` is preserved under 27→9→3→1 blocking and ternary permutation jumps to `3^16`. An exhaustive **1,296-case** `S₃` test shows a *candidate* signed holonomy flips under gauge conjugation, whereas its Wilson character is invariant. | [Hosted PR #34 proof-boundary gate PASS](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/actions/runs/42330584710) · [finite bridge PR #125, DRAFT](https://github.com/JesseBrown1980/Finite-universe-Yang-mills-existence-and-mass-gap-using-HEB-C/pull/125). A retained ternary residual is **not** itself a mass-gap eigenvalue. |
 
 **Interpretation:** Repeated cubing certifies the *chosen* transfer rule, and finite Fourier bandlimits certify the stated virtual observation. Neither establishes that spacetime is discrete, that a nonlinear molecular system can always be fast-forwarded, or that the Clay four-dimensional Yang–Mills existence and physical mass gap are proved. The continuum work still requires a gauge-invariant excitation observable and a lower physical gap bound uniform in lattice spacing; see [the 4D companion proof ledger](https://github.com/JesseBrown1980/yang-mills-4-dimensional-continum-proof/blob/main/PROBLEM.md).
 
-These exploratory experiments run in their **own GitHub Actions workflows** and are **not claimed to be covered by `./verify.sh`**. The original strict integer-only certificate pipeline remains the separately verified core.
+The two YM4 pull requests and the HEB-C bridge were still open drafts when checked on November 11.
+
+The Vienna, Planck-coordinate and CO tests each have their own GitHub Actions workflow, and `./verify.sh` now replays them too, in integer arithmetic. That makes them reproducible. It does not make them certificates: the **Certified** label belongs only to the finite-`S₃` interval-inertia receipts below.
 
 The execution backend and the larger-volume runs live in
 [Finite-universe Yang–Mills (HEB-C)](https://github.com/JesseBrown1980/Finite-universe-Yang-mills-existence-and-mass-gap-using-HEB-C),
@@ -294,13 +308,35 @@ crates/rainbon    three-preon cloud model: cloudb, cloud, symsec
 python/ladder     ladder.py (milli), ladder2.py (micro), rungs.py
 python/volume     exact laws, sector validation, trace moments, shell_gap_cert.py, monotone_cells.py
 python/matrix_tricks exact_jump.py, vacuum_ball_ritz.py, time_jump_ladder.py, jump3_ntt.py, transposition_memo.py
+                     laws_20261106/ (the three laws and their chain)
+                     vienna_nanoparticle_slices_20261106.py (integer replay of the Vienna toy model)
+                     molecular_scale_jump.py, render_molecular_shots.py (Planck-coordinate transport and its stills)
+                     co_molecular_integer_replay_20261106.py (integer replay of the three CO receipts)
 python/testground HTTP-0 page and routes (127.0.0.1)
 python/audit      integer-only AST audit
 data/             operators, ledgers, sweeps, volume runs, 3×3 certificates, jump3 predictions and receipts (json=0)
+data/vienna_nanoparticle  predictions, measured receipt, synthetic detector frames, evidence/ (original Decimal source)
+data/molecular_camera     six stills of the transport model
+data/molecular_co         predictions, three measured receipts, snapshot plot, evidence/ (original Decimal sources)
+docs/             one note per result (below)
 ```
 
-Rules for the certified finite-`S₃` core (not the separately labeled exploratory wave/molecule scripts):
-- integers only in the proof/certificate path: no float, Decimal, Fraction or float timing;
+| Note | Subject |
+|---|---|
+| [`YM_SYMMETRY_ARGUMENT.md`](docs/YM_SYMMETRY_ARGUMENT.md) | The zero-momentum symmetry sectors |
+| [`EXACT_MATRIX_JUMP_AND_VACUUM_BALL.md`](docs/EXACT_MATRIX_JUMP_AND_VACUUM_BALL.md) | Exact matrix-power jump and vacuum-ball methods |
+| [`LAW-POWER-OF-THREE-JUMP.md`](docs/LAW-POWER-OF-THREE-JUMP.md) | The power-of-three jump law, its code and its independent attack |
+| [`VIENNA-NANOPARTICLE-INTERFERENCE-20261106.md`](docs/VIENNA-NANOPARTICLE-INTERFERENCE-20261106.md) | The Vienna nanoparticle toy model and the 43-million jumps |
+| [`VIENNA-INTEGER-REPLAY-20261108.md`](docs/VIENNA-INTEGER-REPLAY-20261108.md) | Its integer-only replay |
+| [`MOLECULAR-SCALE-JUMP-20261106.md`](docs/MOLECULAR-SCALE-JUMP-20261106.md) | Planck-coordinate transport, the noiseless control and the diffusion counterexample |
+| [`CO-MOLECULAR-SLICES-20261106.md`](docs/CO-MOLECULAR-SLICES-20261106.md) | CO bond at three time and space slices |
+| [`CO-MOLECULAR-PAIR-20261106.md`](docs/CO-MOLECULAR-PAIR-20261106.md) | Two CO molecules: phase cancellation against persistent error |
+| [`CO-MOLECULAR-ENSEMBLE-20261106.md`](docs/CO-MOLECULAR-ENSEMBLE-20261106.md) | 1 to 729 CO molecules |
+| [`CO-MOLECULAR-INTEGER-REPLAY-20261111.md`](docs/CO-MOLECULAR-INTEGER-REPLAY-20261111.md) | Integer-only replay of the three CO receipts |
+
+Rules:
+- integers only in every Python tool: no float, Decimal, Fraction or float timing (the audit in `verify.sh` covers all of them, the wave and molecule replays included);
+- a test first written outside that rule keeps its original source as unexecuted text and its receipt unchanged, and gains an integer replay;
 - outward-rounded integer division in certificates;
 - `json=0` on every receipt line;
 - Rust 1.81 with `clippy -D warnings`.

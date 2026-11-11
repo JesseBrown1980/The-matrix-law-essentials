@@ -1,5 +1,7 @@
 # CO molecular interaction through three ternary observation slices
 
+> **Status, November 11, 2026.** The 65-digit Decimal script that produced the receipt below is kept byte for byte, unexecuted, at `data/molecular_co/evidence/ORIGINAL-DECIMAL-SLICES-SOURCE-20261106.txt`. The repository's integer-only rule now applies to this test: [`co_molecular_integer_replay_20261106.py`](../python/matrix_tricks/co_molecular_integer_replay_20261106.py) recomputes every row in 100-digit integer fixed point and compares it with the retained receipt, which is unchanged. See [the integer replay note](CO-MOLECULAR-INTEGER-REPLAY-20261111.md).
+
 **Status:** Registered predictions before code at `2e4b7e84f4360e6233af54b9e5aaf2ea6ea7a36f`. Hosted execution: see [PR #6](https://github.com/JesseBrown1980/The-matrix-law-essentials/pull/6) and its CI artifact. This is a physical-parameterized **classical** diatomic force-model experiment, not measured molecule trajectories or quantum Yang-Mills.
 
 ## What is calibrated and from where
@@ -45,10 +47,11 @@ The matrix-jump rule is a mathematical method. This CO model is **not** a gauge 
 ## Reproduce
 
 ```bash
-python3 python/matrix_tricks/co_molecular_slices_20261106.py > MEASURED-CO-MOLECULAR-SLICES.hbp
+python3 -I python/matrix_tricks/co_molecular_integer_replay_20261106.py --self-test   # compares with the retained receipts
+python3 -I python/matrix_tricks/co_molecular_integer_replay_20261106.py --rows        # prints the replayed rows
 ```
 
-The hosted job `.github/workflows/co-molecular-slices.yml` runs the script, checks the preregistered gates and saves a SHA256SUMS-sealed HBP receipt.
+The original hosted run above executed the Decimal script and matched this receipt byte for byte. The current gate is `.github/workflows/co-molecular-integer-replay.yml`, which `./verify.sh` also runs: it checks the Git blob of the archived source and of the receipt, recomputes the rows from integers and refuses any field that differs.
 
 ## Hosted measurements — November 6 local / November 7 UTC
 

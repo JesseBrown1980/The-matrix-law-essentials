@@ -243,6 +243,17 @@ python3 python/audit/integer_only_audit.py python/ladder/*.py python/testground/
 #      but certify the simplified model again using INTEGER fixed-point math.
 python3 -I python/matrix_tricks/vienna_nanoparticle_slices_20261106.py --self-test > build/vienna_integer_replay.hbp
 grep -q '^VIENNA_INT_VERIFY|status=PASS|engine=INTEGER_FIXED_POINT|' build/vienna_integer_replay.hbp
+# 6c. The CO molecular toy tests: original Decimal sources kept as unexecuted evidence;
+#      every field of the three retained receipts recomputed in INTEGER fixed point.
+python3 -I python/matrix_tricks/co_molecular_integer_replay_20261106.py --self-test > build/co_integer_replay.hbp
+grep -q '^CO_INT_VERIFY|status=PASS|engine=INTEGER_FIXED_POINT|precision_decimal_digits=100|receipts=3|fields_identical=436|fields_below_1e-40_both=30|fields_engine_label=15|fields_mismatched=0|' build/co_integer_replay.hbp
+# 6d. The Planck-coordinate transport model on the jump3 ring, and its six stills byte for byte.
+mkdir -p build/molecular
+python3 python/matrix_tricks/molecular_scale_jump.py > build/molecular/MOLECULAR-RESULTS.hbp
+grep -q '^MOLECULAR_VERIFY|status=PASS|' build/molecular/MOLECULAR-RESULTS.hbp
+python3 python/matrix_tricks/render_molecular_shots.py build/molecular/MOLECULAR-RESULTS.hbp build/molecular/shots > build/molecular/SHOTS.hbp
+grep -q '^MOLECULAR_SHOTS|count=6|all_source_hashes_verified=1|status=PASS|' build/molecular/SHOTS.hbp
+for f in build/molecular/shots/shot_*.svg; do cmp "$f" "data/molecular_camera/$(basename "$f")"; done
 # 7. the laws of November 6, 2026: the HBI -> HBP -> SHA -> SH -> HASH chain and an independent replay
 bash python/matrix_tricks/laws_20261106/verify_laws.sh
 echo "VERIFY|status=PASS|json=0"
