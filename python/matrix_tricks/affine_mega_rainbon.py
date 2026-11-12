@@ -144,7 +144,7 @@ def run(outdir):
     outdir.mkdir(parents=True,exist_ok=True)
     rows=['AFFINE_MEGA_HEADER|prime=1299079|primitive_root=3|matrix_stencil=I+R-R2|dtype=u64_or_mod_p|virtual_meta_pixel_addresses=12000000000|json=0']
     for n in (6561,19683,59049):
-        path=outdir / f'RAINBON-META-{n}-CSR.bin'
+        path=outdir.joinpath(f'RAINBON-META-{n}-CSR.bin')
         dig,bs=write_csr(n,path);check_csr(n,path)
         rows.append(f'MATRIX|d={n}|dense_entries={n*n}|sparse_nnz={3*n}|stored_csr_bytes={bs}|sha256={dig}|csr_all_rows=PASS|json=0')
         x=start(n);f=source(n,27)
@@ -194,8 +194,8 @@ def run(outdir):
         rows.append(f'NEGATIVE|d={n}|state_dependent_local_kicks=27|constant_source_jump_agrees=NO|correctly_refused=PASS|json=0')
         rows.append(f'DIM_PASS|d={n}|csr=PASS|ntt=PASS|affine=PASS|composition=PASS|json=0')
     rows.append('AFFINE_MEGA_PASS|ring_states=6561,19683,59049|dense_matrix_allocation=NO|csr_matrix_materialized=YES|affine_forcing_exact=YES|nonlinear_force_refused=YES|r9=HOLD|json=0')
-    receipt=outdir/'AFFINE-MEGA.hbp';receipt.write_text('\n'.join(rows)+'\n',encoding='ascii')
-    (outdir/'SHA256SUMS').write_text(''.join(f'{sha256(p.read_bytes()).hexdigest()}  {p.name}\n' for p in sorted(outdir.iterdir()) if p.is_file() and (p.name=='AFFINE-MEGA.hbp' or p.name.startswith('RAINBON-META-'))),encoding='ascii')
+    receipt=outdir.joinpath('AFFINE-MEGA.hbp');receipt.write_text('\n'.join(rows)+'\n',encoding='ascii')
+    outdir.joinpath('SHA256SUMS').write_text(''.join(f'{sha256(p.read_bytes()).hexdigest()}  {p.name}\n' for p in sorted(outdir.iterdir()) if p.is_file() and (p.name=='AFFINE-MEGA.hbp' or p.name.startswith('RAINBON-META-'))),encoding='ascii')
     print('\n'.join(rows))
 
 if __name__=='__main__':
