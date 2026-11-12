@@ -1,0 +1,74 @@
+name: Exact nonlinear jump and certified nonlinear contraction
+on:
+  push:
+    paths:
+      - ".github/workflows/nonlinear-exact-bounded-jump.yml"
+      - "python/matrix_tricks/nonlinear_exact_and_bound.py"
+      - "python/matrix_tricks/nonlinear_independent_audit.py"
+      - "data/jump3/NONLINEAR-JUMP-FREEZE-20261112.hbp"
+      - "docs/LAW-NONLINEAR-EXACT-AND-BOUNDED-JUMPS-20261112.md"
+  pull_request:
+    paths:
+      - ".github/workflows/nonlinear-exact-bounded-jump.yml"
+      - "python/matrix_tricks/nonlinear_exact_and_bound.py"
+      - "python/matrix_tricks/nonlinear_independent_audit.py"
+      - "data/jump3/NONLINEAR-JUMP-FREEZE-20261112.hbp"
+      - "docs/LAW-NONLINEAR-EXACT-AND-BOUNDED-JUMPS-20261112.md"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: nonlinear-jump-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: false
+jobs:
+  nonlinear_exact:
+    name: "Pure integer 2-field nonlinear jump Python ${{ matrix.python-version }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "${{ matrix.python-version }}"
+      - name: Read pre-hosted freeze and no float rules
+        run: |
+          set -euo pipefail
+          grep -Fq 'FREEZE|schema=NONLINEAR-JUMP-TWO-LANES-V1|date=2026-11-12|stage=POST_LOCAL_PRE_HOSTED|' data/jump3/NONLINEAR-JUMP-FREEZE-20261112.hbp
+          grep -Fq 'PREDICTION|canonical_full_result_hbp_sha256=a308a754634f7738e1f68e75b9de394e6a9e98201859baba517d067c32b3d7f6|' data/jump3/NONLINEAR-JUMP-FREEZE-20261112.hbp
+          grep -Fq 'LIMIT|no_general_nonlinear_jump_theorem|' data/jump3/NONLINEAR-JUMP-FREEZE-20261112.hbp
+          python3 python/audit/integer_only_audit.py \
+            python/matrix_tricks/nonlinear_exact_and_bound.py \
+            python/matrix_tricks/nonlinear_independent_audit.py
+          mkdir -p build/nonlinear
+      - name: Build exact and bounded genuine nonlinear jumps at 4 sizes
+        run: |
+          set -euo pipefail
+          python3 -B python/matrix_tricks/nonlinear_exact_and_bound.py \
+            --dims 27,243,6561,59049 \
+            --output build/nonlinear/NONLINEAR-JUMP.hbp | tee build/nonlinear/SUMMARY.hbp
+          echo 'a308a754634f7738e1f68e75b9de394e6a9e98201859baba517d067c32b3d7f6  build/nonlinear/NONLINEAR-JUMP.hbp' | sha256sum -c -
+          test "$(grep -c '^NONLINEAR_DIM_PASS|n=' build/nonlinear/NONLINEAR-JUMP.hbp)" -eq 4
+          test "$(grep -c '^BOUND|n=' build/nonlinear/NONLINEAR-JUMP.hbp)" -eq 4
+          grep -Fq 'TERNARY|n=59049|exponent=3^40|complete_state_sha256=0233978db42073ae87a8c22680bf3664e5ab2545200ac5031908d000cd7c864c|' build/nonlinear/NONLINEAR-JUMP.hbp
+          grep -Fq 'TERNARY|n=59049|exponent=3^80|complete_state_sha256=14c12e884522631511e4ab86f38cfd22e799dad53d068bfc6d2df83688b7f012|' build/nonlinear/NONLINEAR-JUMP.hbp
+          grep -Fq 'BOUND|n=59049|initial_sup_bound=1000000|certified_zero_after_steps=21|jump_to=3^80|exact_zero_all_states_in_ball=PASS|bad_coefficient_9=REJECTED|' build/nonlinear/NONLINEAR-JUMP.hbp
+          grep -Fq 'NONLINEAR_JUMP_VERIFY|status=PASS|exact_integrable_family=YES|integer_contractive_family=YES|general_nonlinear=NOT_COVERED|r9=HOLD|' build/nonlinear/NONLINEAR-JUMP.hbp
+      - name: Independent physical update, naive Fourier and uniform bound audit
+        run: |
+          set -euo pipefail
+          python3 -B python/matrix_tricks/nonlinear_independent_audit.py \
+            build/nonlinear/NONLINEAR-JUMP.hbp | tee build/nonlinear/INDEPENDENT-AUDIT.hbp
+          grep -Fq 'NONLINEAR_INDEPENDENT_AUDIT_PASS|four_direct_scales=YES|naive_DFT_two_scales=YES|all_radius_inequalities=YES|receipt_sha256=a308a754634f7738e1f68e75b9de394e6a9e98201859baba517d067c32b3d7f6|' build/nonlinear/INDEPENDENT-AUDIT.hbp
+          (cd build/nonlinear && sha256sum NONLINEAR-JUMP.hbp SUMMARY.hbp INDEPENDENT-AUDIT.hbp > SHA256SUMS && sha256sum -c SHA256SUMS)
+          echo 'NONLINEAR_CERTIFICATE_HOSTED_PASS|exact_nonlinear=YES|uniform_bound=YES|two_fields_max=118098|r9=HOLD|json=0'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nonlinear-jump-and-contraction-python-${{ matrix.python-version }}
+          path: build/nonlinear/
+          retention-days: 30
+          if-no-files-found: warn
