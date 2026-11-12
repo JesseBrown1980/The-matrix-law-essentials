@@ -15,6 +15,19 @@ Results carry one of four labels:
 - **Measured:** precise Euclidean-evolution or eigensolver values.
 - **Exact:** closed-form weak-coupling laws in exact integer arithmetic.
 
+## November 12: state-dependent nonlinear jumps, exact and certified-bounded
+
+Two distinct tested results extend the [fixed-source affine jump](docs/LAW-AFFINE-FORCED-RADIX3-JUMP-20261112.md) to **genuinely state-dependent nearest-neighbor interactions**:
+
+1. **Exact reversible nonlinear jump:** the two-field update `F=T⁻¹LT`, where `T(u,v)=(u,v+7u_i u_(i-1))` and `L` is a coupled invertible sparse step, is nonlinear in the original variables. A **proven invertible change of coordinates** gives `F^n=T⁻¹L^nT`, allowing the power-of-three Fourier jump, forward/backward frozen leaves and direct-state matching at **27, 243, 6,561 and 59,049 spatial sites** (largest **118,098 interacting field components**), including `3^80` on 59,049 sites.
+2. **Certified long-time bound for a different irreversible nonlinear map:** a bilinear neighbor-dependent signed-integer recurrence satisfies a verified uniform sup-norm comparison. For **every** initial state with `max |x_i|<=1,000,000`, its entire state is **exactly zero after at most 21 steps** and remains zero, including at `3^80`. This applies to any ring length and does not enumerate the state space.
+
+The two results are not a general nonlinear fast-forward algorithm: the first requires a **specific proven conjugacy**; the second relies on **strict global contraction**. Deliberately invalid linear and nonlinear controls must fail. A separate independent checker uses explicit nonlinear equations and naive DFT instead of the solver's FFT, plus audits every one of the million possible scalar comparison radii.
+
+[Mathematical proof and reproducibility](docs/LAW-NONLINEAR-EXACT-AND-BOUNDED-JUMPS-20261112.md) · [Exact code](python/matrix_tricks/nonlinear_exact_and_bound.py) · [Independent verifier](python/matrix_tricks/nonlinear_independent_audit.py) · [Pre-hosted seal](data/jump3/NONLINEAR-JUMP-FREEZE-20261112.hbp).
+
+All calculations are integer-only mathematical models, **not** physical Yang–Mills, gluon, proton or gravity dynamics. The protected coupling `r=9` remains on HOLD.
+
 ## November 12: exact affine-source jump for much larger Rainbon matrices
 
 The original [pure linear jump](docs/LAW-POWER-OF-THREE-JUMP.md) does **not** account for a source injected at every microscopic step. We have added its **exact affine extension**, where `x_next=M*x+f` and the source `f` is constant *within each composed interval*. In Fourier space `X_n=lambda^n*X_0+S_n(lambda)*F`; piecewise constant changes at frozen checkpoints also compose exactly. A **state-dependent nonlinear** force is a distinct problem and is deliberately rejected by the negative controls.
