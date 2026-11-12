@@ -1,0 +1,85 @@
+name: Certified affine-source 59,049-state matrix jumps and 12B sparse readout
+on:
+  push:
+    paths:
+      - ".github/workflows/affine-mega-rainbon.yml"
+      - "python/matrix_tricks/affine_mega_rainbon.py"
+      - "python/matrix_tricks/affine_mega_audit.py"
+      - "data/jump3/AFFINE-MEGA-FREEZE-20261112.hbp"
+      - "docs/LAW-AFFINE-FORCED-RADIX3-JUMP-20261112.md"
+  pull_request:
+    paths:
+      - ".github/workflows/affine-mega-rainbon.yml"
+      - "python/matrix_tricks/affine_mega_rainbon.py"
+      - "python/matrix_tricks/affine_mega_audit.py"
+      - "data/jump3/AFFINE-MEGA-FREEZE-20261112.hbp"
+      - "docs/LAW-AFFINE-FORCED-RADIX3-JUMP-20261112.md"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: affine-mega-3pow10-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: false
+jobs:
+  exact_mega:
+    name: "Independent Python ${{ matrix.python-version }} full-CSR and forced-jump audit"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "${{ matrix.python-version }}"
+      - name: Authenticate frozen postexploratory predictions and run boundaries
+        run: |
+          set -euo pipefail
+          grep -q '^FREEZE|schema=MATRIX-LAWS-AFFINE-FORCED-3POW10-V1|date=2026-11-12|status=POST_LOCAL_EXPLORATION_BEFORE_HOSTED_REPLAY|' data/jump3/AFFINE-MEGA-FREEZE-20261112.hbp
+          grep -q '^PROTECTED|finite_YangMills_coupling_r9=HOLD|' data/jump3/AFFINE-MEGA-FREEZE-20261112.hbp
+          python3 -B -m py_compile python/matrix_tricks/affine_mega_rainbon.py python/matrix_tricks/affine_mega_audit.py
+          mkdir -p out
+      - name: Build full sparse matrices and check all force jumps and source changes
+        run: |
+          set -euo pipefail
+          python3 -B python/matrix_tricks/affine_mega_rainbon.py --out out | tee out/HOSTED-LOG.hbp
+          (cd out && sha256sum -c SHA256SUMS)
+          test "$(grep -c '^MATRIX|d=' out/AFFINE-MEGA.hbp)" -eq 3
+          test "$(grep -c '^DIM_PASS|d=' out/AFFINE-MEGA.hbp)" -eq 3
+          test "$(grep -c '^SLIT_READOUT|d=' out/AFFINE-MEGA.hbp)" -eq 9
+          grep -Fq 'MATRIX|d=59049|dense_entries=3486784401|sparse_nnz=177147|stored_csr_bytes=1653402|sha256=3297505eda8ac2efa603d22bc5fac0211b0676ddeec13fd140477ec0a2208474|' out/AFFINE-MEGA.hbp
+          grep -Fq 'JUMP|d=59049|t=3^80|hash=11d5ea99a88f2001dfc3ea0c1cf743759ef461cf4e26fccf45ff0b9365741ac1|' out/AFFINE-MEGA.hbp
+          grep -Fq 'COMPOSE|d=59049|t1=3^40|t2=2^40|force_switch=27_to_243|independent_spectral_compose=PASS|hash=94a7470283abd6a6fec516b7a7b4b97f5edd266757f6fcf22f69d8f3334fe7e0|' out/AFFINE-MEGA.hbp
+          grep -Fq 'AFFINE_MEGA_PASS|ring_states=6561,19683,59049|dense_matrix_allocation=NO|csr_matrix_materialized=YES|affine_forcing_exact=YES|nonlinear_force_refused=YES|r9=HOLD|' out/AFFINE-MEGA.hbp
+      - name: Independently verify every CSR row and direct 27-step forced dynamics
+        run: |
+          set -euo pipefail
+          python3 -B python/matrix_tricks/affine_mega_audit.py out | tee out/INDEPENDENT-AUDIT.hbp
+          grep -Fq 'AFFINE_MEGA_INDEPENDENT_AUDIT_PASS|matrices=3|total_rows=85293|direct_short_run=PASS|jump_receipt_hash=PASS|' out/INDEPENDENT-AUDIT.hbp
+      - name: Negative controls and complete artifact manifest
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          from hashlib import sha256
+          p=Path("out/RAINBON-META-59049-CSR.bin")
+          b=p.read_bytes()
+          attacked=Path("out/ATTACK.bin")
+          attacked.write_bytes(b[:32]+bytes([b[32]^1])+b[33:])
+          assert sha256(b).hexdigest()=="3297505eda8ac2efa603d22bc5fac0211b0676ddeec13fd140477ec0a2208474"
+          assert sha256(attacked.read_bytes()).hexdigest()!=sha256(b).hexdigest()
+          attacked.unlink()
+          Path("out/TAMPER-NEGATIVE.hbp").write_text("NEGATIVE|one_CSR_byte_modified=DETECTED|affine_jump_does_not_cover_nonlinear_force=YES|json=0\n",encoding="ascii")
+          PY
+          (cd out && sha256sum HOSTED-LOG.hbp INDEPENDENT-AUDIT.hbp TAMPER-NEGATIVE.hbp >> SHA256SUMS && sha256sum -c SHA256SUMS)
+          grep -Fq 'NEGATIVE|d=59049|state_dependent_local_kicks=27|constant_source_jump_agrees=NO|correctly_refused=PASS|' out/AFFINE-MEGA.hbp
+          echo 'AFFINE_MEGA_HOSTED_PASS|python_integer_model=PASS|three_full_matrices=YES|r9=HOLD|json=0'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: affine-mega-59049-python-${{ matrix.python-version }}
+          path: out/
+          retention-days: 30
+          if-no-files-found: warn
