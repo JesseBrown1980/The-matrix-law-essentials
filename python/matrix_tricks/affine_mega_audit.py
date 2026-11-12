@@ -74,10 +74,10 @@ def main():
     checked_prime(P)
     assert pow(3,P-1,P)==1
     assert all(pow(3,(P-1)//q,P)!=1 for q in (2,3,11))
-    receipt=(a.resultdir/"AFFINE-MEGA.hbp").read_text()
+    receipt=a.resultdir.joinpath("AFFINE-MEGA.hbp").read_text()
     assert "AFFINE_MEGA_PASS|ring_states=6561,19683,59049|" in receipt
     for n,(matrix_hash,direct_hash) in EXPECTED.items():
-        path=a.resultdir/("RAINBON-META-%d-CSR.bin"%n)
+        path=a.resultdir.joinpath("RAINBON-META-%d-CSR.bin"%n)
         offs,cols,vals=independent_csr(path,n,matrix_hash)
         got=independent_direct(n,offs,cols,vals)
         assert got==direct_hash,("direct 27 CSR replay mismatch",n,got)
@@ -94,7 +94,7 @@ def main():
         assert ("JUMP|d=%d|t=3^40|hash=%s|"%(n,h40)) in receipt
         assert ("JUMP|d=%d|t=3^80|hash=%s|"%(n,h80)) in receipt
         assert ("COMPOSE|d=%d|t1=3^40|t2=2^40|force_switch=27_to_243|independent_spectral_compose=PASS|hash=%s|"%(n,h_switch)) in receipt
-    assert sha256((a.resultdir/"AFFINE-MEGA.hbp").read_bytes()).hexdigest()=="43440bb7d611ed26c0598b0091d70bfbc75d0339b9d31d9630d30f233112fd9a"
+    assert sha256(a.resultdir.joinpath("AFFINE-MEGA.hbp").read_bytes()).hexdigest()=="43440bb7d611ed26c0598b0091d70bfbc75d0339b9d31d9630d30f233112fd9a"
     print("AFFINE_MEGA_INDEPENDENT_AUDIT_PASS|matrices=3|total_rows=85293|direct_short_run=PASS|jump_receipt_hash=PASS|json=0")
 
 if __name__=="__main__":
