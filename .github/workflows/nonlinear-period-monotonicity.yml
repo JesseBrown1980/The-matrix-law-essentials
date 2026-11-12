@@ -1,0 +1,49 @@
+name: Nonlinear jump mode-period and monotone-contraction audit
+on:
+  push:
+    paths:
+      - ".github/workflows/nonlinear-period-monotonicity.yml"
+      - "python/matrix_tricks/nonlinear_period_monotonicity_audit.py"
+      - "docs/LAW-NONLINEAR-EXACT-AND-BOUNDED-JUMPS-20261112.md"
+  pull_request:
+    paths:
+      - ".github/workflows/nonlinear-period-monotonicity.yml"
+      - "python/matrix_tricks/nonlinear_period_monotonicity_audit.py"
+      - "docs/LAW-NONLINEAR-EXACT-AND-BOUNDED-JUMPS-20261112.md"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  period_and_monotonicity:
+    name: "Proof audit Python ${{ matrix.python-version }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "${{ matrix.python-version }}"
+      - name: Enforce no floats, preserve original evidence
+        run: |
+          set -euo pipefail
+          python3 python/audit/integer_only_audit.py python/matrix_tricks/nonlinear_period_monotonicity_audit.py
+          sha256sum data/jump3/NONLINEAR-JUMP-FREEZE-20261112.hbp
+      - name: Independently prove the period and the comparison monotonicity
+        run: |
+          set -euo pipefail
+          mkdir -p build/nonlinear-period
+          python3 -B python/matrix_tricks/nonlinear_period_monotonicity_audit.py | tee build/nonlinear-period/AUDIT.hbp
+          grep -Fq 'NONLINEAR_PERIOD|d=59049|field=1299079|split_modes=29605|quadratic_extension_modes=29444|defective_modes=0|all_59049_mode_matrices_at_exponent_are_identity=PASS|universal_exponent=843803124120|3pow80_remainder=444653673201|minimal_period=NOT_CLAIMED|' build/nonlinear-period/AUDIT.hbp
+          grep -Fq 'NONLINEAR_MONOTONICITY|q=1000000|all_b_from_0_to_1000000_tested=YES|nondecreasing_comparison_map=PASS|strict_for_positive_b=PASS|top_trajectory_reaches_zero_at=21|all_smaller_initial_supnorms_covered=PASS|' build/nonlinear-period/AUDIT.hbp
+          grep -Fq 'NONLINEAR_SCOPE_AUDIT|status=PASS|r9_launch_not_invoked=YES|' build/nonlinear-period/AUDIT.hbp
+          (cd build/nonlinear-period && sha256sum AUDIT.hbp > AUDIT.sha256 && sha256sum -c AUDIT.sha256)
+          echo 'NONLINEAR_PERIOD_MONOTONICITY_ACCEPT|status=PASS|not_a_YangMills_gap_proof=YES|json=0'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nonlinear-period-monotone-python-${{ matrix.python-version }}
+          path: build/nonlinear-period/
+          retention-days: 30

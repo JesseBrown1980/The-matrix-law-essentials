@@ -45,6 +45,32 @@ det L(w) = 1.
 
 The determinant identity proves reversibility in each mode. Binary powering or repeated cubing computes `L(w)^n` exactly modulo the field prime and reconstructs the physical nonlinear state through `T^(-1)`.
 
+### Period, mode census, and what is inherited from the linear system
+
+The physical map `F=T^(-1)LT` is **dynamically conjugate** to `L`: orbit structure, periods, recurrence relations and invariants are transported by `T`. In the original `(u,v)` state coordinates, `F` is nonlinear, so it does **not** have an ordinary linear-matrix spectrum. The Fourier **mode matrices of `L`** (or appropriately defined conjugate Koopman operators) provide the spectral information. This exact class is *nonlinearity caused by a change of coordinates*, not evidence for a general nonlinear jump.
+
+For the largest tested ring `D=59,049`, the field prime is `p=1,299,079`. Every mode is
+
+```
+L(w) = [[1+w², w], [w, 1]]
+tr L(w) = 2+w²       det L(w) = 1
+Delta(w) = (tr L)^2 - 4 = w²(w²+4).
+```
+
+Since `p=3 mod 4`, `-4` is not a square modulo `p`, while `w != 0`; therefore **no discriminant is zero**. Every mode has distinct eigenvalues over at most the quadratic extension. Exhaustively enumerating all `59,049` roots gives exactly **29,605 split modes** (both eigenvalues in `GF(p)`) and **29,444 nonsplit modes** (both in `GF(p²)`), with **zero defective modes**.
+
+For a split determinant-one mode, each eigenvalue has order dividing `p-1`. For a nonsplit mode, Frobenius swaps the two roots, and their product is one; thus each eigenvalue obeys `lambda^(p+1)=1`. As all modes are diagonalizable, the full transformed operator, and hence the nonlinear map `F`, satisfy
+
+```
+F^M = identity,    M = lcm(p-1,p+1) = (p²-1)/2
+M = 843,803,124,120.
+3^80 mod M = 444,653,673,201.
+```
+
+Therefore the `3^80` snapshot is **exactly** the snapshot at step `444,653,673,201` modulo the certified universal exponent. **This does not prove that `M` is the minimal common period**, nor that a long modular jump represents a new physical time scale. The new independent [all-mode period audit](../python/matrix_tricks/nonlinear_period_monotonicity_audit.py) directly checks `L(w)^M=I` at all `59,049` modes, counts the discriminant classes, and checks the long-jump residue. The uniform mode `w=1` is the Arnold cat map `[[2,1],[1,1]] mod p`.
+
+**Method 1 scope line:** An exact jump exists here **because** an explicit invertible conjugacy to a linear matrix was constructed. Its dynamical invariants and periodicity come from that matrix. The result says nothing about a nonlinear model for which no such conjugacy or another valid reduction theorem is known.
+
 **Why this matters and what it does not mean:** real nonlinear feedback occurs at each microscopic step, yet it can be skipped **because a specific invertible conjugacy was proven**. This does not imply that a generic nonlinear force is integrable or that our full SU(3) Yang–Mills equations possess such a conjugacy.
 
 ## 2. A different, irreducibly dissipative nonlinear model with a uniform long-time certificate
@@ -79,9 +105,13 @@ For every integer `1<=B<=Q`, the right side is at most `floor(5B/8)<B`. The exac
 13, 6, 3, 1, 0.
 ```
 
+The missing comparison step is explicit: for nonnegative integers `B`, `g(B)=floor((4B+floor(B²/Q))/8)` is **nondecreasing**, because squaring on nonnegative integers, multiplication by positive coefficients, addition and floor division by positive integers all preserve order. Thus if `B_0 <= Q`, induction yields `B_t <= g^t(B_0) <= g^t(Q)`. This justifies using the single top-radius trajectory to enclose **every smaller initial radius**. The [independent monotonicity audit](../python/matrix_tricks/nonlinear_period_monotonicity_audit.py) additionally checks this ordering and strict shrinkage at all one million positive integer radii.
+
 Therefore **every** initial condition in the entire sup-norm ball `|x_i|<=1,000,000`, for **any finite ring length D**, satisfies `x(21)=0`, and because zero is fixed, `x(n)=0` for every `n>=21`, including `3^80`. This is an exact universal-in-that-ball *long-time certificate*, derived from a proved inequality; it does **not** require enumerating states.
 
 A stronger self coefficient `9` instead of `3` breaks the comparison at `x_i=Q`, explicitly showing that the bound is not indiscriminately reusable.
+
+**Method 2 scope line:** This is a **certificate of extinction**. The long-time state is known because it becomes exactly zero by step 21. It cannot certify arbitrary persistent nonlinear waves, oscillations, chaotic attractors, or non-dissipative gauge dynamics.
 
 This dissipative example reaches a fixed point; it does not claim to skip complicated persistent nonlinear transients or oscillations. It demonstrates a different valid general mathematical route: a comparison theorem over the complete state set.
 
@@ -119,4 +149,8 @@ python3 python/audit/integer_only_audit.py \
 sha256sum build/nonlinear/NONLINEAR-JUMP.hbp
 ```
 
-**Scope boundary:** the exact lane is *integrable by its construction*, and the bounded lane requires a strict, global dissipative inequality. A general nonlinear Yang–Mills or gravitational model still needs its own proof of a compatible conjugacy, invariant subspace, contractivity, interval enclosure or rigorously bounded truncation. The matrices here are modular signal/state updates, not real physical time evolution or a continuum QFT. All coupling `r=9` Yang–Mills floor-freeze work remains **on HOLD**.
+**Yang–Mills scope line:** The protected `r=9` task is a **linear Hamiltonian spectral floor certification**, not a nonlinear classical time-evolution problem. Neither nonlinear jump method in this note accelerates that existing spectral certificate, the outstanding full-symmetry `r=12` lower-sector bounds, or the continuum SU(N) mass-gap problem.
+
+**Operations, reported November 12, 2026 at 22:36 UTC:** The operator reported the protected `r=9` verification had **already launched**, with nine steps completed at `rc=0` and no exit/result yet. Previous wording here that the *launch remained on HOLD* described the earlier pre-launch gate and is superseded. This note does not launch, restart, cancel or certify that run. Its final verdict remains pending based on the reported checkpoint.
+
+**Proof boundary:** The exact lane is integrable by construction; the bounded lane is strictly dissipative. Neither supplies a general nonlinear Yang–Mills, gravitational, or persistent many-body dynamics shortcut.
