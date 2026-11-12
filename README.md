@@ -15,6 +15,8 @@ Results carry one of four labels:
 - **Measured:** precise Euclidean-evolution or eigensolver values.
 - **Exact:** closed-form weak-coupling laws in exact integer arithmetic.
 
+> **Operational status correction (operator report, 2026-11-12 22:36 UTC):** the protected `r=9` verification had **already launched**; nine steps had completed with `rc=0`, and no final exit or certificate was reported. Older pre-launch HOLD language is superseded for that run. Nothing in this matrix-law work starts or restarts it.
+
 ## November 12: state-dependent nonlinear jumps, exact and certified-bounded
 
 Two distinct tested results extend the [fixed-source affine jump](docs/LAW-AFFINE-FORCED-RADIX3-JUMP-20261112.md) to **genuinely state-dependent nearest-neighbor interactions**:
@@ -26,7 +28,7 @@ The two results are not a general nonlinear fast-forward algorithm: the first re
 
 [Mathematical proof and reproducibility](docs/LAW-NONLINEAR-EXACT-AND-BOUNDED-JUMPS-20261112.md) · [Exact code](python/matrix_tricks/nonlinear_exact_and_bound.py) · [Independent verifier](python/matrix_tricks/nonlinear_independent_audit.py) · [Pre-hosted seal](data/jump3/NONLINEAR-JUMP-FREEZE-20261112.hbp).
 
-All calculations are integer-only mathematical models, **not** physical Yang–Mills, gluon, proton or gravity dynamics. The protected coupling `r=9` remains on HOLD.
+All calculations are integer-only mathematical models, **not** physical Yang–Mills, gluon, proton or gravity dynamics. **Period update:** the 59,049-site two-field nonlinear map is conjugate to the linear mode evolution; a verified universal period exponent is `843803124120` (not necessarily minimal), with `3^80 mod exponent = 444653673201`, 29,605 split and 29,444 nonsplit modes, none defective. **Contraction update:** the integer comparison map is nondecreasing in its radius, so its 21-step top-radius certificate covers every smaller initial state. [Independent all-mode and million-radius verifier](python/matrix_tricks/nonlinear_period_monotonicity_audit.py). The nonlinear jump methods **do not** accelerate the finite Yang–Mills `r=9` spectral certificate or the open `r=12` symmetry-sector lower bounds.
 
 ## November 12: exact affine-source jump for much larger Rainbon matrices
 
@@ -38,7 +40,7 @@ The first independent **local** experiment built and audited complete **6,561-, 
 - [Runnable exact Python implementation](python/matrix_tricks/affine_mega_rainbon.py) and [separate complete-CSR/direct-step auditor](python/matrix_tricks/affine_mega_audit.py)
 - [Post-local-exploration frozen hosted expectations](data/jump3/AFFINE-MEGA-FREEZE-20261112.hbp) and [automated large-matrix replays](.github/workflows/affine-mega-rainbon.yml)
 
-**Scope:** exact modular algebra and synthetic Rainbon-source readouts. Not a nonlinear Yang–Mills, gravity, radiation or physically validated gluon/glueball/proton simulation. The protected finite-model coupling `r=9` remains HOLD.
+**Scope:** exact modular algebra and synthetic Rainbon-source readouts. Not a nonlinear Yang–Mills, gravity, radiation or physically validated gluon/glueball/proton simulation. These jump methods are not a substitute for the protected finite-model `r=9` spectral floor certification.
 
 ## Latest cross-scale results: 43-million jumps, molecule slices and Shadow Cats (November 6–7, 2026)
 
