@@ -4,7 +4,7 @@
 All computations are integers, no solver imports, no timing/float claims.
 The bound is a universal exponent, not necessarily the minimal orbit period.
 """
-from math import gcd
+from math import gcd, isqrt
 
 P = 1_299_079
 D = 59_049
@@ -32,6 +32,9 @@ def matpow(x, n):
 
 
 def period_check():
+    # Independent proof that the modulus really is a field prime.
+    for divisor in range(2, isqrt(P) + 1):
+        assert P % divisor != 0, ("composite modulus", divisor)
     assert P % 4 == 3
     assert (P - 1) % D == 0
     period_exponent = (P * P - 1) // 2
@@ -64,6 +67,10 @@ def period_check():
         w = w * r % P
     assert w == 1
     assert (split, quadratic, defective) == (29605, 29444, 0)
+    # A one-step exponent sabotage must be refused (already at the uniform cat map).
+    cat = (2, 1, 1, 1)
+    assert matpow(cat, period_exponent) == (1, 0, 0, 1)
+    assert matpow(cat, period_exponent - 1) != (1, 0, 0, 1)
     print(
         "NONLINEAR_PERIOD|d=59049|field=1299079|"
         "split_modes=29605|quadratic_extension_modes=29444|"
@@ -85,6 +92,8 @@ def monotonicity_check():
         current = scalar(b)
         assert previous <= current, (b, previous, current)
         assert current < b, (b, current)
+        if b == Q:
+            assert (10 * b + (b * b) // Q) // 8 > b
         previous = current
     seq = [Q]
     while seq[-1] > 0:
