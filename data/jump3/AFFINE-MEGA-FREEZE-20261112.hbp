@@ -1,0 +1,17 @@
+FREEZE|schema=MATRIX-LAWS-AFFINE-FORCED-3POW10-V1|date=2026-11-12|status=POST_LOCAL_EXPLORATION_BEFORE_HOSTED_REPLAY|json=0
+SOURCE|existing_jump_law=docs/LAW-POWER-OF-THREE-JUMP.md|original_prime=1000081|new_prime=1299079|new_primitive_root=3|new_fft_sizes=6561,19683,59049|json=0
+THEOREM|step=x_next=M*x+f|force=f_constant_per_stage|M=I+R-R2|field=GF(1299079)|geometric_sum=S_n(lambda)|lambda_ne_1=(lambda_pow_n-1)/(lambda-1)|lambda_eq_1=n_mod_p|json=0
+THEOREM|X_n=lambda_pow_n*X_0+S_n(lambda)*F|piecewise_forcing=exact_affine_semigroup_composition|source_dependent_on_current_state=NOT_COVERED|json=0
+PREDICTION|d=6561|sparse_nnz=19683|CSR_sha256=ebe0ee2bc29bf93d8ea3c5968a58fe676c4d461bb001e20165089a28bbf7c59b|json=0
+PREDICTION|d=19683|sparse_nnz=59049|CSR_sha256=95f12bb8addcbf88cedafb14237e3a6d3e3727b22ab0c9262ceb834c6838d8bc|json=0
+PREDICTION|d=59049|sparse_nnz=177147|CSR_sha256=3297505eda8ac2efa603d22bc5fac0211b0676ddeec13fd140477ec0a2208474|json=0
+PREDICTION|d=6561|time=3^40|state_sha256=bfd0139b7a227d9471862622398abcd2a94918c93e75f92b59a9b840b4d2931c|json=0
+PREDICTION|d=19683|time=3^40|state_sha256=bc97bc645e23f66b36409751bf28a0669eb9e3af04b00b072fe575c5d97081df|json=0
+PREDICTION|d=59049|time=3^40|state_sha256=3fedf4d67518bee4742cbe49995e3c7248843647b7f5ca6a9f5c42cf8da10395|json=0
+PREDICTION|d=59049|time=3^80|state_sha256=11d5ea99a88f2001dfc3ea0c1cf743759ef461cf4e26fccf45ff0b9365741ac1|json=0
+PREDICTION|d=59049|time=3^40_then_2^40|source_changes=YES|state_sha256=94a7470283abd6a6fec516b7a7b4b97f5edd266757f6fcf22f69d8f3334fe7e0|json=0
+GATE|every_one_of_all_CSR_rows_checked=YES|all_3_dimensions_direct_matches_forced_jump_at_27_steps=YES|d_6561_direct_matches_at_729_steps=YES|exact_two_by_two_affine_pair_matches_separate_geometric_method=YES|json=0
+GATE|source_switch_stage_composition=YES|freeze_play_forward_three=YES|source_cutoff_equals_vacuum=YES|nonlinear_state_dependent_force_must_FAIL_affine=YES|json=0
+SCOPE|virtual_address_space=12000000000|sampled=243|dynamic_states_max=59049|matrices_are_sparse_and_actually_written_CSR|not_a_12b_state_physical_simulation|json=0
+PHYSICS_LIMIT|modular_field_not_Schrodinger_or_YangMills|gluon_proton_glueball_identification=NONE|density_temperature_names_only=toy_force_labels|sha256_is_not_a_force|json=0
+PROTECTED|finite_YangMills_coupling_r9=HOLD|no_r9_script_invocation|json=0
