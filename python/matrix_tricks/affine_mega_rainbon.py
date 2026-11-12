@@ -195,7 +195,7 @@ def run(outdir):
         rows.append(f'DIM_PASS|d={n}|csr=PASS|ntt=PASS|affine=PASS|composition=PASS|json=0')
     rows.append('AFFINE_MEGA_PASS|ring_states=6561,19683,59049|dense_matrix_allocation=NO|csr_matrix_materialized=YES|affine_forcing_exact=YES|nonlinear_force_refused=YES|r9=HOLD|json=0')
     receipt=outdir/'AFFINE-MEGA.hbp';receipt.write_text('\n'.join(rows)+'\n',encoding='ascii')
-    (outdir/'SHA256SUMS').write_text(''.join(f'{sha256(p.read_bytes()).hexdigest()}  {p.name}\n' for p in sorted(outdir.iterdir()) if p.is_file() and p.name!='SHA256SUMS'),encoding='ascii')
+    (outdir/'SHA256SUMS').write_text(''.join(f'{sha256(p.read_bytes()).hexdigest()}  {p.name}\n' for p in sorted(outdir.iterdir()) if p.is_file() and (p.name=='AFFINE-MEGA.hbp' or p.name.startswith('RAINBON-META-'))),encoding='ascii')
     print('\n'.join(rows))
 
 if __name__=='__main__':
