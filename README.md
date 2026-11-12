@@ -15,6 +15,18 @@ Results carry one of four labels:
 - **Measured:** precise Euclidean-evolution or eigensolver values.
 - **Exact:** closed-form weak-coupling laws in exact integer arithmetic.
 
+## November 12: exact affine-source jump for much larger Rainbon matrices
+
+The original [pure linear jump](docs/LAW-POWER-OF-THREE-JUMP.md) does **not** account for a source injected at every microscopic step. We have added its **exact affine extension**, where `x_next=M*x+f` and the source `f` is constant *within each composed interval*. In Fourier space `X_n=lambda^n*X_0+S_n(lambda)*F`; piecewise constant changes at frozen checkpoints also compose exactly. A **state-dependent nonlinear** force is a distinct problem and is deliberately rejected by the negative controls.
+
+The first independent **local** experiment built and audited complete **6,561-, 19,683- and 59,049-row** sparse matrices `I+R−R²` over `GF(1,299,079)`. The largest matrix has **177,147 nonzero entries** (not a dense 3.49-billion-entry allocation); its actual CSR binary is about **1.65 MB**. Radix-three NTT reaches `3^40`, `3^80`, binary `2^40`, forward freeze/play and a **changed-source composite**; short direct forced stepping and an independent affine semigroup agree exactly. One-, two- and three-source readouts sample 243 addresses of a 12-billion-coordinate **virtual** screen. That does not simulate 12 billion independently interacting particles.
+
+- [Mathematical theorem, evidence and limitations](docs/LAW-AFFINE-FORCED-RADIX3-JUMP-20261112.md)
+- [Runnable exact Python implementation](python/matrix_tricks/affine_mega_rainbon.py) and [separate complete-CSR/direct-step auditor](python/matrix_tricks/affine_mega_audit.py)
+- [Post-local-exploration frozen hosted expectations](data/jump3/AFFINE-MEGA-FREEZE-20261112.hbp) and [automated large-matrix replays](.github/workflows/affine-mega-rainbon.yml)
+
+**Scope:** exact modular algebra and synthetic Rainbon-source readouts. Not a nonlinear Yang–Mills, gravity, radiation or physically validated gluon/glueball/proton simulation. The protected finite-model coupling `r=9` remains HOLD.
+
 ## Latest cross-scale results: 43-million jumps, molecule slices and Shadow Cats (November 6–7, 2026)
 
 The matrix-law toolkit now has **three distinct kinds of evidence**: the certified *finite* `S₃` Hamiltonian calculations below, exact or high-precision **algorithm tests**, and deliberately simplified **physical models**. They must not be treated as interchangeable claims.
