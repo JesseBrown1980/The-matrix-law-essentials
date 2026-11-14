@@ -1,0 +1,3 @@
+# Sealed after local exact integer verification and before first hosted replay.
+FROZEN_PARAM_INPUT|status=POST_LOCAL_EXPLORATION_BEFORE_HOSTED_REPLAY|source_git_blob=ab9495fc4b86bbc77054165e3c47cbad774f7e7b|source_sha256=25e2873c6df1d834a32d3135a06f86f3f46c6834273812e347475fc03349c792|grid=0,1,2,3,4,5|faults=3|json=0
+FROZEN_PARAM_SCOPE|derived_exact_fixed_trial_polynomial=1|source_changed_requires_rebuild=1|not_a_real_yang_mills_spectral_certificate=1|r9_issue_137=HOLD|json=0

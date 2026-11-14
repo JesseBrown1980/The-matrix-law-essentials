@@ -1,0 +1,8 @@
+FROZEN_PARAM_FREEZE|source_sha256=25e2873c6df1d834a32d3135a06f86f3f46c6834273812e347475fc03349c792|model=symmetric_integer_3Q_2P|z0=1|queries=6|json=0
+FROZEN_PARAM_POINT|z=0|fullQ_floor=7|boundary_denom=14|exact_S_numerator_determinant=29833056|polynomial_equals_direct=1|Loewner_sandwich=1|json=0
+FROZEN_PARAM_POINT|z=1|fullQ_floor=6|boundary_denom=13|exact_S_numerator_determinant=9766211|polynomial_equals_direct=1|Loewner_sandwich=1|json=0
+FROZEN_PARAM_POINT|z=2|fullQ_floor=5|boundary_denom=12|exact_S_numerator_determinant=2433564|polynomial_equals_direct=1|Loewner_sandwich=1|json=0
+FROZEN_PARAM_POINT|z=3|fullQ_floor=4|boundary_denom=11|exact_S_numerator_determinant=315675|polynomial_equals_direct=1|Loewner_sandwich=1|json=0
+FROZEN_PARAM_POINT|z=4|fullQ_floor=3|boundary_denom=10|exact_S_numerator_determinant=-57664|polynomial_equals_direct=1|Loewner_sandwich=1|json=0
+FROZEN_PARAM_POINT|z=5|fullQ_floor=2|boundary_denom=9|exact_S_numerator_determinant=-34749|polynomial_equals_direct=1|Loewner_sandwich=1|json=0
+FROZEN_PARAM_VERDICT|points=6|negative_controls_rejected=3|polynomial_degree_U=1|polynomial_degree_G=2|exterior_residual_degree=0|whole_graph_reused=1|general_spectral_weight=NOT_PROVED|json=0
