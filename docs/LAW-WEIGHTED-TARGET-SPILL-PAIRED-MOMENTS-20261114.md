@@ -54,6 +54,52 @@ For Q-sector powers of a full Hamiltonian, remove P destinations
 \((QHQ)^2\ne QH^2Q\); unprojected flat-sector reentry is a source
 error.
 
+## Extra exact trick: odd moments by an on-support edge form
+
+The odd identity also admits a no-next-vector evaluation:
+
+\[
+ \mu_{2j+1}=V_j^{\!*_W}AV_j.
+\]
+
+For the finite gauge Hamiltonian
+\(X_z=b(72I-T+9M)-z_{\rm num}I\), and source values
+\(V_j(x)\) with finite known support \(S_j\),
+
+\[
+\mu_{2j+1}
+ =\sum_{x\in S_j} w_x[b(72+9m_x)-z_{\rm num}]
+      V_j(x)V_j(x)^\top
+ -b\sum_{x,y\in S_j}w_xT_{xy}
+      V_j(x)V_j(y)^\top.
+\]
+
+All 72 outgoing raw moves per source still must be enumerated and
+their destinations resolved to prove support completeness. But once
+\(V_j(y)=0\) is certified outside \(S_j\), the **quadratic form**
+needs no *stored* \(V_{j+1}\) values on the next outer shell.
+The inner electric edge term may be evaluated exactly by taking
+each *undirected* off-diagonal edge once:
+
+\[
+ -b\sum_{\{x,y\}\subseteq S_j}w_xT_{xy}
+   \{V_j(x)V_j(y)^\top+V_j(y)V_j(x)^\top\},
+\]
+plus the self-loop term
+\(-b\sum_x w_xT_{xx}V_j(x)V_j(x)^\top\).
+
+The balanced edge weight is the same in either orientation, by
+the proved \(W\)-detailed-balance law. This is a further rigorous
+memory/cycle saving for **odd** moments at a known complete support.
+It does **not** supply the outer-shell \(V_{j+1}\) needed by the
+next even moment \(\mu_{2j+2}\).
+
+In particular, after constructing complete \(V_1=X_zR_z\)
+for real \(\mu_2\), the \(\mu_3=V_1^{\!*_W}X_zV_1\) route
+may avoid retaining a shell6 vector. Still, every real shell5
+row and internal edge must be verified, and the result remains
+HOLD until that source computation occurs.
+
 ## Verified toolkit accelerations and limits
 
 1. **Sparse frontier rather than the global graph.** Keep exact
