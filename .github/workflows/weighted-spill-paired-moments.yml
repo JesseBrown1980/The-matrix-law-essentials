@@ -19,8 +19,11 @@ jobs:
           set -euo pipefail
           python3 -I -B python/matrix_tricks/weighted_spill_paired_odd.py | tee weighted-spill-paired-odd.hbp
           test "$(grep -c '^WEIGHTED_MOMENT_POINT|' weighted-spill-paired-odd.hbp)" -eq 4
-          grep -Fq 'exact_passes=4|exact_moments=8|fullQ_weighted_pairing=PASS|on_support_undirected_odd_form=PASS|' weighted-spill-paired-odd.hbp
-          grep -Fq 'missing_self_loop=REJECTED|missing_cross_edge=REJECTED|unprojected_P_return=REJECTED|wrong_W=REJECTED|' weighted-spill-paired-odd.hbp
+          grep -Fq 'outward_operator_passes=3|exact_moments=8|final_odd_computed_without_next_vector=1|' weighted-spill-paired-odd.hbp
+          grep -Fq 'support_spill_odd=PASS|on_support_undirected_odd_form=PASS|' weighted-spill-paired-odd.hbp
+          grep -Fq 'missing_self_loop=DETECTED_BY_DIFFERENCE|missing_cross_edge=DETECTED_BY_DIFFERENCE|edge_to_self_loops_same_W_same_72=REFUSED_BY_RAW_MOVE_WITNESS|' weighted-spill-paired-odd.hbp
+          grep -Fq 'unprojected_P_return=REJECTED|wrong_W=REJECTED|' weighted-spill-paired-odd.hbp
+          grep -Fq 'next_vector_has_nonzero_outside_support=1|odd_from_only_original_support=PASS|actual_next_outer_vector_stored_by_odd_method=0|' weighted-spill-paired-odd.hbp
           grep -Fq 'finite_3x4_actual_source=NOT_COMPUTED|Wilson_weight=HOLD' weighted-spill-paired-odd.hbp
       - uses: actions/upload-artifact@v4
         with:
