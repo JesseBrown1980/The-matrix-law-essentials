@@ -82,7 +82,60 @@ def hashm(Mm):
                           .encode("ascii")).hexdigest()
 
 
+def support_odd(V,z=5,T_source=T):
+    """Quadratic edge form reads only known nonzero source indices.
+
+    This path never builds the next outer-shell vector.
+    """
+    support=[i for i in range(len(Q)) if any(V[i])]
+    out=[[0]*N for _ in range(N)]
+    for x in support:
+        i=Q[x]
+        w=W[i]
+        diag=72+9*M[i]-z-T_source[i][i]
+        for a in range(N):
+            for b in range(N):
+                out[a][b]+=w*diag*V[x][a]*V[x][b]
+    for ii,x in enumerate(support):
+        i=Q[x]
+        for y in support[ii+1:]:
+            j=Q[y]
+            if T_source[i][j]==0:
+                continue
+            balance=W[i]*T_source[i][j]
+            require(balance==W[j]*T_source[j][i],
+                    "support_wrong_W_balance")
+            for a in range(N):
+                for b in range(N):
+                    out[a][b]-=balance*(V[x][a]*V[y][b]+
+                                        V[y][a]*V[x][b])
+    return tuple(tuple(row) for row in out)
+
+
+def raw_move_rows():
+    """Immutable synthetic 72-move witness, independent of trial T.
+
+    The source must explicitly emit its moves. Testing only the row
+    sum or W detailed balance lets hidden edge->self-loop faults pass.
+    """
+    return tuple(tuple(dst for dst,multiplicity in enumerate(row)
+                       for _ in range(multiplicity)) for row in T)
+
+
+def gate_operator_against_raw(T_trial,witness):
+    require(len(witness)==len(T_trial),"raw_witness_count")
+    for i,row in enumerate(T_trial):
+        counter=[0]*len(row)
+        for dest in witness[i]:
+            require(0<=dest<len(row),"raw_witness_destination")
+            counter[dest]+=1
+        require(len(witness[i])==72,"raw_source_not_72")
+        require(tuple(counter)==row,"raw_source_multiplicities_changed")
+
+
 def run():
+    witness=raw_move_rows()
+    gate_operator_against_raw(T,witness)
     for i,row in enumerate(T):
         require(sum(row)==72,"full_source_row_not_72")
         for j,v in enumerate(row):
@@ -91,29 +144,77 @@ def run():
     assert len(R)==4
     V=R
     moments=[]
+    outward=0
     for j in range(4):
-        Vnext=matrix_apply(A,V)
+        # Only V0..V3 are constructed. The last odd μ7 comes from
+        # support edges; V4 is never constructed in this run.
         even=gram(V,V)
-        odd=gram(V,Vnext)
-        sourceedge=edge_odd(V)
-        require(odd==sourceedge,"odd_edge_not_complete")
-        require(even==gram(R, repeated(A,R,2*j)),
+        odd=support_odd(V)
+        full_odd=edge_odd(V)
+        require(odd==full_odd,"support_odd_not_full_quadratic")
+        require(even==gram(R,repeated(A,R,2*j)),
                 "even_direct_moment_disagrees")
-        require(odd==gram(R, repeated(A,R,2*j+1)),
+        require(odd==gram(R,repeated(A,R,2*j+1)),
                 "odd_direct_moment_disagrees")
         moments.extend((even,odd))
         emit("WEIGHTED_MOMENT_POINT",degree=j,
              even_order=2*j,odd_order=2*j+1,
              even_sha256=hashm(even),odd_sha256=hashm(odd),
              independent_undirected_edge="PASS",
+             support_only_odd="PASS",
+             outward_applications_so_far=outward,
              fullQ_pairing="PASS")
-        V=Vnext
+        if j<3:
+            V=matrix_apply(A,V)
+            outward+=1
+
+    # Explicit support-spill case: source row 4 has zero V but nonzero
+    # AV from row 3. Odd form still uses ONLY internal support edges.
+    sparse=R[:3]+((0,)*N,)
+    next_sparse=matrix_apply(A,sparse)
+    require(not any(sparse[3]) and any(next_sparse[3]),
+            "no_genuine_exterior_spill")
+    support=tuple(i for i,row in enumerate(sparse) if any(row))
+    require(support==(0,1,2),"sparse_support_not_proper")
+    sparse_direct=gram(sparse,next_sparse)
+    sparse_support= support_odd(sparse)
+    require(sparse_direct==sparse_support,
+            "outer_spill_odd_quadratic_disagrees")
+    emit("WEIGHTED_MOMENT_OUTER_SPILL",
+         source_support_states=len(support),
+         Q_states=len(Q),
+         next_vector_has_nonzero_outside_support=1,
+         odd_from_only_original_support="PASS",
+         actual_next_outer_vector_stored_by_odd_method=0,
+         real_3x4_K3="NOT_COMPUTED")
 
     require(edge_odd(R,drop_self=True)!=edge_odd(R),
             "omitted_self_loops_not_detected")
     require(edge_odd(R,drop_cross=True)!=edge_odd(R),
             "omitted_cross_edges_not_detected")
-    # A full (P + Q) propagation can leave Q and return through P.
+
+    # SELF-CONSISTENT tamper: both directions of a balanced edge
+    # replaced by self-loops. Row sums and W balance still PASS.
+    bad=[list(row) for row in T]
+    require(W[3]==W[4] and bad[3][4]==bad[4][3]==3,
+            "tamper_source_precondition")
+    bad[3][4]=0
+    bad[4][3]=0
+    bad[3][3]+=3
+    bad[4][4]+=3
+    altered=tuple(tuple(row) for row in bad)
+    require(all(sum(row)==72 for row in altered),
+            "self_consistent_tamper_row_sum")
+    require(all(W[i]*altered[i][j]==W[j]*altered[j][i]
+                for i in range(len(W)) for j in range(len(W))),
+            "self_consistent_tamper_W_balance")
+    refused=False
+    try:
+        gate_operator_against_raw(altered,witness)
+    except ValueError:
+        refused=True
+    require(refused,"self_consistent_edge_fold_not_refused")
+
     H=tuple(tuple((72+9*M[i]-5 if i==j else 0)-T[i][j]
                   for j in range(5)) for i in range(5))
     raw2=tuple(tuple(sum(H[i][k]*H[k][j] for k in range(5))
@@ -121,23 +222,27 @@ def run():
     A2=tuple(tuple(sum(A[i][k]*A[k][j] for k in range(4))
                    for j in range(4)) for i in range(4))
     require(raw2!=A2,"flat_reentry_truncation_not_detected")
-    # Changing one W weight while retaining the source T breaks balance.
-    bad=(1,2,6,6,6)
-    require(any(bad[i]*T[i][j]!=bad[j]*T[j][i]
+    badW=(1,2,6,6,6)
+    require(any(badW[i]*T[i][j]!=badW[j]*T[j][i]
                 for i in range(5) for j in range(5)),
             "wrong_metric_not_detected")
-    require(len(moments)==8,"four_pass_moment_count")
+    require(len(moments)==8 and outward==3,
+            "n_minus_one_terminal_odd_pass_count")
     emit("WEIGHTED_MOMENT_VERDICT",operator_rows=5,
          P_states=1,Q_states=4,source_columns=N,
          raw_moves_per_full_row=72,
-         exact_passes=4,exact_moments=8,
+         outward_operator_passes=3,exact_moments=8,
+         final_odd_computed_without_next_vector=1,
          fullQ_weighted_pairing="PASS",
+         support_spill_odd="PASS",
          on_support_undirected_odd_form="PASS",
-         missing_self_loop="REJECTED",missing_cross_edge="REJECTED",
-         unprojected_P_return="REJECTED",wrong_W="REJECTED",
+         missing_self_loop="DETECTED_BY_DIFFERENCE",
+         missing_cross_edge="DETECTED_BY_DIFFERENCE",
+         edge_to_self_loops_same_W_same_72="REFUSED_BY_RAW_MOVE_WITNESS",
+         unprojected_P_return="REJECTED",
+         wrong_W="REJECTED",
          finite_3x4_actual_source="NOT_COMPUTED",
          Wilson_weight="HOLD")
-
 
 def repeated(A,V,n):
     out=V

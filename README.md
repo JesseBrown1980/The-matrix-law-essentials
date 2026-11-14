@@ -19,10 +19,15 @@ Results carry one of four labels:
 
 ## November 14: exact weighted target-spill and paired whole-Q moments
 
-**New reusable certificate algorithm:** for a W-self-adjoint sparse operator,
-compute `mu_(2j)=<A^jR,A^jR>_W` and
-`mu_(2j+1)=<A^jR,A^(j+1)R>_W`, obtaining **22 exact
-8×8 moment matrices from 11 whole-operator passes** at degree 11.
+**Sharper, independently reviewed certificate algorithm:** for a
+W-self-adjoint sparse operator, compute `mu_(2j)=<A^jR,A^jR>_W`
+and the final `mu_(2n-1)=<A^(n-1)R,A(A^(n-1)R)>_W` directly from
+on-support weighted raw edges. This obtains **22 exact 8×8 moments
+from only 10 outward operator passes** at degree 11, saving the
+largest final shell. Source rows must retain exact self-loop counts
+from raw move enumeration; row-sum and W symmetry alone are insufficient.
+Plain unsigned integer lane packing applies only to nonnegative vectors;
+mixed-sign later Krylov vectors require a proved signed encoding.
 Sparse source shards must emit every raw outgoing move and reduce
 **by canonical target across all shards before squaring**; otherwise
 cross-shard Gram terms are lost. Exact packed integer lanes, radix
