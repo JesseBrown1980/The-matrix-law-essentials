@@ -1,0 +1,28 @@
+name: Exact signed two-channel integer lane packing
+on:
+  pull_request:
+    paths:
+      - 'python/matrix_tricks/signed_two_channel_packing.py'
+      - 'docs/LAW-SIGNED-TWO-CHANNEL-PACKING-20261114.md'
+      - '.github/workflows/signed-two-channel-packing.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-signed-proof-witness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify exact signed two-lane 8-column W-weighted source reduction
+        run: |
+          set -euo pipefail
+          python3 -I -B python/matrix_tricks/signed_two_channel_packing.py | tee signed-lane-receipt.hbp
+          grep -Fq 'two_nonnegative_channels=PASS|independent_scalar_agreement=PASS|weighted_Gram=PASS|' signed-lane-receipt.hbp
+          grep -Fq 'cross_shard_square_before_merge=REJECTED|false_lane_width=REFUSED|wrong_source_sign=DETECTED|over_72_target_incoming=REFUSED|' signed-lane-receipt.hbp
+          grep -Fq 'finite_3x4_actual_mu3=NOT_COMPUTED|Wilson_weight=HOLD' signed-lane-receipt.hbp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signed-two-channel-exact-integer
+          path: signed-lane-receipt.hbp
+          retention-days: 60
