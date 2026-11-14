@@ -119,8 +119,60 @@ def hashm(Mm):
                           .encode("ascii")).hexdigest()
 
 
+def signed_bias_lane_trial():
+    """Proof-sized offset lanes for mixed-sign higher Krylov vectors.
+
+    In production the source bound and incoming degree must be proven
+    from all 72 raw moves. Never directly unsigned-pack negative V_j.
+    """
+    v0=(-13,15,-2,0,7,-5,11,-1)
+    v1=(9,-4,6,-12,0,3,-1,12)
+    offset=16
+    degree=72
+    largest=15
+    bound=degree*(offset+largest)
+    width=bound.bit_length()
+    require(bound < (1<<width),"safe_width_not_large_enough")
+    mask=(1<<width)-1
+
+    def encode(vec,bits,bias):
+        require(all(-bias<=v<=largest for v in vec),
+                "signed_source_bound")
+        require(degree*(bias+largest) < (1<<bits),
+                "signed_lane_carry_bound")
+        return sum((v+bias)<<(bits*k) for k,v in enumerate(vec))
+
+    packed0=encode(v0,width,offset)
+    packed1=encode(v1,width,offset)
+    total=2*packed0+3*packed1
+    actual=tuple(((total>>(width*k))&mask)-5*offset
+                 for k in range(N))
+    expected=tuple(2*v0[k]+3*v1[k] for k in range(N))
+    require(actual==expected,"independent_signed_lane_unpack")
+    require(all(v!=0 for v in expected),"nontrivial_signed_lane_test")
+
+    refused_narrow=False
+    try:
+        encode(v0,7,offset)
+    except ValueError:
+        refused_narrow=True
+    require(refused_narrow,"narrow_signed_width_must_refuse")
+    bad=tuple(((total>>(width*k))&mask)-5*(offset+1)
+              for k in range(N))
+    require(bad!=expected,"wrong_signed_offset_not_detected")
+    emit("WEIGHTED_SIGNED_LANES",signed_sources=2,
+         weighted_incoming_degree=5,
+         bound_incoming_degree=degree,
+         tested_eight_columns=N,
+         exact_signed_bias_roundtrip="PASS",
+         unsigned_negative_values="FORBIDDEN",
+         insufficient_lane_width="REFUSED",
+         incorrect_bias_subtraction="REJECTED")
+
+
 def run():
     audit_source(T)
+    signed_bias_lane_trial()
     A=operator()
     require(len(R)==4,"Q_source_census")
     V=R
@@ -208,6 +260,7 @@ def run():
          raw_moves_per_full_row=72,
          production_outward_passes=3,exact_moments=8,
          saved_final_full_vector_action=1,
+         signed_eight_lane_offset_control="PASS",
          actual_outer_Q_spill_witness="PASS",
          on_support_undirected_odd_form="PASS",
          raw_oracle_self_loop_drop="REFUSED",
