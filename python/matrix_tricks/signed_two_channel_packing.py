@@ -62,6 +62,9 @@ def target_reduce(vectors,records,width):
     Return exact signed vectors for every target, never partial Gram.
     """
     limit=1<<width
+    observed_max=max(abs(x) for row in vectors for x in row)
+    need(limit>ROW_CAP*observed_max,
+         "WIDTH_DOES_NOT_CERTIFY_INCOMING_BOUND")
     positive={}
     negative={}
     count={}
@@ -151,8 +154,7 @@ def run():
          "narrow_width_not_rejected")
     bad_width_refused=False
     try:
-        need((1<<too_narrow)>ROW_CAP*largest,
-             "WIDTH_DOES_NOT_CERTIFY_INCOMING_BOUND")
+        target_reduce(src,records,too_narrow)
     except ValueError:
         bad_width_refused=True
     need(bad_width_refused,"bad_width_passed")
