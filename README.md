@@ -17,6 +17,30 @@ Results carry one of four labels:
 
 > **Operational status correction (operator report, 2026-11-12 22:36 UTC):** the protected `r=9` verification had **already launched**; nine steps had completed with `rc=0`, and no final exit or certificate was reported. Older pre-launch HOLD language is superseded for that run. Nothing in this matrix-law work starts or restarts it.
 
+## November 14: exact weighted target-spill and paired whole-Q moments
+
+**New reusable certificate algorithm:** for a W-self-adjoint sparse operator,
+compute `mu_(2j)=<A^jR,A^jR>_W` and
+`mu_(2j+1)=<A^jR,A^(j+1)R>_W`, obtaining **22 exact
+8×8 moment matrices from 11 whole-operator passes** at degree 11.
+Sparse source shards must emit every raw outgoing move and reduce
+**by canonical target across all shards before squaring**; otherwise
+cross-shard Gram terms are lost. Exact packed integer lanes, radix
+target buckets, content-addressed receipts, strict W balance and
+independent raw-move controls keep the computation both sparse
+and auditable.
+
+The concrete 3×4 finite-S₃ source [#137/#194](https://github.com/JesseBrown1980/Finite-universe-Yang-mills-existence-and-mass-gap-using-HEB-C/pull/194)
+has a first **248,152-state / 17,866,944-move** partition PASS,
+using a **198,867,900-byte** binary target spill. A complete
+degree-11 moment/normalized-Wilson certificate is **still OPEN/HOLD**.
+No Fourier/NTT power-of-three jump is substituted without a
+proved circulant reduction. Historical accepted-K3 Schur matrix
+moments require the **`1/K_n²`** prefactor, not an extra
+`10^9/K_n²`.
+
+[Exact law, negative-control requirements and reproducibility](docs/LAW-WEIGHTED-TARGET-SPILL-PAIRED-MOMENTS-20261114.md).
+
 ## November 14: exact frozen-trial parameter-replay law (new toolkit method)
 
 **Derived:** for an affine symmetric pencil \(A(z)=QHQ-zI\) and a fixed
