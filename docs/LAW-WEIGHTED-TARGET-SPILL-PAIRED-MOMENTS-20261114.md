@@ -18,11 +18,19 @@ For any nonnegative integer \(j\), define \(V_j=A^jR\). Then
            =V_j^{\!*_W}V_{j+1}.
 \]
 
-Thus \(n\) *complete* operator applications yield the \(2n\) exact
-moments \(\mu_0,\ldots,\mu_{2n-1}\). With \(n=11\), eleven actions
-yield 22 moment matrices (44 at two distinct frozen source/energy
-pairs). Source columns may be batched; an operator action must not
-silently drop newly reached states.
+**Sharper terminal-pass law.** With the on-support odd quadratic
+form proved below, \(2n\) exact moments need only \(n-1\) complete
+outward operator applications, producing \(V_0,\ldots,V_{n-1}\).
+The last odd moment is \(V_{n-1}^{\!*_W}A V_{n-1}\),
+evaluated from verified on-support edges. The outer-shell
+\(V_n\) is not needed for this final moment. Specifically,
+**degree 11 requires ten complete outward applications** to
+obtain the 22 moments \(\mu_0,\ldots,\mu_{21}\), assuming the complete
+support and on-support operator are independently verified.
+For earlier odd moments one may use the usual paired evaluation
+while the next vector is needed for a later even moment. Source
+columns may be batched; an operator action must not silently drop
+newly reached states.
 
 For a directed raw electric adjacency \(T\) with positive orbit
 weights \(w_x\), suppose detailed balance holds for every pair:
@@ -89,10 +97,11 @@ plus the self-loop term
 \(-b\sum_x w_xT_{xx}V_j(x)V_j(x)^\top\).
 
 The balanced edge weight is the same in either orientation, by
-the proved \(W\)-detailed-balance law. This is a further rigorous
-memory/cycle saving for **odd** moments at a known complete support.
-It does **not** supply the outer-shell \(V_{j+1}\) needed by the
-next even moment \(\mu_{2j+2}\).
+the proved \(W\)-detailed-balance law. This saves **one entire final outward pass** for an even count of
+moments: \(2n\) moments from \(n-1\) full passes. It also saves
+outer-shell memory for an odd moment at a known complete support.
+It does **not** supply \(V_{j+1}\) needed by the next even
+moment \(\mu_{2j+2}\).
 
 In particular, after constructing complete \(V_1=X_zR_z\)
 for real \(\mu_2\), the \(\mu_3=V_1^{\!*_W}X_zV_1\) route
@@ -106,10 +115,15 @@ HOLD until that source computation occurs.
    nonzero source vectors, enumerate all outgoing neighbors for each
    active source, and append every reached target. Any unaccounted
    boundary edge is a certificate HOLD, not an approximation.
-2. **Integer lane packing.** When source entries and move
-   multiplicities are nonnegative, pack \(p\) columns in separated
-   integer bit fields large enough for the *maximum sum of incoming
-   weights*. The width bound itself is part of the proof; unpack,
+2. **Integer lane packing.** This direct no-carry trick applies
+   to **nonnegative** source entries and nonnegative move
+   multiplicities, with a verified upper bound on incoming sums.
+   The general higher Krylov vectors \(V_j\) have **mixed signs**.
+   Use separate signed positive/negative lanes or a rigorously
+   bounded offset/biased representation, subtracting the bias
+   exactly after reduction and proving no cross-lane carry.
+   A raw nonnegative packing routine must refuse such signed
+   vectors until this extension is verified. Always unpack,
    re-pack, and compare against an independent row method.
 3. **Out-of-core radix bucketing.** Store target canonical address,
    source index, weighted reverse multiplicity and target weight in
@@ -135,6 +149,17 @@ HOLD until that source computation occurs.
    **No extra scale \(b\)** multiplies the accepted-source moments.
    The source-unit conversion must be anchored to the original
    Schur bracket, with old/new Loewner nesting and inertia checks.
+
+**Independent raw-move fidelity is distinct from symmetry.**
+A malicious or mistaken edit that replaces both orientations of
+a balanced off-diagonal edge with corresponding self-loops can
+preserve row sums, weighted detailed balance, and every moment of
+the *altered* operator. Therefore acceptance requires a complete
+source-move enumeration (or a separately pinned independently
+derived move witness), with the precise destination and
+multiplicity for **every** raw move. A synthetic negative control
+must refuse the altered adjacency against the unchanged witness,
+rather than merely asserting its numerical answer changes.
 
 ### Formal production gates
 
@@ -175,10 +200,11 @@ moves, **14,204,850** signed-source shell5 edge records
 accepted \(\mu_0,\mu_1\) partials.
 [Hosted shard-0 PASS](https://github.com/JesseBrown1980/Finite-universe-Yang-mills-existence-and-mass-gap-using-HEB-C/actions/runs/43604542743).
 
-A parallel eight-source-shard production pipeline is
-[run 43605546210](https://github.com/JesseBrown1980/Finite-universe-Yang-mills-existence-and-mass-gap-using-HEB-C/actions/runs/43605546210).
-**Its full μ2 was not complete at the moment this note was frozen.**
-Even a completed μ2 would leave the degree-11 moments μ3..μ21,
+A parallel eight-source-shard production pipeline was
+[run 43606393196](https://github.com/JesseBrown1980/Finite-universe-Yang-mills-existence-and-mass-gap-using-HEB-C/actions/runs/43606393196).
+**All eight real source shards, all eight shell-5 target reducers and
+the final full-Q μ2 assembly passed** at both frozen energies. That
+establishes μ0..μ2 (source-conditional); degree 11 still needs μ3..μ21,
 normalized E1/E2 Wilson transition and independent full raw
 source review open. The original first-excitation Wilson weight
 remains **HOLD**. This method does not prove continuum
