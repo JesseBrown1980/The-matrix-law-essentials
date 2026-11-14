@@ -18,11 +18,20 @@ For any nonnegative integer \(j\), define \(V_j=A^jR\). Then
            =V_j^{\!*_W}V_{j+1}.
 \]
 
-Thus \(n\) *complete* operator applications yield the \(2n\) exact
-moments \(\mu_0,\ldots,\mu_{2n-1}\). With \(n=11\), eleven actions
-yield 22 moment matrices (44 at two distinct frozen source/energy
-pairs). Source columns may be batched; an operator action must not
-silently drop newly reached states.
+The paired-vector formula alone uses \(n\) complete applications to
+construct \(V_n\) and recover \(2n\) moments, but **the on-support
+odd-moment quadratic form below saves the last complete application**.
+Precisely, only \(V_0,\ldots,V_{n-1}\) are required:
+\(\mu_{2j}=V_j^{\!*_W}V_j\) and
+\(\mu_{2j+1}=V_j^{\!*_W} A V_j\). Therefore **\(n-1\)
+complete vector expansions yield \(2n\) moments**, plus \(n\)
+on-support quadratic/edge evaluations. For degree **11**, the
+production target is **10 complete outward vector expansions** and
+**22 exact 8×8 moments per frozen energy**, not 11 expansions.
+This saves the last and potentially largest vector \(V_{11}\),
+while still requiring exact source and edge verification for \(V_{10}\).
+Independent direct-power checks may use additional applications
+solely as verifier work; they do not count toward the production algorithm.
 
 For a directed raw electric adjacency \(T\) with positive orbit
 weights \(w_x\), suppose detailed balance holds for every pair:
@@ -88,6 +97,22 @@ each *undirected* off-diagonal edge once:
 plus the self-loop term
 \(-b\sum_x w_xT_{xx}V_j(x)V_j(x)^\top\).
 
+**The hosted synthetic must use at least one source vector whose
+complete \(A V\) extends to a Q state outside the support of \(V\).**
+It then compares the odd moment computed from *support edges only*
+to the direct whole-Q product and checks that no exterior vector
+was formed in that shortcut. This directly exercises the claimed
+outer-shell saving.
+
+**Completeness is a separate proof obligation:** row-sum 72 and
+detailed balance alone do not detect an edge removed in both
+directions and replaced by self-loop counts. The production verifier
+must reconstruct every self-loop and every off-diagonal target from
+an independently specified raw 72-move generator. A deliberately
+self-consistent edge-to-self-loop tampering case should be rejected
+*against that immutable raw move census*. If the purported raw generator
+is itself truncated, a self-consistent moment checker is insufficient.
+
 The balanced edge weight is the same in either orientation, by
 the proved \(W\)-detailed-balance law. This is a further rigorous
 memory/cycle saving for **odd** moments at a known complete support.
@@ -106,11 +131,17 @@ HOLD until that source computation occurs.
    nonzero source vectors, enumerate all outgoing neighbors for each
    active source, and append every reached target. Any unaccounted
    boundary edge is a certificate HOLD, not an approximation.
-2. **Integer lane packing.** When source entries and move
-   multiplicities are nonnegative, pack \(p\) columns in separated
-   integer bit fields large enough for the *maximum sum of incoming
-   weights*. The width bound itself is part of the proof; unpack,
-   re-pack, and compare against an independent row method.
+2. **Integer lane packing.** An unsigned fixed-width packed
+   source is valid only when all packed entries are nonnegative.
+   The accepted \(R\)-source outer-boundary representation is
+   nonnegative after a fixed sign, but \(V_j\) for \(j\ge1\)
+   generally has **mixed signs**. Later passes must use an exact
+   per-lane bias with proved source-entry and incoming-degree bounds,
+   then subtract bias times incoming multiplicity on each target,
+   or a separately verified signed-lane representation. Pure unsigned
+   packing of mixed-sign \(V_j\) is **forbidden**. Width bounds,
+   no cross-lane carry, correct signed unpack/re-pack and independent
+   matrix-row checks are hard gates.
 3. **Out-of-core radix bucketing.** Store target canonical address,
    source index, weighted reverse multiplicity and target weight in
    a compact fixed-width record. Bucket by deterministic target key.
@@ -140,7 +171,10 @@ HOLD until that source computation occurs.
 
 - Every source row emits the exact mandated raw move count; no
   dropped destination, duplicate edge, incorrect orbit weight or
-  unverified Q projection.
+  unverified Q projection. A separately specified raw generator
+  determines the **actual off-diagonal targets and self-loop counts**.
+  Row sums and W-balance alone cannot defeat the planted
+  self-consistent edge-to-self-loop fault.
 - All disjoint source partitions are present, their row ranges
   cover the exact census, and all target-address buckets are present
   before the final target Gram is accepted.
