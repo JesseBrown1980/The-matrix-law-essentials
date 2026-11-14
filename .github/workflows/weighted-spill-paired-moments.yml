@@ -1,0 +1,29 @@
+name: Exact weighted target-spill and paired odd moment law
+on:
+  pull_request:
+    paths:
+      - 'python/matrix_tricks/weighted_spill_paired_odd.py'
+      - 'docs/LAW-WEIGHTED-TARGET-SPILL-PAIRED-MOMENTS-20261114.md'
+      - '.github/workflows/weighted-spill-paired-moments.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  standalone-weighted-operator-witness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Four exact weighted Q passes, eight Gram and undirected edge moments
+        run: |
+          set -euo pipefail
+          python3 -I -B python/matrix_tricks/weighted_spill_paired_odd.py | tee weighted-spill-paired-odd.hbp
+          test "$(grep -c '^WEIGHTED_MOMENT_POINT|' weighted-spill-paired-odd.hbp)" -eq 4
+          grep -Fq 'exact_passes=4|exact_moments=8|fullQ_weighted_pairing=PASS|on_support_undirected_odd_form=PASS|' weighted-spill-paired-odd.hbp
+          grep -Fq 'missing_self_loop=REJECTED|missing_cross_edge=REJECTED|unprojected_P_return=REJECTED|wrong_W=REJECTED|' weighted-spill-paired-odd.hbp
+          grep -Fq 'finite_3x4_actual_source=NOT_COMPUTED|Wilson_weight=HOLD' weighted-spill-paired-odd.hbp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: weighted-spill-paired-odd-exact
+          path: weighted-spill-paired-odd.hbp
+          retention-days: 60
