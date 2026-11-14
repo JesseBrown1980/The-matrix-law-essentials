@@ -1,0 +1,41 @@
+name: Exact frozen-trial parameter certificate replay
+on:
+  pull_request:
+    paths:
+      - "python/matrix_tricks/frozen_trial_parameter_replay.py"
+      - "docs/LAW-FROZEN-TRIAL-PARAMETER-REPLAY-20261114.md"
+      - "data/frozen_parameter/**"
+      - ".github/workflows/frozen-trial-parameter-replay.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integer-parameter-replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify pre-hosted source seal and explicit scope hold
+        run: |
+          set -euo pipefail
+          D=data/frozen_parameter
+          P=python/matrix_tricks/frozen_trial_parameter_replay.py
+          grep -Fq 'status=POST_LOCAL_EXPLORATION_BEFORE_HOSTED_REPLAY|' "$D/PREDICTION-20261114.hbp"
+          grep -Fq 'not_a_real_yang_mills_spectral_certificate=1|r9_issue_137=HOLD|' "$D/PREDICTION-20261114.hbp"
+          test "$(git hash-object "$P")" = "ab9495fc4b86bbc77054165e3c47cbad774f7e7b"
+      - name: Exact direct-vs-polynomial and Schur sandwich checks
+        run: |
+          set -euo pipefail
+          mkdir -p out/frozen-parameter
+          python3 -I -B python/matrix_tricks/frozen_trial_parameter_replay.py | tee out/frozen-parameter/RESULT.hbp
+          cmp out/frozen-parameter/RESULT.hbp data/frozen_parameter/EXPECTED-20261114.hbp
+          test "$(grep -c '^FROZEN_PARAM_POINT|' out/frozen-parameter/RESULT.hbp)" -eq 6
+          grep -Fq 'negative_controls_rejected=3|polynomial_degree_U=1|polynomial_degree_G=2|exterior_residual_degree=0|' out/frozen-parameter/RESULT.hbp
+          grep -Fq 'general_spectral_weight=NOT_PROVED|' out/frozen-parameter/RESULT.hbp
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-trial-parameter-exact-test
+          path: out/frozen-parameter/RESULT.hbp
+          if-no-files-found: ignore
+          retention-days: 60
