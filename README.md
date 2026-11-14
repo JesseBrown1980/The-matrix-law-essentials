@@ -17,6 +17,32 @@ Results carry one of four labels:
 
 > **Operational status correction (operator report, 2026-11-12 22:36 UTC):** the protected `r=9` verification had **already launched**; nine steps had completed with `rc=0`, and no final exit or certificate was reported. Older pre-launch HOLD language is superseded for that run. Nothing in this matrix-law work starts or restarts it.
 
+## November 14: exact frozen-trial parameter-replay law (new toolkit method)
+
+**Derived:** for an affine symmetric pencil \(A(z)=QHQ-zI\) and a fixed
+certificate trial \(Y\), exact Schur upper and residual Gram matrices
+are low-degree polynomials in the changed energy threshold:
+\(U(z)=U_0-(z-z_0)C\) and
+\(G(z)=G_0-(z-z_0)J+(z-z_0)^2H\).
+A cached exact exterior Gram can additionally tighten the **full-Q**
+Schur upper through a certified diagonal boundary majorant. Unlike
+time-jumping, the saved work is the **expensive operator graph and residual
+reconstruction**, not an iteration count. SHA-256 authenticates the
+coefficient cache; the identities calculate the changed result.
+
+The standalone integer-only test compares exact direct evaluation to
+cached replay at **six thresholds**, checks full Schur Loewner bounds with
+a direct adjugate, and rejects **three planted faults**. The corresponding
+3x4 finite-S3 application on #137/#190 is a separate source-conditional
+research track, and the actual first-excitation Wilson weight remains
+**HOLD**. This is a new technique in this repository, not a claim of
+mathematical priority.
+
+[Exact law and restrictions](docs/LAW-FROZEN-TRIAL-PARAMETER-REPLAY-20261114.md) ·
+[Runnable integer test](python/matrix_tricks/frozen_trial_parameter_replay.py) ·
+[Pre-host seal and expected receipt](data/frozen_parameter/PREDICTION-20261114.hbp) ·
+[Dedicated hosted check](.github/workflows/frozen-trial-parameter-replay.yml).
+
 ## November 12: state-dependent nonlinear jumps, exact and certified-bounded
 
 Two distinct tested results extend the [fixed-source affine jump](docs/LAW-AFFINE-FORCED-RADIX3-JUMP-20261112.md) to **genuinely state-dependent nearest-neighbor interactions**:
