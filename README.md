@@ -17,6 +17,14 @@ Results carry one of four labels:
 
 > **Operational status correction (operator report, 2026-11-12 22:36 UTC):** the protected `r=9` verification had **already launched**; nine steps had completed with `rc=0`, and no final exit or certificate was reported. Older pre-launch HOLD language is superseded for that run. Nothing in this matrix-law work starts or restarts it.
 
+## November 20: exact two-energy Schur–Gram jump and Wilson minimax center
+
+The small physical Schur matrices **themselves** determine the entire cross-energy P+Q Gram: \(G(E_2,E_1)=[S(E_1)-S(E_2)]/(E_2-E_1)\). For any diagonal observable, changing its scalar center subtracts exactly that Gram multiple; its matrix element cancels between genuine orthogonal eigenstates, but **must be retained for frozen approximate directions**. On the actual seven-loop S₃ Wilson source, the better doubled integer center \(2O-7I\) has global norm ≤21, versus ≤30 for the earlier \(2O-16I\).
+
+A separate source-conditional exact-rational error comparison finds the centered degree-14 Chebyshev whole-Q inverse **error bound** 9,104,850,167 parts per trillion, below the existing 9,285,530,088-ppt conditional signed Wilson margin; the old-centered degree-14 bound is 13,006,928,810 ppt. **The full original polynomial signed action was not computed**; its source/projector certification, not a faster evolution demo, remains the final Wilson gate. The matrix-law approach is to reuse the existing exact eight-flat Schur and original Q duals in one pinned evidence fan-in, while preserving original finite Wilson **FORMAL HOLD** and continuum **OPEN**.
+
+[Exact derivation, gate comparison and conditions](docs/LAW-SCHUR-GRAM-WILSON-CENTER-JUMP-20261120.md) · [Main Yang–Mills theorem and integer-only verifier, PR #348](https://github.com/JesseBrown1980/Finite-universe-Yang-mills-existence-and-mass-gap-using-HEB-C/pull/348).
+
 ## November 14: exact weighted target-spill and paired whole-Q moments
 
 **Sharper, independently reviewed certificate algorithm:** for a
