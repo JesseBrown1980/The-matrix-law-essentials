@@ -18,7 +18,7 @@ This explains an operational matrix rule: discover a coordinate order or decompo
 
 ## Evidence
 
-The P–NP companion [PR #71](https://github.com/JesseBrown1980/P-NP/pull/71) records the [theorem, cost ledger, source hashes and native test](https://github.com/JesseBrown1980/P-NP/blob/c8cc5603b7a654cb03c1b9f977aff9793bda0186/native/PRIMITIVE_JOINT_SHADOW_GENERATOR.md). Its earlier non-affine weighted shadow gate passed [hosted run 45879385528](https://github.com/JesseBrown1980/P-NP/actions/runs/45879385528).
+The P–NP companion [PR #71](https://github.com/JesseBrown1980/P-NP/pull/71) records the [theorem, cost ledger, source hashes and native test](https://github.com/JesseBrown1980/P-NP/blob/113178b4b4fb08b59319c31caf3ab8c80f8eba71/native/PRIMITIVE_JOINT_SHADOW_GENERATOR.md). Its earlier non-affine weighted shadow gate passed [hosted run 45879385528](https://github.com/JesseBrown1980/P-NP/actions/runs/45879385528).
 
 The new local exact audit: 44/56 pair configurations completed, 12 held under a 60,000 allocated-node cap in separated order. At k=32 (64 boundary bits), paired weighted diagram: 96 live nodes, 624 allocated intermediate nodes, versus 1,617 live / 2,769 allocated for the same in-house unnormalized multi-terminal ADD. Count = 6^32. A second source-incidence discovery audit with randomized variable names and a supplied boundary/internal partition completed 42/42, 14,208 address checks and 7,224 verified witnesses. Primitive DP visited 1,800 states versus 10,791 for scale-dependent memoization. All 64 general small-CNF diagram configurations matched reference DPLL. Counts are not runtime or byte savings; no optimized third-party comparison is claimed.
 
