@@ -17,6 +17,10 @@ Results carry one of four labels:
 
 > **Operational status correction (operator report, 2026-11-12 22:36 UTC):** the protected `r=9` verification had **already launched**; nine steps had completed with `rc=0`, and no final exit or certificate was reported. Older pre-launch HOLD language is superseded for that run. Nothing in this matrix-law work starts or restarts it.
 
+## November 26: primitive joint-shadow replay (cross-project research)
+
+Exact integer-weight normalization separates a shared boundary function from its incoming scale; primitive suffix sums can be cached once per node. The order of coupled coordinates is essential: a 32-pair local test has 96 reachable normalized decision nodes, while the separated-coordinate order has an exponential residual-function lower bound for the same family. The [companion P–NP research ledger](https://github.com/JesseBrown1980/P-NP/blob/c8cc5603b7a654cb03c1b9f977aff9793bda0186/native/PRIMITIVE_JOINT_SHADOW_GENERATOR.md) records local exact tests and construction costs; the new native gate awaits hosted acceptance. [Derivation and scope](docs/LAW-PRIMITIVE-JOINT-SHADOW-REPLAY-20261126.md). This is a separate finite constraint-computation technique; the Yang–Mills certificate pipeline is unchanged.
+
 ## November 20: exact two-energy Schur–Gram jump and Wilson minimax center
 
 The small physical Schur matrices **themselves** determine the entire cross-energy P+Q Gram: \(G(E_2,E_1)=[S(E_1)-S(E_2)]/(E_2-E_1)\). For any diagonal observable, changing its scalar center subtracts exactly that Gram multiple; its matrix element cancels between genuine orthogonal eigenstates, but **must be retained for frozen approximate directions**. On the actual seven-loop S₃ Wilson source, the better doubled integer center \(2O-7I\) has global norm ≤21, versus ≤30 for the earlier \(2O-16I\).
