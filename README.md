@@ -17,6 +17,10 @@ Results carry one of four labels:
 
 > **Operational status correction (operator report, 2026-11-12 22:36 UTC):** the protected `r=9` verification had **already launched**; nine steps had completed with `rc=0`, and no final exit or certificate was reported. Older pre-launch HOLD language is superseded for that run. Nothing in this matrix-law work starts or restarts it.
 
+## November 27: certified signed-address generator reuse (cross-project research)
+
+An exact signed variable bijection preserves Boolean constraint counts and permits witness replay across differently addressed residuals. Local P–NP tests verified 720/720 counts and 695 reusable maps; discovery overhead remains substantial. Connected selector controls reduced counting calls from 628 to 334, while random CNF controls showed little gain. Identical local graph signatures are not equivalence certificates. [Exact identity and controls](docs/LAW-SIGNED-RESIDUAL-REUSE-20261127.md) · [Pinned P–NP ledger](https://github.com/JesseBrown1980/P-NP/blob/d5e9446a619b08cb54af0f07e3b230b49587109c/native/SIGNED_RESIDUAL_REUSE.md). New native gate pending; existing certificates unchanged.
+
 ## November 26: adaptive conditional shadow replay (cross-project research)
 
 Conditioning can expose disjoint residual components. Their exact counts multiply and their positive witnesses combine; adaptive address order can exploit these splits. Local P–NP graph tests completed 30/30 using 5,119 cached states for degree/component replay versus 21,425 for neighborhood ordering, with paths favoring the latter. General CNF controls matched 24/24 independent counts. [Conditional replay law and limits](docs/LAW-CONDITIONAL-SHADOW-COMPONENT-REPLAY-20261126.md) · [Pinned research ledger](https://github.com/JesseBrown1980/P-NP/blob/d2792ded04be320e0ee753326e153a010f26a2b8/native/AUTOMATIC_SHADOW_REPLAY.md). New native gate pending; existing certificate workflow unchanged.
