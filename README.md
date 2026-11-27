@@ -17,6 +17,18 @@ Results carry one of four labels:
 
 > **Operational status correction (operator report, 2026-11-12 22:36 UTC):** the protected `r=9` verification had **already launched**; nine steps had completed with `rc=0`, and no final exit or certificate was reported. Older pre-launch HOLD language is superseded for that run. Nothing in this matrix-law work starts or restarts it.
 
+## November 27: certified signed-address generator reuse (cross-project research)
+
+An exact signed variable bijection preserves Boolean constraint counts and permits witness replay across differently addressed residuals. Local P–NP tests verified 720/720 counts and 695 reusable maps; discovery overhead remains substantial. Connected selector controls reduced counting calls from 628 to 334, while random CNF controls showed little gain. Identical local graph signatures are not equivalence certificates. [Exact identity and controls](docs/LAW-SIGNED-RESIDUAL-REUSE-20261127.md) · [Pinned P–NP ledger](https://github.com/JesseBrown1980/P-NP/blob/d5e9446a619b08cb54af0f07e3b230b49587109c/native/SIGNED_RESIDUAL_REUSE.md). New native gate pending; existing certificates unchanged.
+
+## November 26: adaptive conditional shadow replay (cross-project research)
+
+Conditioning can expose disjoint residual components. Their exact counts multiply and their positive witnesses combine; adaptive address order can exploit these splits. Local P–NP graph tests completed 30/30 using 5,119 cached states for degree/component replay versus 21,425 for neighborhood ordering, with paths favoring the latter. General CNF controls matched 24/24 independent counts. [Conditional replay law and limits](docs/LAW-CONDITIONAL-SHADOW-COMPONENT-REPLAY-20261126.md) · [Pinned research ledger](https://github.com/JesseBrown1980/P-NP/blob/d2792ded04be320e0ee753326e153a010f26a2b8/native/AUTOMATIC_SHADOW_REPLAY.md). New native gate pending; existing certificate workflow unchanged.
+
+## November 26: primitive joint-shadow replay (cross-project research)
+
+Exact integer-weight normalization separates a shared boundary function from its incoming scale; primitive suffix sums can be cached once per node. The order of coupled coordinates is essential: a 32-pair local test has 96 reachable normalized decision nodes, while the separated-coordinate order has an exponential residual-function lower bound for the same family. The [companion P–NP research ledger](https://github.com/JesseBrown1980/P-NP/blob/113178b4b4fb08b59319c31caf3ab8c80f8eba71/native/PRIMITIVE_JOINT_SHADOW_GENERATOR.md) records local exact tests and construction costs; the new native gate awaits hosted acceptance. [Derivation and scope](docs/LAW-PRIMITIVE-JOINT-SHADOW-REPLAY-20261126.md). This is a separate finite constraint-computation technique; the Yang–Mills certificate pipeline is unchanged.
+
 ## November 20: exact two-energy Schur–Gram jump and Wilson minimax center
 
 The small physical Schur matrices **themselves** determine the entire cross-energy P+Q Gram: \(G(E_2,E_1)=[S(E_1)-S(E_2)]/(E_2-E_1)\). For any diagonal observable, changing its scalar center subtracts exactly that Gram multiple; its matrix element cancels between genuine orthogonal eigenstates, but **must be retained for frozen approximate directions**. On the actual seven-loop S₃ Wilson source, the better doubled integer center \(2O-7I\) has global norm ≤21, versus ≤30 for the earlier \(2O-16I\).
