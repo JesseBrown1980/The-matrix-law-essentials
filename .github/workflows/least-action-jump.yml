@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'python/matrix_tricks/least_action_jump.py'
+      - 'python/matrix_tricks/boundary_quotient.py'
       - '.github/workflows/least-action-jump.yml'
       - 'docs/LAW-LEAST-ACTION-JUMP-20261128.md'
   workflow_dispatch:
@@ -17,3 +18,7 @@ jobs:
       - run: python3 python/matrix_tricks/least_action_jump.py | tee receipt.txt
         shell: bash
       - run: grep -Fx 'PASS controls=4 horizon=3^40 sha256=994ef829b8095f846f7565b97febc3add77a80b4838a3a911b248c6a9bd9257c' receipt.txt
+      - run: |
+          set -euo pipefail
+          python3 python/matrix_tricks/boundary_quotient.py | tee quotient.txt
+          grep -Fx 'PASS cases=72 entries=132840 structured_81_classes=[27, 27, 27, 27, 27, 27] sha256=0925dd6a85765a1bfd4bbacefa51fb1611c806d8b103711b4a905ca35ba8822e' quotient.txt
