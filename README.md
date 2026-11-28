@@ -1,5 +1,9 @@
 # The matrix law essentials
 
+## November 28: exact least-action ternary jump
+
+**Local PASS:** min-plus composition gives exact minimum additive path costs at 1, 3, 9, 27 and 81 frames; 98,280 forward/backward comparisons agree. A uniform-cost control reaches 3^40. Dense 27-state full-kernel candidate counts fall by 90% at 81 frames. Classical min-plus identity; no general SAT acceleration or quantum spectral claim. [Law and receipt](docs/LAW-LEAST-ACTION-JUMP-20261128.md) · [Runnable test](python/matrix_tricks/least_action_jump.py).
+
 Integer-only tools, matrix tricks and certified results for the finite S₃
 lattice gauge Hamiltonian H = J_E·E + J_B·M on periodic tori, with r = J_B/J_E.
 Everything here rebuilds the operators, re-runs the certificates and reproduces
